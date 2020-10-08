@@ -1,28 +1,37 @@
+"""
+sudo ip link set can0 type can bitrate 250000
+sudo ip link set can0 up
+python3 receiver.py -u ws://192.168.43.117:55201/api/WebSocket
+"""
 import can
-import socket
 import asyncio
 import websockets
 import time
 import sys
-from struct import pack
-from datetime import datetime
-from concurrent import futures
 import threading
 import functools
 import argparse
+import logging
+
+from struct import pack
+from datetime import datetime
+from concurrent import futures
 
 
 MESSAGE_LENGTH = 213
 INTERVAL_SEC = 3
 URI = None
-DEFAULT_URI = "ws://192.168.43.117:55201/api/WebSocket"
-# DEFAULT_URI = "ws://localhost:55201/api/WebSocket"
+# DEFAULT_URI = "ws://192.168.43.117:55201/api/WebSocket"
+DEFAULT_URI = "ws://localhost:55201/api/WebSocket"
+LOG_PATH = "./logs.log"
+BACKUP_PATH = "./backup.bin"
 
 sent_threads = []
 
 """
 exceptions
 """
+
 class Frames:
     # CORE CAN:
     engines = bytearray(5)
@@ -133,22 +142,25 @@ class Car:
     quality = bytearray(1)
 
 
-class BackupFile():
-    def __init__(self, path="backup.bin"):
-        self.path = path
+class BackupFile:
+    @staticmethod
+    def write_into_binary_file(path, data):
+        try:
+            with open(path, "ab") as f:
+                f.write(data)
+                f.write(b"\n")
+        except Exception as e:
+            logging.warning("Failed to save message to the file" + str(e))
 
-    def write_into_binary_file(self, data):
-        with open(self.path, "ab") as f:
-            f.write(data)
-            f.write("\n")
-
-    def read_from_binary_file(self):
-        with open(self.path, "ab") as f:
+    @staticmethod
+    def read_from_binary_file(path):
+        with open(path, "ab") as f:
             data = f.read()
-            print(data)
+            logging.info(data)
 
-    def get_timestamp(self, message_number, message_length):
-        with open(self.path, "ab") as f:
+    @staticmethod
+    def get_timestamp(path, message_number, message_length):
+        with open(path, "ab") as f:
             timestamp = bytearray(8)
             f.seek(message_number*message_length, 0)
             timestamp = f.read(8)
@@ -163,32 +175,29 @@ def byte_to_bit_array(byte):
 
 
 async def send_message(message):
-    # uri = "wss://echo.websocket.org"  #Do testow
-    # uri = "ws://192.168.43.117:55201/api/WebSocket"
-    await asyncio.sleep(1)
+    logging.debug("Start sending message")
     async with websockets.connect(URI) as websocket:
         await websocket.send(message)
-        print("Sent")
+        logging.info("Message sent")
 
 
 def parse_car_timestamp(timestamp):
-    # 1559297416.090523
+    # for tests: 1559297416.090523
     date = datetime.fromtimestamp(timestamp)
     int_timestamp = round((date - datetime(1970, 1, 1)).total_seconds())
     return pack("Q", int_timestamp)
 
 
 def fill_car_model(car, timestamp, frames):
-    # Fill Car model
-    # GENERAL
     try:
         car.timestamp = parse_car_timestamp(timestamp)
     except Exception as err:
-        print(f"Timestamp cannot be converted {timestamp}")
-        print(err)
-        print("Skipping frame")
+        logging.warning(f"Timestamp cannot be converted {timestamp}")
+        logging.warning(err)
+        logging.warning("Skipping frame")
         return car
 
+    # GENERAL
     car.throttlePosition = frames.engines[0:1]
     car.motorController = frames.engines[1:2]
     byte_to_bit_array(car.motorController)
@@ -197,30 +206,26 @@ def fill_car_model(car, timestamp, frames):
     car.cruiseDesiredSpeed = frames.engines[4:5]
     car.batteryError = byte_to_bit_array(frames.lights[1:2])[1:2]
     car.engineError = byte_to_bit_array(frames.lights[1:2])[2:3]
-    # TODO moze trzeba reverse?
     driveMode = byte_to_bit_array(frames.lights[1:2])
     car.driveMode = (driveMode[4]*2 + driveMode[5]).to_bytes(1, "big")
     car.cruiseEngaged = byte_to_bit_array(frames.lights[1:2])[6:7]
     car.horn = byte_to_bit_array(frames.lights[0:1])[7:8]
     car.handBrake = byte_to_bit_array(frames.lights[1:2])[0:1]
-    # car.temperatures #chyba brak
+    # car.temperatures # not exisiting
     car.rpm = frames.speed[0:2]
     car.solarRadiance = frames.sunSensor[0:2]
     # BATTERY
-    # TODO sprawdzic
+    # TODO check
     car.remainingChargeTime = frames.batteryRemainingEnergyFrame[0:3]
     car.remainingChargeTime.append(0x00)
-    # TODO pokazuje true - chyba ogarniete
     car.chargerEnabled = frames.batteryMainFrame[6:7]
     car.systemState = frames.batteryMainFrame[4:5]
     car.inputOutputState = frames.batteryOtherDataFrame[4:5]
     car.packCRate = frames.batteryOtherDataFrame[5:7][::-1]
     car.stateOfCharge = frames.batteryMainFrame[5:6]
-    # O ile SOH to state of Health
     car.stateOfHealth = frames.batteryOtherDataFrame[0:1]
     car.numberOfCellsConnected = frames.batteryOtherDataFrame[1:2]
     car.remainingEnergy = frames.batteryRemainingEnergyFrame[3:5][::-1]
-    # O ile to Voltage Difference
     car.deviationOfVoltageInCells = frames.batteryOtherDataFrame[2:4][::-1]
     car.packTemperatureMax = frames.batteryTemperatureFrame[0:1]
     car.LMUNumberWithMaxTemperature = frames.batteryTemperatureFrame[1:2]
@@ -233,7 +238,6 @@ def fill_car_model(car, timestamp, frames):
     car.cellAvgVoltage = frames.batteryVoltageCellsFrame[0:2][::-1]
     car.packVoltage = frames.batteryMainFrame[0:2][::-1]
     car.packCurrent = frames.batteryMainFrame[2:4][::-1]
-    # tutaj problem, bo ma 4 bajty a na strategii 3
     car.warnings = frames.batteryErrorFrame[4:7]
     car.errors = frames.batteryErrorFrame[0:4]
     # LIGHTS
@@ -261,11 +265,8 @@ def fill_car_model(car, timestamp, frames):
         frames.mppt3TemperatureData[6:8] + frames.mppt4TemperatureData[6:8]
     car.mpptMofsetTemperature = frames.mppt1TemperatureData[4:6] + frames.mppt2TemperatureData[4:6] + \
         frames.mppt3TemperatureData[4:6]+frames.mppt4TemperatureData[4:6]
-    # TIRES
-    # car.pressures BRAK
-    # car.tiresTemperatures BRAK
-    # GPS
-    # BRAK
+    # TIRES not exisiting
+    # GPS not exisiting
     return car
 
 
@@ -328,14 +329,49 @@ def send_message_thread(message):
     try:
         loop.run_until_complete(send_message(message))
         loop.close()
-    except:
-        print("Failed to send message")
+    except Exception as e:
+        logging.warning(f"Failed sending message with exception: " + str(e))
+        logging.info("Saving message to the backup file")
+        BackupFile.write_into_binary_file(BACKUP_PATH, message)
         loop.close()
 
 
+def create_final_message(car):
+    return car.timestamp+car.throttlePosition+car.motorController+car.regenerationBrake+car.cruiseThrottle + \
+        car.cruiseDesiredSpeed+car.batteryError+car.engineError+car.driveMode+car.cruiseEngaged+car.horn + \
+        car.handBrake+car.temperatures+car.rpm+car.solarRadiance + \
+        car.remainingChargeTime + \
+        car.chargerEnabled+car.systemState+car.inputOutputState+car.packCRate+car.stateOfCharge + \
+        car.stateOfHealth+car.numberOfCellsConnected+car.remainingEnergy+car.deviationOfVoltageInCells + \
+        car.packTemperatureMax+car.LMUNumberWithMaxTemperature+car.packTemperatureMin + \
+        car.LMUNumberWithMinTemperature+car.cellVoltageMax+car.cellNumberWithMaxVoltage+car.cellVoltageMin + \
+        car.cellNumberWithMinVoltage+car.cellAvgVoltage+car.packVoltage+car.packCurrent+car.warnings + \
+        car.errors + \
+        car.stopLights+car.lowBeamLights+car.highBeamLights+car.rightIndicatorLights + \
+        car.leftIndicatorLights+car.parkLights+car.interiorLights+car.emergencyLights+car.mpptInputVoltage + \
+        car.mpptInputCurrent+car.mpptOutputVoltage + \
+        car.mpptOutputPower+car.mpptPcbTemperature+car.mpptMofsetTemperature+car.pressures + \
+        car.tiresTemperatures+car.dateDay+car.dateMonth+car.dateYear+car.timeHour+car.timeMin + \
+        car.timeSec+car.latitude+car.latitudeDirection+car.longitude+car.longitudeDirection + \
+        car.altitude+car.speedKnots+car.speedKilometers+car.satellitesNumber+car.quality
+
+
+def create_send_thread(finalMessage):
+    try:
+        for thread in sent_threads:
+            thread.join()
+        t = threading.Thread(target=send_message_thread,
+                                args=(finalMessage,))
+        sent_threads.append(t)
+        t.start()
+    except Exception as e:
+        logging.warning(f"Error creating thread: " + str(e))
+
+
 async def can_producer():
-    can_interface = 'can0'
-    bus = can.interface.Bus(can_interface, bustype='socketcan_native')
+    logging.info("Configuring Can")
+    # can_interface = 'can0'
+    # bus = can.interface.Bus(can_interface, bustype='socketcan_native')
 
     frames = Frames()
     start_time = time.time()
@@ -343,111 +379,63 @@ async def can_producer():
     car = Car()
 
     while True:
-        message = bus.recv()
-        # arbitration_id = int(input("ID: "))
-        # dat = [1, 16, 3, 4, 5, 6, 1, 8]
-        # dat = dat[0: 8]
-        # input("-----------------------------------")
+        # message = bus.recv()
+        # START for testing
+        arbitration_id = int(input("ID: "))
+        dat = [1, 16, 3, 4, 5, 6, 1, 8]
+        dat = dat[0: 8]
 
-        # message = can.Message(arbitration_id=arbitration_id,
-        #                       data=dat, extended_id=False)
+        message = can.Message(arbitration_id=arbitration_id,
+                              data=dat, extended_id=False)
+        # END for testing
+
         save_frame(frames, message.arbitration_id, message.data)
-
-        # message = can.Message(arbitration_id=1475, data=[6, 5, 4, 3, 2, 1], extended_id=False, timestamp=1559297417.090523)
-        # save_frame(frames, message.arbitration_id , message.data)
-
-        # message = can.Message(arbitration_id=arbitration_id, data=[5, 8, 3, 9, 1], extended_id=False, timestamp=1559297418.090523)
-        # save_frame(frames, message.arbitration_id , message.data)
 
         if time.time() - start_time > INTERVAL_SEC:
             start_time = time.time()
 
             car = fill_car_model(car, message.timestamp, frames)
-            # print(car.__dict__)
-            finalMessage = car.timestamp+car.throttlePosition+car.motorController+car.regenerationBrake+car.cruiseThrottle + \
-                car.cruiseDesiredSpeed+car.batteryError+car.engineError+car.driveMode+car.cruiseEngaged+car.horn + \
-                car.handBrake+car.temperatures+car.rpm+car.solarRadiance + \
-                car.remainingChargeTime + \
-                car.chargerEnabled+car.systemState+car.inputOutputState+car.packCRate+car.stateOfCharge + \
-                car.stateOfHealth+car.numberOfCellsConnected+car.remainingEnergy+car.deviationOfVoltageInCells + \
-                car.packTemperatureMax+car.LMUNumberWithMaxTemperature+car.packTemperatureMin + \
-                car.LMUNumberWithMinTemperature+car.cellVoltageMax+car.cellNumberWithMaxVoltage+car.cellVoltageMin + \
-                car.cellNumberWithMinVoltage+car.cellAvgVoltage+car.packVoltage+car.packCurrent+car.warnings + \
-                car.errors + \
-                car.stopLights+car.lowBeamLights+car.highBeamLights+car.rightIndicatorLights + \
-                car.leftIndicatorLights+car.parkLights+car.interiorLights+car.emergencyLights+car.mpptInputVoltage + \
-                car.mpptInputCurrent+car.mpptOutputVoltage + \
-                car.mpptOutputPower+car.mpptPcbTemperature+car.mpptMofsetTemperature+car.pressures + \
-                car.tiresTemperatures+car.dateDay+car.dateMonth+car.dateYear+car.timeHour+car.timeMin + \
-                car.timeSec+car.latitude+car.latitudeDirection+car.longitude+car.longitudeDirection + \
-                car.altitude+car.speedKnots+car.speedKilometers+car.satellitesNumber+car.quality
-
+            finalMessage = create_final_message(car)
             try:
                 for thread in sent_threads:
                     thread.join()
                 t = threading.Thread(target=send_message_thread,
-                                    args=(finalMessage,))
+                                        args=(finalMessage,))
                 sent_threads.append(t)
                 t.start()
             except Exception as e:
-                print(f"Error creating thread: " + str(e))
+                logging.warning(f"Error creating thread: " + str(e))
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description="Send car telemetry via websockets")
+    parser = argparse.ArgumentParser(
+        description="Send car telemetry via websockets")
     parser.add_argument("-u", "--uri", default=DEFAULT_URI, required=False)
 
     return parser.parse_args()
+
+
+def setup_logging():
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s [%(levelname)s] %(message)s",
+        handlers=[
+            logging.FileHandler(LOG_PATH),
+            logging.StreamHandler()
+        ]
+    )
 
 
 def main():
     global URI
     args = parse_args()
     URI = args.uri
+    setup_logging()
 
+    logging.info("Start event loop")
     event_loop = asyncio.get_event_loop()
     event_loop.run_until_complete(can_producer())
 
-# b'\x0c\x0b' -> 0b0c
 
 if __name__ == "__main__":
     main()
-
-
-
-    # loop = asyncio.get_event_loop()
-    # result = loop.run_in_executor(None, functools.partial(send_message, finalMessage))
-    # await result
-    # futures = []
-    # print("create")
-    # futures.append(loop.create_task(task(3)))
-    # if future_old:
-    # 	print("aaaaaa")
-    # 	await asyncio.gather(*futures)
-
-    # future_old = True
-
-    # future_new = asyncio.create_task(send_message(finalMessage))
-    # if future_old:
-    # 	await future_old
-
-    # producer_task = asyncio.ensure_future(send_message(finalMessage))
-
-    # done, pending = await asyncio.wait(
-    # 	[producer_task],
-    # 	return_when=asyncio.FIRST_COMPLETED,
-    # )
-
-    # try:
-    # 	event_loop = asyncio.get_event_loop()
-    # 	event_loop.run_until_complete(send_message(finalMessage))
-    # except:
-    # 	event_loop.close()
-    # 	print("Failed to send message")
-
-    # Wyzerowanie ramek(Jeżeli wysyła bit 1 jako włączone i później zmienia na bit 0 przy wyłączaniu, to niepotrzebne.)
-    """
-        frames.engines = bytearray(5)
-        frames.lights = bytearray(2)
-        frames.batteryVoltageCellsFrame = bytearray(8)
-        """
