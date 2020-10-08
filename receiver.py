@@ -28,10 +28,6 @@ BACKUP_PATH = "./backup.bin"
 
 sent_threads = []
 
-"""
-exceptions
-"""
-
 class Frames:
     # CORE CAN:
     engines = bytearray(5)
@@ -178,6 +174,7 @@ async def send_message(message):
     logging.debug("Start sending message")
     async with websockets.connect(URI) as websocket:
         await websocket.send(message)
+        # FIN change to debug
         logging.info("Message sent")
 
 
@@ -393,18 +390,12 @@ async def can_producer():
 
         if time.time() - start_time > INTERVAL_SEC:
             start_time = time.time()
-
-            car = fill_car_model(car, message.timestamp, frames)
-            finalMessage = create_final_message(car)
             try:
-                for thread in sent_threads:
-                    thread.join()
-                t = threading.Thread(target=send_message_thread,
-                                        args=(finalMessage,))
-                sent_threads.append(t)
-                t.start()
+                car = fill_car_model(car, message.timestamp, frames)
+                finalMessage = create_final_message(car)
             except Exception as e:
-                logging.warning(f"Error creating thread: " + str(e))
+                logging.warning(f"Failed creating final message: " + str(e))
+            create_send_thread(finalMessage)
 
 
 def parse_args():
