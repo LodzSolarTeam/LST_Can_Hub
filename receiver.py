@@ -28,6 +28,7 @@ BACKUP_PATH = "./backup.bin"
 
 sent_threads = []
 
+
 class Frames:
     # CORE CAN:
     engines = bytearray(5)
@@ -358,7 +359,7 @@ def create_send_thread(finalMessage):
         for thread in sent_threads:
             thread.join()
         t = threading.Thread(target=send_message_thread,
-                                args=(finalMessage,))
+                             args=(finalMessage,))
         sent_threads.append(t)
         t.start()
     except Exception as e:
