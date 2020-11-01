@@ -12,6 +12,7 @@ import threading
 import functools
 import argparse
 import logging
+import ssl
 
 from struct import pack
 from datetime import datetime
@@ -19,14 +20,20 @@ from concurrent import futures
 
 
 MESSAGE_LENGTH = 213
-INTERVAL_SEC = 3
+INTERVAL_SEC = 1
 URI = None
+# DEFAULT_URI = "ws://127.0.0.1:55201/api/WebSocket"
 # DEFAULT_URI = "ws://192.168.43.117:55201/api/WebSocket"
-DEFAULT_URI = "ws://localhost:55201/api/WebSocket"
+DEFAULT_URI = "wss://lst-api-v1.azurewebsites.net//api/WebSocket"
 LOG_PATH = "./logs.log"
 BACKUP_PATH = "./backup.bin"
 
 sent_threads = []
+
+# ssl_context = ssl.SSLContext()
+# ssl_context.check_hostname = False
+# ssl_context.verify_mode = ssl.CERT_NONE
+ssl_context = ssl.create_default_context()
 
 
 class Frames:
@@ -173,10 +180,10 @@ def byte_to_bit_array(byte):
 
 async def send_message(message):
     logging.debug("Start sending message")
-    async with websockets.connect(URI) as websocket:
+    async with websockets.connect(URI, ssl=ssl_context) as websocket:
+        # async with websockets.connect(URI) as websocket:
         await websocket.send(message)
-        # FIN change to debug
-        logging.info("Message sent")
+        logging.debug("Message sent")
 
 
 def parse_car_timestamp(timestamp):
@@ -331,6 +338,7 @@ def send_message_thread(message):
         logging.warning(f"Failed sending message with exception: " + str(e))
         logging.info("Saving message to the backup file")
         BackupFile.write_into_binary_file(BACKUP_PATH, message)
+        # raise
         loop.close()
 
 
@@ -368,8 +376,8 @@ def create_send_thread(finalMessage):
 
 async def can_producer():
     logging.info("Configuring Can")
-    # can_interface = 'can0'
-    # bus = can.interface.Bus(can_interface, bustype='socketcan_native')
+    can_interface = 'can0'
+    bus = can.interface.Bus(can_interface, bustype='socketcan_native')
 
     frames = Frames()
     start_time = time.time()
@@ -377,14 +385,14 @@ async def can_producer():
     car = Car()
 
     while True:
-        # message = bus.recv()
+        message = bus.recv()
         # START for testing
-        arbitration_id = int(input("ID: "))
-        dat = [1, 16, 3, 4, 5, 6, 1, 8]
-        dat = dat[0: 8]
+        # arbitration_id = int(input("ID: "))
+        # dat = [1, 16, 3, 4, 5, 6, 1, 8]
+        # dat = dat[0: 8]
 
-        message = can.Message(arbitration_id=arbitration_id,
-                              data=dat, extended_id=False)
+        # message = can.Message(arbitration_id=arbitration_id,
+        #                       data=dat, extended_id=False)
         # END for testing
 
         save_frame(frames, message.arbitration_id, message.data)
