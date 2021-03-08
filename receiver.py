@@ -1,4 +1,28 @@
+#!/usr/bin/env python
+
+# Co zrobic, zeby telemetria byla wysylana:
+# Wlaczyc hotspota z  internetem:
+# Nazwa: 4DS612
+# Haslo: mTzW4snd
+# Wlaczyc Raspberke i podlaczyc CAN do shielda
+# Telemetria powinna zaczac sie wysylac  po ok. 5 sekundach. Skrypt zbierajacy dane powinien automatycznie odpalic sie po wlaczeniu Raspberki. Dane mozemy zobaczyc:
+# Czyste dane: https://lst-api-v1.azurewebsites.net/api/car/recent
+# Frontend: https://white-sky-0251a6303.azurestaticapps.net
+# Jesli wszystko dziala poprawnie to powinnismy na 'czyste dane' miec aktualny timestamp
+# Dane z CAN sa wysylane co 3 sekundy do backendu na chmurze.
+
+# Skypt, ktory odpala sie przy starcie Raspberry
+#   /etc/init.d/can_ [I calej nazwy pliku niestety nie pamietam, trzeba sprawdzic]
+# zeby wylaczyc automatyczne odpalanie sie skryptu przy starcie:
+#   sudo update-rc.d can_ [To ten sam plik co wyzej, trzeba sprawdzic cala nazwe] remove
+
+# Jakby bylo potrzeba to do dane logowania do RPi3 (nie musimy tego robic jak tylko chcemy wlaczyc telemetrie):
+# Username: pi
+# Password: raspberry
+
 """
+Commands to start collecting data:
+
 sudo ip link set can0 type can bitrate 250000
 sudo ip link set can0 up
 python3 receiver.py -u ws://192.168.43.117:55201/api/WebSocket
@@ -9,7 +33,6 @@ import websockets
 import time
 import sys
 import threading
-import functools
 import argparse
 import logging
 import ssl
@@ -17,24 +40,29 @@ import ssl
 from struct import pack
 from datetime import datetime
 from concurrent import futures
+from concurrent.futures import ThreadPoolExecutor, TimeoutError as ConnectionTimeoutError
 
 
 MESSAGE_LENGTH = 213
-INTERVAL_SEC = 1
+INTERVAL_SEC = 0.5
+TIMEOUT = 4
+THREAD_NUMBER = 8
+SEND_TO_BOARD_COMPUTER = True
+SEND_TO_STRATEGY = False
 URI = None
+
 # DEFAULT_URI = "ws://127.0.0.1:55201/api/WebSocket"
 # DEFAULT_URI = "ws://192.168.43.117:55201/api/WebSocket"
-DEFAULT_URI = "wss://lst-api-v1.azurewebsites.net//api/WebSocket"
-LOG_PATH = "./logs.log"
-BACKUP_PATH = "./backup.bin"
+DEFAULT_URI = "wss://lst-api-v1.azurewebsites.net/api/WebSocket"
+LOG_PATH = "/home/pi/lst_canhub_py/logs.log"
+BACKUP_PATH = "/home/pi/lst_canhub_py/backup.bin"
 
-sent_threads = []
+URI_BOARD_COMPUTER = "ws://127.0.0.1:55201/api/websocket"
+URI_STRATEGY = "wss://lst-api-v1.azurewebsites.net/api/WebSocket"
 
-# ssl_context = ssl.SSLContext()
-# ssl_context.check_hostname = False
-# ssl_context.verify_mode = ssl.CERT_NONE
 ssl_context = ssl.create_default_context()
 
+executor = ThreadPoolExecutor(max_workers=THREAD_NUMBER)
 
 class Frames:
     # CORE CAN:
@@ -178,12 +206,32 @@ def byte_to_bit_array(byte):
     return bytearray(bits[::-1])
 
 
-async def send_message(message):
+class WebSocketConnectWithTimeout(websockets.connect):
+    def __init__(self, *args, **kwargs):
+        self.connect_timeout = kwargs.pop('connect_timeout')
+        super(WebSocketConnectWithTimeout, self).__init__(*args, **kwargs)
+
+    async def __aenter__(self, *args, **kwargs):
+        return await asyncio.wait_for(super(WebSocketConnectWithTimeout, self).__aenter__(*args, **kwargs), timeout = self.connect_timeout)
+
+    async def __aexit__(self, *args, **kwargs):
+        return await super(WebSocketConnectWithTimeout, self).__aexit__(*args, **kwargs)
+
+
+async def send_message(message, uri):
     logging.debug("Start sending message")
-    async with websockets.connect(URI, ssl=ssl_context) as websocket:
-        # async with websockets.connect(URI) as websocket:
-        await websocket.send(message)
-        logging.debug("Message sent")
+
+    try:
+        if uri[0:3] == "wss":
+            async with WebSocketConnectWithTimeout(uri, ssl=ssl_context, connect_timeout=TIMEOUT) as websocket:
+                await websocket.send(message)
+        else:
+            async with WebSocketConnectWithTimeout(uri, connect_timeout=TIMEOUT) as websocket:
+            # async with websockets.connect(uri) as websocket:
+                await websocket.send(message)
+    except Exception as e:
+        logging.warning(f"Failed sending msg to " + uri + ": " + str(type(e).__name__) + ". Saving message to the backup file.")
+        BackupFile.write_into_binary_file(BACKUP_PATH, message)
 
 
 def parse_car_timestamp(timestamp):
@@ -217,10 +265,9 @@ def fill_car_model(car, timestamp, frames):
     car.horn = byte_to_bit_array(frames.lights[0:1])[7:8]
     car.handBrake = byte_to_bit_array(frames.lights[1:2])[0:1]
     # car.temperatures # not exisiting
-    car.rpm = frames.speed[0:2]
+    car.rpm = frames.speed[0:2][::-1]
     car.solarRadiance = frames.sunSensor[0:2]
     # BATTERY
-    # TODO check
     car.remainingChargeTime = frames.batteryRemainingEnergyFrame[0:3]
     car.remainingChargeTime.append(0x00)
     car.chargerEnabled = frames.batteryMainFrame[6:7]
@@ -328,18 +375,11 @@ def save_frame(frames, id, data):
         frames.mppt4TemperatureData = data
 
 
-def send_message_thread(message):
+def send_message_thread(message, uri):
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
-    try:
-        loop.run_until_complete(send_message(message))
-        loop.close()
-    except Exception as e:
-        logging.warning(f"Failed sending message with exception: " + str(e))
-        logging.info("Saving message to the backup file")
-        BackupFile.write_into_binary_file(BACKUP_PATH, message)
-        # raise
-        loop.close()
+    loop.run_until_complete(send_message(message, uri))
+    loop.close()
 
 
 def create_final_message(car):
@@ -362,16 +402,14 @@ def create_final_message(car):
         car.altitude+car.speedKnots+car.speedKilometers+car.satellitesNumber+car.quality
 
 
-def create_send_thread(finalMessage):
+def queue_message(finalMessage):
     try:
-        for thread in sent_threads:
-            thread.join()
-        t = threading.Thread(target=send_message_thread,
-                             args=(finalMessage,))
-        sent_threads.append(t)
-        t.start()
+        if SEND_TO_BOARD_COMPUTER:
+            executor.submit(send_message_thread, finalMessage, URI_BOARD_COMPUTER)
+        if SEND_TO_STRATEGY:
+            executor.submit(send_message_thread, finalMessage, URI_STRATEGY)
     except Exception as e:
-        logging.warning(f"Error creating thread: " + str(e))
+        logging.warning(f"Error adding a thread to pool: " + str(e))
 
 
 async def can_producer():
@@ -387,7 +425,7 @@ async def can_producer():
     while True:
         message = bus.recv()
         # START for testing
-        # arbitration_id = int(input("ID: "))
+        # arbitration_id = 11 #int(input("ID: "))
         # dat = [1, 16, 3, 4, 5, 6, 1, 8]
         # dat = dat[0: 8]
 
@@ -404,7 +442,7 @@ async def can_producer():
                 finalMessage = create_final_message(car)
             except Exception as e:
                 logging.warning(f"Failed creating final message: " + str(e))
-            create_send_thread(finalMessage)
+            queue_message(finalMessage)
 
 
 def parse_args():
