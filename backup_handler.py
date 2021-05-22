@@ -50,13 +50,3 @@ class BackupHandler:
             return popped_messages
         else:
             return []
-
-    # TODO usunac
-    @staticmethod
-    def get_timestamp(path, message_number, message_length):
-        with open(path, "ab") as f:
-            timestamp = bytearray(8)
-            f.seek(message_number*message_length, 0)
-            timestamp = f.read(8)
-
-        return timestamp

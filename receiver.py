@@ -44,6 +44,7 @@ MESSAGE_LENGTH = 213
 INTERVAL_SEC = 0.4
 TIMEOUT = 4
 MESSAGES_IN_QUEUE_LIMIT = 10
+NUMBER_OF_MESSAGES_TO_RESEND = 3
 SEND_TO_BOARD_COMPUTER = False
 SEND_TO_STRATEGY = True
 
@@ -82,11 +83,10 @@ async def send_message(q, url):
                     while True:
                         message = await q.get()
                         q.task_done()
-                        print("wss size" + str(q.qsize()))
                         await websocket.send(message)
                         message = b""
 
-                        messages_to_resend = backup_handler.get_unsent_messages(3) # TODO
+                        messages_to_resend = backup_handler.get_unsent_messages(NUMBER_OF_MESSAGES_TO_RESEND)
 
                         for msg in messages_to_resend:
                             await websocket.send(msg)
@@ -96,7 +96,6 @@ async def send_message(q, url):
                     while True:
                         message = await q.get()
                         q.task_done()
-                        print("ws size" + str(q.qsize()))
                         await websocket.send(message)
                         message = b""
 
