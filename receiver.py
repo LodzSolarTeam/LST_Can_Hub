@@ -150,8 +150,8 @@ async def queue_message(q, finalMessage):
 
 async def can_producer(queue_board_computer, queue_cloud):
     logging.info("Configuring Can")
-    # can_interface = 'can0'
-    # bus = can.interface.Bus(can_interface, bustype='socketcan_native')
+    can_interface = 'can0'
+    bus = can.interface.Bus(can_interface, bustype='socketcan_native')
 
     frames = Frames()
     start_time = time.time()
@@ -159,14 +159,14 @@ async def can_producer(queue_board_computer, queue_cloud):
     car = Car()
 
     while True:
-        # message = bus.recv()
+        message = bus.recv()
         # START for testing
-        arbitration_id = 11  # int(input("ID: "))
-        dat = [1, 16, 3, 4, 5, 6, 1, 8]
-        dat = dat[0: 8]
+        # arbitration_id = 11  # int(input("ID: "))
+        # dat = [1, 16, 3, 4, 5, 6, 1, 8]
+        # dat = dat[0: 8]
 
-        message = can.Message(arbitration_id=arbitration_id,
-                              data=dat, extended_id=False)
+        # message = can.Message(arbitration_id=arbitration_id,
+        #                       data=dat, extended_id=False)
         # END for testing
 
         frames.save_frame(message.arbitration_id, message.data)
