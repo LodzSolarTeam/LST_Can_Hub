@@ -44,12 +44,12 @@ MESSAGE_LENGTH = 213
 INTERVAL_SEC = 0.4
 TIMEOUT = 4
 MESSAGES_IN_QUEUE_LIMIT = 10
-NUMBER_OF_MESSAGES_TO_RESEND = 3
+NUMBER_OF_MESSAGES_TO_RESEND = 6
 SEND_TO_BOARD_COMPUTER = False
 SEND_TO_STRATEGY = True
 
-LOG_PATH = "/home/pi/lst_canhub_py/logs.log"
-BACKUP_PATH = "/home/pi/lst_canhub_py/backup.bin"
+LOG_PATH = "logs.log"
+BACKUP_PATH = "backup.bin"
 
 URI_BOARD_COMPUTER = "ws://localhost:55201/api/websocket" # TODO make it work with static ip
 URI_STRATEGY = "wss://lst-api-v1.azurewebsites.net/api/WebSocket"
