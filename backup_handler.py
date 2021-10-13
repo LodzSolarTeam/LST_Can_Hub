@@ -13,11 +13,16 @@ class BackupHandler:
 
         with open(path, "rb") as f:
             data = bytearray(f.read())
-            logging.info(f"{os.path.getsize(path)} messages detected in the backup file.")
+            print(f"{os.path.getsize(path)/self.message_length} messages detected in the backup file.")
+
             self.messages = []
+            if not (len(data)/self.message_length).is_integer():
+                return
+
             for _ in range(0, int(round(len(data)/self.message_length))):
                 self.messages.append(data[:self.message_length])
                 del data[:self.message_length]
+            print(len(self.messages))
 
     def backup_messages(self, data):
         self.messages.extend(data)
@@ -26,7 +31,7 @@ class BackupHandler:
                 for msg in data:
                     f.write(msg)
         except Exception as e:
-            logging.warning("Failed to save message to the file" + str(e))
+            print("Failed to save message to the file" + str(e))
 
     def _clear_file(self):
         try:

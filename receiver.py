@@ -39,24 +39,32 @@ import ssl
 from backup_handler import BackupHandler
 from car import Car
 from frames import Frames
+from serial_data_parser import SerialDataParser
+from motor_temperature_reader import MotorTemperatureReader
+from gps_reader import GpsReader
 
-MESSAGE_LENGTH = 213
+MESSAGE_LENGTH = 220
 INTERVAL_SEC = 0.4
 TIMEOUT = 4
 MESSAGES_IN_QUEUE_LIMIT = 10
-NUMBER_OF_MESSAGES_TO_RESEND = 6
+
+NUMBER_OF_MESSAGES_TO_RESEND = 4
 SEND_TO_BOARD_COMPUTER = False
 SEND_TO_STRATEGY = True
+COLLECT_SERIAL_DATA = True
+COLLECT_MOTOR_TEMPERATURE = True
+COLLECT_GPS_DATA = True
 
 LOG_PATH = "logs.log"
 BACKUP_PATH = "backup.bin"
 
-URI_BOARD_COMPUTER = "ws://localhost:55201/api/websocket" # TODO make it work with static ip
+URI_BOARD_COMPUTER = "ws://192.168.43.117:55201/api/websocket" # TODO make it work with static ip
 URI_STRATEGY = "wss://lst-api-v1.azurewebsites.net/api/WebSocket"
 
 ssl_context = ssl.create_default_context()
 
 backup_handler = BackupHandler(BACKUP_PATH, MESSAGE_LENGTH)
+car = Car()
 
 
 class WebSocketConnectWithTimeout(websockets.connect):
@@ -84,8 +92,7 @@ async def send_message(q, url):
                         message = await q.get()
                         q.task_done()
                         await websocket.send(message)
-                        message = b""
-
+                        print("sent")
                         messages_to_resend = backup_handler.get_unsent_messages(NUMBER_OF_MESSAGES_TO_RESEND)
 
                         for msg in messages_to_resend:
@@ -114,21 +121,21 @@ async def send_message(q, url):
 def create_final_message(car):
     return car.timestamp+car.throttlePosition+car.motorController+car.regenerationBrake+car.cruiseThrottle + \
         car.cruiseDesiredSpeed+car.batteryError+car.engineError+car.driveMode+car.cruiseEngaged+car.horn + \
-        car.handBrake+car.temperatures+car.rpm+car.solarRadiance + \
+        car.handBrake+car.temperatures+car.rpm+car.solarRadiance + car.motorTemperature + \
         car.remainingChargeTime + \
         car.chargerEnabled+car.systemState+car.inputOutputState+car.packCRate+car.stateOfCharge + \
         car.stateOfHealth+car.numberOfCellsConnected+car.remainingEnergy+car.deviationOfVoltageInCells + \
         car.packTemperatureMax+car.LMUNumberWithMaxTemperature+car.packTemperatureMin + \
         car.LMUNumberWithMinTemperature+car.cellVoltageMax+car.cellNumberWithMaxVoltage+car.cellVoltageMin + \
         car.cellNumberWithMinVoltage+car.cellAvgVoltage+car.packVoltage+car.packCurrent+car.warnings + \
-        car.errors + \
+        car.errors + car.cells_voltage + car.cells_temperature + \
         car.stopLights+car.lowBeamLights+car.highBeamLights+car.rightIndicatorLights + \
         car.leftIndicatorLights+car.parkLights+car.interiorLights+car.emergencyLights+car.mpptInputVoltage + \
         car.mpptInputCurrent+car.mpptOutputVoltage + \
-        car.mpptOutputPower+car.mpptPcbTemperature+car.mpptMofsetTemperature+car.pressures + \
-        car.tiresTemperatures+car.dateDay+car.dateMonth+car.dateYear+car.timeHour+car.timeMin + \
-        car.timeSec+car.latitude+car.latitudeDirection+car.longitude+car.longitudeDirection + \
-        car.altitude+car.speedKnots+car.speedKilometers+car.satellitesNumber+car.quality
+        car.mpptOutputPower+car.mpptPcbTemperature+car.mpptMofsetTemperature +car.pressures + \
+        car.tiresTemperatures+car.gps.dateDay+car.gps.dateMonth+car.gps.dateYear+car.gps.timeHour+car.gps.timeMin + \
+        car.gps.timeSec+car.gps.latitude+car.gps.latitudeDirection+car.gps.longitude+car.gps.longitudeDirection + \
+        car.gps.altitude+car.gps.speedKnots+car.gps.speedKilometers+car.gps.satellitesNumber+car.gps.quality
 
 
 async def queue_message(q, finalMessage):
@@ -151,12 +158,12 @@ async def queue_message(q, finalMessage):
 async def can_producer(queue_board_computer, queue_cloud):
     logging.info("Configuring Can")
     can_interface = 'can0'
+    print("CAN interface:",can_interface)
     bus = can.interface.Bus(can_interface, bustype='socketcan_native')
-
+    print("BUS:",bus)
     frames = Frames()
     start_time = time.time()
     finalMessage = bytearray(MESSAGE_LENGTH)
-    car = Car()
 
     while True:
         message = bus.recv()
@@ -204,17 +211,27 @@ async def main():
     logging.info("Start event loop")
     queue_board_computer = asyncio.Queue()
     queue_cloud = asyncio.Queue()
+
+    s = SerialDataParser(car.cells_voltage, car.cells_temperature)
+    m = MotorTemperatureReader(car.motorTemperature)
+    g = GpsReader(car.gps)
+
     tasks = []
     if SEND_TO_BOARD_COMPUTER:
-        consumer_task_1 = asyncio.create_task(
+        tasks.append(asyncio.create_task(
             send_message(queue_board_computer, URI_BOARD_COMPUTER)
-        )
-        tasks.append(consumer_task_1)
+        ))
     if SEND_TO_STRATEGY:
-        consumer_task_2 = asyncio.create_task(
+        tasks.append(asyncio.create_task(
             send_message(queue_cloud, URI_STRATEGY)
-        )
-        tasks.append(consumer_task_2)
+        ))
+    if COLLECT_SERIAL_DATA:
+        tasks.append(asyncio.create_task(s.start_listening()))
+    if COLLECT_MOTOR_TEMPERATURE:
+        tasks.append(asyncio.create_task(m.start_listening()))
+    if COLLECT_GPS_DATA:
+        tasks.append(asyncio.create_task(g.start_listening()))
+
     producer_task = asyncio.create_task(
         can_producer(queue_board_computer, queue_cloud)
     )
