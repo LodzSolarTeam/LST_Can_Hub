@@ -1,6 +1,7 @@
 from struct import pack
 from datetime import datetime
 import logging
+from gps import Gps
 
 class Car:
     # GENERAL
@@ -19,7 +20,8 @@ class Car:
     temperatures = bytearray(4)
     rpm = bytearray(2)
     solarRadiance = bytearray(2)
-    # Battery
+    motorTemperature = bytearray(2)
+    # BATTERY
     remainingChargeTime = bytearray(4)
     chargerEnabled = bytearray(1)
     systemState = bytearray(1)
@@ -43,6 +45,9 @@ class Car:
     packCurrent = bytearray(2)
     warnings = bytearray(3)  # BatteryWarnings = 3 bajty
     errors = bytearray(4)  # BatteryErrors = 4 bajty
+    # SERIAL DATA
+    cells_voltage = bytearray(64)
+    cells_temperature = bytearray(16)
     # LIGHTS
     stopLights = bytearray(1)
     lowBeamLights = bytearray(1)
@@ -63,21 +68,7 @@ class Car:
     pressures = bytearray(4)  # tiresPressureSize = 4
     tiresTemperatures = bytearray(4)  # tiresTemperaturesSize = 4
     # GPS
-    dateDay = bytearray(1)
-    dateMonth = bytearray(1)
-    dateYear = bytearray(2)
-    timeHour = bytearray(1)
-    timeMin = bytearray(1)
-    timeSec = bytearray(1)
-    latitude = bytearray(8)  # double
-    latitudeDirection = bytearray(1)
-    longitude = bytearray(8)  # double
-    longitudeDirection = bytearray(1)
-    altitude = bytearray(8)  # double
-    speedKnots = bytearray(8)  # double
-    speedKilometers = bytearray(8)  # double
-    satellitesNumber = bytearray(1)
-    quality = bytearray(1)
+    gps = Gps()
 
     def _parse_car_timestamp(self, timestamp):
         # for tests: 1559297416.090523
