@@ -1,32 +1,5 @@
 #!/usr/bin/env python
 
-# Co zrobic, zeby telemetria byla wysylana:
-# Wlaczyc hotspota z  internetem:
-# Nazwa: 4DS612
-# Haslo: mTzW4snd
-# Wlaczyc Raspberke i podlaczyc CAN do shielda
-# Telemetria powinna zaczac sie wysylac  po ok. 5 sekundach. Skrypt zbierajacy dane powinien automatycznie odpalic sie po wlaczeniu Raspberki. Dane mozemy zobaczyc:
-# Czyste dane: https://lst-api-v1.azurewebsites.net/api/car/recent
-# Frontend: https://white-sky-0251a6303.azurestaticapps.net
-# Jesli wszystko dziala poprawnie to powinnismy na 'czyste dane' miec aktualny timestamp
-# Dane z CAN sa wysylane co 3 sekundy do backendu na chmurze.
-
-# Skypt, ktory odpala sie przy starcie Raspberry
-#   /etc/init.d/can_ [I calej nazwy pliku niestety nie pamietam, trzeba sprawdzic]
-# zeby wylaczyc automatyczne odpalanie sie skryptu przy starcie:
-#   sudo update-rc.d can_ [To ten sam plik co wyzej, trzeba sprawdzic cala nazwe] remove
-
-# Jakby bylo potrzeba to do dane logowania do RPi3 (nie musimy tego robic jak tylko chcemy wlaczyc telemetrie):
-# Username: pi
-# Password: raspberry
-
-"""
-Commands to start collecting data:
-
-sudo ip link set can0 type can bitrate 250000
-sudo ip link set can0 up
-python3 receiver.py
-"""
 from asyncio.futures import CancelledError
 import can
 import asyncio
