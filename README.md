@@ -39,22 +39,6 @@ If done correctly, you will see 'clean data' with current timestamp.
 Data from CAN is sent every 3 seconds to the cloud's backend.
 
 
-## Autorun script
-
-Project should start automatically with Raspberry.
-
-For that, there should be a script:
-
-```bash
-/etc/init.d/can_receiver_startup
-```
-To turn off autorun type: 
-```bash
-sudo update-rc.d can_* remove
-```
-
-
-
 ## Login to RPi
 
 If necessary, you can login to RPi. Use:
@@ -64,6 +48,21 @@ If necessary, you can login to RPi. Use:
  Password: raspberry
  ```
 
+Project directory 
+```bash
+$HOME/lst_canhub_py/new
+```
+
+
+## Autorun script
+
+Project should start automatically with Raspberry.
+
+For that, there should be a script:
+
+```bash
+/etc/init.d/can_receiver_startup
+```
 
 
 ## Sending data
