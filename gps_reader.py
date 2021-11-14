@@ -1,55 +1,51 @@
+import glob
+import io
+import logging
 import struct
+
 import serial
 import asyncio
-from datetime import datetime
-import subprocess
-# import serial_asyncio
+import pynmea2
+
+GPS_BAUD_RATE = 38400
+
 
 class GpsReader:
     def __init__(self, gps) -> None:
         self.gps = gps
 
     async def start_listening(self):
-        while True:
+        while True:  # connection loop
             try:
-                process = subprocess.Popen(['sudo', 'rfcomm', 'bind', '0', '00:08:F4:01:98:E5'],
-                                    stdout=subprocess.PIPE, 
-                                    stderr=subprocess.PIPE)
-                _, stderr = process.communicate()
-                if stderr and stderr != b"Can't create device: Address already in use\n":
-                    print(f"Error while binding /dev/rfcomm0 interface {stderr}. Retrying in 10 sec.")
-                    continue
-                ser = serial.Serial('/dev/rfcomm0', 38400, timeout=0)
-                break
-            except Exception as e:
-                print(f"Error while establishing bluetooth connection {str(e)}. Retrying in 10 sec.")
-                await asyncio.sleep(10)
+                ports = glob.glob('/dev/gps*')
+                ser = serial.Serial(ports[0], baudrate=GPS_BAUD_RATE, timeout=5.0)
+                # noinspection PyTypeChecker
+                sio = io.TextIOWrapper(io.BufferedRWPair(ser, ser))
 
-        while True:
-            try:
-                await asyncio.sleep(0.1)
-                gps_data = ser.readline()
-                if not gps_data:
-                    continue
+                while True:  # data flow loop
+                    try:
+                        await asyncio.sleep(0)
 
-                gps_array = str(gps_data)[2:-1].split(",")
-                if gps_array[0][0:7] == "$GPGGA":
-                    print(gps_array[2])
-                    print(gps_array[4])
-                    self.gps.latitude = struct.pack('d', float(0 if gps_array[2] == '' else
-                        float(float(gps_array[2][0:2])) + float(float(gps_array[2][2:8]))/60
-                    ))
-                    self.gps.latitudeDirection = bytes(gps_array[3], "utf-8")
-                    self.gps.longitude = struct.pack('d', float(0 if gps_array[4] == '' else
-                        float(float(gps_array[4][1:3])) + float(float(gps_array[4][3:9]))/60
-                    ))
-                    self.gps.longitudeDirection = bytes(gps_array[5], "utf-8")
-                    self.gps.altitude = struct.pack('d', float(0 if gps_array[9] == '' else gps_array[9]))
-                    self.gps.satellitesNumber = struct.pack('b', int(0 if gps_array[7] == '' else gps_array[7]))
-                    self.gps.quality = struct.pack('b', int(0 if gps_array[6] == '' else gps_array[6]))
-                elif gps_array[0][0:7] == "$GPVTG":
-                    self.gps.speedKnots = struct.pack('d', float(0 if gps_array[5] == '' else gps_array[5]))
-                    self.gps.speedKilometers = struct.pack('d', float(0 if gps_array[7] == '' else gps_array[7]))
+                        line = sio.readline()
+                        msg = pynmea2.parse(line)
+
+                        if msg.sentence_type == 'GGA':
+                            if msg.is_valid:
+                                self.gps.latitude = struct.pack('d', msg.latitude)
+                                self.gps.latitudeDirection = struct.pack('c', msg.lat_dir)
+                                self.gps.longitude = struct.pack('d', msg.longitude)
+                                self.gps.longitudeDirection = struct.pack('c', msg.lon_dir)
+                                self.gps.altitude = struct.pack('d', msg.altitude)
+                                self.gps.satellitesNumber = struct.pack('b', msg.num_sats)
+                                self.gps.quality = struct.pack('b', msg.gps_qual)
+                        elif msg.sentence_type == 'VTG':
+                            self.gps.speedKnots = struct.pack('d', msg.spd_over_grnd_kts)
+                            self.gps.speedKilometers = struct.pack('d', msg.spd_over_grnd_kmph)
+                    except pynmea2.ParseError as e:
+                        logging.info(f"[GPS_READER] Data parsing error: {e}.")
+            except serial.SerialException as e:
+                logging.warning(f"[GPS_READER] Connection exception {e}. Sleeping for 5 seconds")
+                await asyncio.sleep(1)
             except Exception as e:
-                print(f"Error parsing gps data {e}")
-                await asyncio.sleep(4)
+                logging.warning(f"[GPS_READER] {e}")
+                await asyncio.sleep(1)
