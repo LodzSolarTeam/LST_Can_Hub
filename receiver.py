@@ -92,24 +92,7 @@ async def send_message(q, url):
 
 
 def create_final_message(car):
-    return car.timestamp+car.throttlePosition+car.motorController+car.regenerationBrake+car.cruiseThrottle + \
-        car.cruiseDesiredSpeed+car.batteryError+car.engineError+car.driveMode+car.cruiseEngaged+car.horn + \
-        car.handBrake+car.temperatures+car.rpm+car.solarRadiance + car.motorTemperature + \
-        car.remainingChargeTime + \
-        car.chargerEnabled+car.systemState+car.inputOutputState+car.packCRate+car.stateOfCharge + \
-        car.stateOfHealth+car.numberOfCellsConnected+car.remainingEnergy+car.deviationOfVoltageInCells + \
-        car.packTemperatureMax+car.LMUNumberWithMaxTemperature+car.packTemperatureMin + \
-        car.LMUNumberWithMinTemperature+car.cellVoltageMax+car.cellNumberWithMaxVoltage+car.cellVoltageMin + \
-        car.cellNumberWithMinVoltage+car.cellAvgVoltage+car.packVoltage+car.packCurrent+car.warnings + \
-        car.errors + car.cells_voltage + car.cells_temperature + \
-        car.stopLights+car.lowBeamLights+car.highBeamLights+car.rightIndicatorLights + \
-        car.leftIndicatorLights+car.parkLights+car.interiorLights+car.emergencyLights+car.mpptInputVoltage + \
-        car.mpptInputCurrent+car.mpptOutputVoltage + \
-        car.mpptOutputPower+car.mpptPcbTemperature+car.mpptMofsetTemperature +car.pressures + \
-        car.tiresTemperatures+car.gps.dateDay+car.gps.dateMonth+car.gps.dateYear+car.gps.timeHour+car.gps.timeMin + \
-        car.gps.timeSec+car.gps.latitude+car.gps.latitudeDirection+car.gps.longitude+car.gps.longitudeDirection + \
-        car.gps.altitude+car.gps.speedKnots+car.gps.speedKilometers+car.gps.satellitesNumber+car.gps.quality
-
+    return car.to_bytes()
 
 async def queue_message(q, finalMessage):
     try:
@@ -185,9 +168,9 @@ async def main():
     queue_board_computer = asyncio.Queue()
     queue_cloud = asyncio.Queue()
 
-    s = SerialDataParser(car.cells_voltage, car.cells_temperature)
-    m = MotorTemperatureReader(car.motorTemperature)
-    g = GpsReader(car.gps)
+    s = SerialDataParser(car.Battery.Cells.voltages, car.Battery.Cells.temperatures)
+    m = MotorTemperatureReader(car.General.motorTemperature)
+    g = GpsReader(car.Gps)
 
     tasks = []
     if SEND_TO_BOARD_COMPUTER:
