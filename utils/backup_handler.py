@@ -1,6 +1,8 @@
 import logging
 import os
 
+NUMBER_OF_MESSAGES_TO_RESEND = 4
+
 class BackupHandler:
     def __init__(self, path, message_length):
         self.path = path
@@ -13,13 +15,13 @@ class BackupHandler:
 
         with open(path, "rb") as f:
             data = bytearray(f.read())
-            print(f"{os.path.getsize(path)/self.message_length} messages detected in the backup file.")
+            print(f"{os.path.getsize(path) / self.message_length} messages detected in the backup file.")
 
             self.messages = []
-            if not (len(data)/self.message_length).is_integer():
+            if not (len(data) / self.message_length).is_integer():
                 return
 
-            for _ in range(0, int(round(len(data)/self.message_length))):
+            for _ in range(0, int(round(len(data) / self.message_length))):
                 self.messages.append(data[:self.message_length])
                 del data[:self.message_length]
             print(len(self.messages))
@@ -40,7 +42,7 @@ class BackupHandler:
         except Exception as e:
             logging.warning("Failed to clear backup file" + str(e))
 
-    def get_unsent_messages(self, number_of_messages = 1):
+    def get_unsent_messages(self, number_of_messages=1):
         if len(self.messages) >= number_of_messages:
             popped_messages = self.messages[0: number_of_messages]
             self.messages = self.messages[number_of_messages:]

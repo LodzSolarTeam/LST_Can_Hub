@@ -1,9 +1,10 @@
 import struct
 import asyncio
-import logging
 import serial
-import glob
 from asyncio.futures import CancelledError
+
+from car import Car
+
 
 class SerialDataParser:
 
@@ -36,9 +37,10 @@ class SerialDataParser:
 
     MAX_LINE_LENGTH = 100
     ser = None
-    def __init__(self, cells_voltage, cells_temperature):
-        self.cells_voltage = cells_voltage
-        self.cells_temperature = cells_temperature
+    def __init__(self, car: Car, serial_port):
+        self.cells_voltage = car.Battery.Cells.voltages
+        self.cells_temperature = car.Battery.Cells.temperatures
+        self.serial_port = serial_port
 
         self._init_serial()
 
@@ -46,9 +48,7 @@ class SerialDataParser:
         if self.ser:
             self.ser.close()
         try:
-            ports = glob.glob('/dev/ttyUSB*')
-
-            self.ser = serial.Serial(port=ports[0],
+            self.ser = serial.Serial(port=self.serial_port,
                             baudrate=38400,
                             bytesize=serial.EIGHTBITS,
                             parity=serial.PARITY_NONE,
@@ -72,7 +72,6 @@ class SerialDataParser:
                 if line[-leneol:] == eol:
                     break
 
-        await asyncio.sleep(0)
         return bytes(line)
 
     def _get_value_from_message(self, data, start_byte, length):
@@ -89,9 +88,6 @@ class SerialDataParser:
         if length == 8:
             return struct.pack('<I', value)
 
-    async def _get_data_from_serial(self):
-        return await self._readline_from_serial()
-
     async def start_listening(self):
         while True:
             try:
@@ -99,7 +95,7 @@ class SerialDataParser:
                     await asyncio.sleep(10)
                     self._init_serial()
                     continue
-                data = await self._get_data_from_serial()
+                data = await self._readline_from_serial()
 
                 if len(data) > self.CELL_TYPE_BYTE and data[0: self.CELL_TYPE_BYTE] in self.VOLTAGE_ROW_BEGINNING:
                     frame_id = data[0: self.CELL_TYPE_BYTE]
@@ -125,6 +121,8 @@ class SerialDataParser:
                             ] = self._get_value_from_message(
                                 data, self.PAYLOAD_START_BYTE + i*self.TEMPERATURE_VALUE_LEN, self.TEMPERATURE_VALUE_LEN
                             )
+
+                await asyncio.sleep(0)
             except CancelledError:
                 self.ser.close()
             except Exception as e:
