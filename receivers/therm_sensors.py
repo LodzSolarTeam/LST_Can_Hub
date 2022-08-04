@@ -5,7 +5,6 @@ from w1thermsensor import W1ThermSensor
 
 from car import Car
 
-@asyncio.coroutine
 async def motor_temperature_receiver(car: Car):
     while True:
         try:

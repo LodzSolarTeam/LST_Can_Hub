@@ -7,9 +7,7 @@ from car import Car
 MESSAGES_IN_QUEUE_LIMIT = 10
 
 
-@asyncio.coroutine
 async def send_scheduler(car: Car, backup_handler: BackupHandler, *args: asyncio.Queue):
-    @asyncio.coroutine
     async def queue_message(q: asyncio.Queue, finalMessage):
         try:
             if q.qsize() > MESSAGES_IN_QUEUE_LIMIT:

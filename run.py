@@ -22,7 +22,7 @@ LOG_PATH = "logs.log"  # TODO make it program argument `log-path=FILE_NAME`
 BACKUP_PATH = "backup.bin"  # TODO make it program argument `backup-path=FILE_NAME`
 
 URI_BOARD_COMPUTER = "ws://192.168.43.117:55201/api/websocket"
-URI_STRATEGY = "wss://lst-api-v1.azurewebsites.net/api/WebSocket"
+URI_STRATEGY = "wss://test-lst-api.azurewebsites.net/api/WebSocket"
 
 car = Car()
 backup_handler = BackupHandler(BACKUP_PATH, len(car.to_bytes()))

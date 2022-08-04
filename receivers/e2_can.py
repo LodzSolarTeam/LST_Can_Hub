@@ -9,7 +9,6 @@ from car import Car
 from frames import Frames
 
 
-@asyncio.coroutine
 async def can_receiver(car: Car, can_interface, mock=False):
     frames = Frames()
     while True:

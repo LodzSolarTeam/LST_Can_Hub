@@ -12,7 +12,6 @@ from car import Car
 GPS_BAUD_RATE = 38400
 
 
-@asyncio.coroutine
 async def gps_receiver(car: Car, port: SerialBase):
     while True:  # connection loop
         try:
@@ -25,19 +24,32 @@ async def gps_receiver(car: Car, port: SerialBase):
                 try:
                     line = sio.readline()
                     msg = pynmea2.parse(line)
-
-                    if msg.sentence_type == 'GGA':
+                    
+                    if msg.sentence_type == 'RMC':
                         if msg.is_valid:
-                            car.Gps.latitude = struct.pack('d', msg.latitude) # TODO fix parsing errors
-                            car.Gps.latitudeDirection = struct.pack('b', msg.lat_dir)
+                            gps_datetime = msg.datetime
+                            print(gps_datetime.year, gps_datetime.month, gps_datetime.day, gps_datetime.hour, gps_datetime.minute, gps_datetime.second)
+                            car.Gps.dateYear = struct.pack("H", gps_datetime.year)
+                            car.Gps.dateMonth = struct.pack("B", gps_datetime.month)
+                            car.Gps.dateDay = struct.pack("B", gps_datetime.day)
+                            car.Gps.timeHour = struct.pack("B", gps_datetime.hour)
+                            car.Gps.timeMin = struct.pack("B", msg.datetime.minute)
+                            car.Gps.timeSec = struct.pack("B", gps_datetime.second)
+                            logging.info("GPS datetime inited")
+                    elif msg.sentence_type == 'GGA':
+                        if msg.is_valid:
+                            car.Gps.latitude = struct.pack('d', msg.latitude) 
+                            car.Gps.latitudeDirection = struct.pack('B', ord(msg.lat_dir))
                             car.Gps.longitude = struct.pack('d', msg.longitude)
-                            car.Gps.longitudeDirection = struct.pack('b', msg.lon_dir)
+                            car.Gps.longitudeDirection = struct.pack('B', ord(msg.lon_dir))
                             car.Gps.altitude = struct.pack('d', msg.altitude)
-                            car.Gps.satellitesNumber = struct.pack('b', msg.num_sats)
+                            car.Gps.satellitesNumber = struct.pack('B', int(msg.num_sats))
                             car.Gps.quality = struct.pack('b', msg.gps_qual)
+                            logging.info("GPS localisation inited")
                     elif msg.sentence_type == 'VTG':
                         car.Gps.speedKnots = struct.pack('d', msg.spd_over_grnd_kts)
                         car.Gps.speedKilometers = struct.pack('d', msg.spd_over_grnd_kmph)
+                        logging.info("GPS speeed inited")
 
                     await asyncio.sleep(0)
                 except pynmea2.ParseError as e:
