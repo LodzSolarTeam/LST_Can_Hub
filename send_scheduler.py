@@ -31,7 +31,7 @@ async def send_scheduler(car: Car):
                         except Exception as e:
                             logging.warning(f"Failed creating final message: " + str(e))
 
-                    await asyncio.sleep(0)
+                    await asyncio.sleep(0.05)
         except:
             logging.warning("Broker connection can't be established")
             await asyncio.sleep(0)
