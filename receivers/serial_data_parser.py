@@ -1,3 +1,4 @@
+import logging
 import struct
 import asyncio
 import serial
@@ -54,9 +55,9 @@ class SerialDataParser:
                             parity=serial.PARITY_NONE,
                             stopbits=serial.STOPBITS_ONE,
                             timeout=0.1)
-            print("Serial communication started succesfully")
+            logging.info("Serial communication started succesfully")
         except Exception as e:
-            print("Failed to start serial communication")
+            logging.info("Failed to start serial communication")
             self.ser = None
 
     async def _readline_from_serial(self):
@@ -96,8 +97,8 @@ class SerialDataParser:
                     self._init_serial()
                     continue
                 data = await self._readline_from_serial()
-
                 if len(data) > self.CELL_TYPE_BYTE and data[0: self.CELL_TYPE_BYTE] in self.VOLTAGE_ROW_BEGINNING:
+                    logging.info("[Serial Data Parser] Messsage gathered")
                     frame_id = data[0: self.CELL_TYPE_BYTE]
                     if bytes([data[self.CELL_TYPE_BYTE]]) == self.VOLTAGE_FLAG:
                         if frame_id == b'r00017': # for this particular frame byte order needs to be changed
@@ -122,10 +123,10 @@ class SerialDataParser:
                                 data, self.PAYLOAD_START_BYTE + i*self.TEMPERATURE_VALUE_LEN, self.TEMPERATURE_VALUE_LEN
                             )
 
-                await asyncio.sleep(0)
+                await asyncio.sleep(0.5)
             except CancelledError:
                 self.ser.close()
             except Exception as e:
-                print(f"A problem occured during parsing serial data: {e}")
+                logging.info(f"A problem occured during parsing serial data: {e}")
                 await asyncio.sleep(10)
                 self._init_serial()

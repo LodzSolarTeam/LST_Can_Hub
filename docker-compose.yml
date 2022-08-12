@@ -1,0 +1,12 @@
+services:
+    rabbitmq3:
+        container_name: "rabbitmq"
+        image: rabbitmq:3.9-management-alpine
+        environment:
+            - RABBITMQ_DEFAULT_USER=toor
+            - RABBITMQ_DEFAULT_PASS=toor
+        ports:
+            # AMQP protocol port
+            - '5672:5672'
+            # HTTP management UI
+            - '15672:15672'

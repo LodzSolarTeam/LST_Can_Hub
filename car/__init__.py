@@ -11,7 +11,7 @@ from car.tires import Tires
 
 
 class Car:
-    canStatus = False
+    __canStatus = False
     General = General()
     Battery = Battery()
     Lights = Lights()
