@@ -3,10 +3,7 @@
 import asyncio
 import glob
 import time
-import pika
 import logging
-import ssl
-from asyncio.futures import CancelledError
 import broker
 
 from car import Car
@@ -15,8 +12,6 @@ from receivers.gps import gps_receiver
 from receivers.serial_data_parser import SerialDataParser
 from receivers.therm_sensors import motor_temperature_receiver
 from send_scheduler import send_scheduler
-from utils.backup_handler import BackupHandler, NUMBER_OF_MESSAGES_TO_RESEND
-from utils.web_socket import WebSocketConnectWithTimeout, WEBSOCKET_CONNECTION_TIMEOUT
 
 SEND_TO_BOARD_COMPUTER = False  # TODO make it program argument `send-board-computer=[True/False]`
 SEND_CLOUD = True  # TODO make it program argument `send-cloud=[True/False]`
@@ -29,6 +24,7 @@ URI_STRATEGY = "wss://test-lst-api.azurewebsites.net/api/WebSocket"
 
 car = Car()
 
+
 def main():
     logging.basicConfig(
         level=logging.INFO,
@@ -37,7 +33,7 @@ def main():
             logging.FileHandler(LOG_PATH),
             logging.StreamHandler()
         ])
-    
+
     logging.info("Waiting for broker connection")
     while True:
         try:

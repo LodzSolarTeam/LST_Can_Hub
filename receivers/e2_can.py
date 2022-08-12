@@ -19,13 +19,13 @@ async def can_receiver(car: Car, can_interface, mock=False):
                 logging.info(f"CAN: Configuring can bus at `{can_interface}` interface.")
                 bus = can.interface.Bus(can_interface, bustype='socketcan_native')
                 logging.info("CAN: Bus ", bus)
-            car.__canStatus = True
+            car.canStatus = True
             while True:
                 if not mock:
                     message = bus.recv(0.5)
                 else:
                     arbitration_id = 1412
-                    dat = [random.randint(1,30), random.randint(25,255), 10, 10, 10, 10, 00, 10]
+                    dat = [random.randint(1, 30), random.randint(25, 255), 10, 10, 10, 10, 00, 10]
                     dat = dat[0: 8]
                     message = can.Message(arbitration_id=arbitration_id,
                                           timestamp=time.time(),

@@ -1,18 +1,14 @@
-import asyncio
+import ssl
 
 import websockets
 
+TIMEOUT = 10  # seconds
 
-WEBSOCKET_CONNECTION_TIMEOUT = 4
+ssl_context = ssl.create_default_context()
 
-class WebSocketConnectWithTimeout(websockets.connect):
-    def __init__(self, *args, **kwargs):
-        self.connect_timeout = kwargs.pop('connect_timeout')
-        super(WebSocketConnectWithTimeout, self).__init__(*args, **kwargs)
 
-    async def __aenter__(self, *args, **kwargs):
-        return await asyncio.wait_for(super(WebSocketConnectWithTimeout, self).__aenter__(*args, **kwargs),
-                                      timeout=self.connect_timeout)
-
-    async def __aexit__(self, *args, **kwargs):
-        return await super(WebSocketConnectWithTimeout, self).__aexit__(*args, **kwargs)
+def get_websocket_connection(url):
+    if url[0:3] == "wss":
+        return websockets.connect(url, ssl_context)
+    else:
+        return websockets.connect(url)

@@ -5,7 +5,7 @@ from datetime import datetime
 from aio_pika.abc import AbstractIncomingMessage
 
 import broker
-from websocket import get_websocket_connection
+from utils.web_socket import get_websocket_connection
 
 URL = "ws://0.0.0.0:55201/api/WebSocket"
 frames_queue = asyncio.Queue(maxsize=1)
@@ -17,6 +17,7 @@ async def consume_car_frame(message: AbstractIncomingMessage) -> None:
 
 
 async def websocket_handler():
+    global message
     message: AbstractIncomingMessage
     while True:
         try:
@@ -27,10 +28,10 @@ async def websocket_handler():
                 await message.ack()
                 logging.debug(f"Message acknowledge sent {datetime.utcnow()}")
         except KeyboardInterrupt:
-            message.nack()
+            await message.nack()
             break
         except Exception:
-            message.nack()
+            await message.nack()
             logging.warning("Sleep 5 seconds then reconnect")
             await asyncio.sleep(5)
             continue

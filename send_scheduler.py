@@ -8,13 +8,14 @@ from car import Car
 
 INTERVAL_SEC = 1
 
+
 async def send_scheduler(car: Car):
     start_time = time.time()
     while True:
         try:
             with broker.get_channel() as channel:
                 while True:
-                    if car.__canStatus and (time.time() - start_time > INTERVAL_SEC):
+                    if car.canStatus and (time.time() - start_time > INTERVAL_SEC):
                         start_time = time.time()
                         try:
                             finalMessage = car.to_bytes()
