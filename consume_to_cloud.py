@@ -1,32 +1,36 @@
-from ast import arg
 import asyncio
-import logging
 from datetime import datetime
+import logging
 
 from aio_pika.abc import AbstractIncomingMessage
 
 import broker
 from utils.web_socket import get_websocket_connection
 
-URL = "wss://test-lst-api.azurewebsites.net/api/WebSocket"
+# URI_STRATEGY = "wss://test-lst-api.azurewebsites.net/api/WebSocket"
+URI_STRATEGY = "wss://lst-api-v1.azurewebsites.net/api/WebSocket"
 
-    
+e = datetime.now()
+LOG_PATH = f"./logs/{e.year}-{e.month}-{e.day} {e.hour}:{e.minute}:{e.second} canhub_consumer_logs.log"
 
 async def consume_car_frame(message: AbstractIncomingMessage, frames_queue) -> None:
     await frames_queue.put(message)
     logging.debug(f"frame_queue.put()")
-
+        
 
 async def websocket_handler(frames_queue):
     message = None
     while True:
         try:
-            websocket = await get_websocket_connection(URL)
+            logging.info(f"Connecting to websocket")
+            websocket = await get_websocket_connection(URI_STRATEGY)
+            logging.info(f"Websocket connection established")
             while True:
                 message: AbstractIncomingMessage = await frames_queue.get()
+                logging.info(f"Message receiver")
                 await websocket.send(message.body)
                 await message.ack()
-                logging.debug(f"Message acknowledge sent {datetime.utcnow()}")
+                logging.info(f"Message ACK")
         except KeyboardInterrupt:
             if message is not None:
                 await message.nack()
@@ -34,8 +38,8 @@ async def websocket_handler(frames_queue):
         except Exception as e:
             if message is not None:
                 await message.nack()
-            logging.warning(f"Sleep 5 seconds then reconnect. {e}")
-            await asyncio.sleep(5)
+            logging.warning(f"Sleep 1 seconds then reconnect. {e}")
+            await asyncio.sleep(1)
             continue
 
 
@@ -62,7 +66,7 @@ if __name__ == "__main__":
         level=logging.INFO,
         format="%(asctime)s [%(levelname)s] %(message)s",
         handlers=[
+            logging.FileHandler(LOG_PATH),
             logging.StreamHandler()
-        ]
-    )
+        ])
     asyncio.run(main())

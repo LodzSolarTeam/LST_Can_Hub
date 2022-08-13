@@ -27,25 +27,13 @@ class Car:
                + self.Tires.to_bytes() \
                + self.Gps.to_bytes()
 
-    def _parse_car_timestamp(self, timestamp):
-        # for tests: 1559297416.090523
-        date = datetime.fromtimestamp(timestamp)
-        int_timestamp = round((date - datetime(1970, 1, 1)).total_seconds())
-        return pack("Q", int_timestamp)
 
     def _byte_to_bit_array(self, byte):
         bit_string = ''.join(format(ord(byte), '08b'))
         bits = list(map(int, bit_string))
         return bytearray(bits[::-1])
 
-    def fill_car_model(self, timestamp, frames):
-        try:
-            self.General.timestamp = self._parse_car_timestamp(timestamp)
-        except Exception as err:
-            logging.warning(f"Timestamp cannot be converted {timestamp}")
-            logging.warning(err)
-            logging.warning("Skipping frame")
-
+    def fill_car_model(self, frames):
         # GENERAL
         self.General.throttlePosition = frames.engines[0:1]
         self.General.motorController = frames.engines[1:2]

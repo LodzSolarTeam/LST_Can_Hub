@@ -1,6 +1,7 @@
+import asyncio
 import logging
-
 import pika
+import aio_pika
 
 BROKER_USER = 'toor'
 BROKER_PASS = 'toor'
@@ -9,9 +10,13 @@ CAR_FRAME_QUEUE = "car_frame_queue"
 
 
 async def get_channel_async():
-    import aio_pika
-    connection = await aio_pika.connect(login=BROKER_USER, password=BROKER_PASS)
-    return await connection.channel()
+    while True:
+        try:
+            connection = await aio_pika.connect(login=BROKER_USER, password=BROKER_PASS)
+            return await connection.channel()
+        except:
+            logging.info("Cant establish connection with broker. Retry in 1 seconds")
+            await asyncio.sleep(1)
 
 def get_connection():
     credentials = pika.PlainCredentials(BROKER_USER, BROKER_PASS)
