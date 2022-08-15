@@ -1,3 +1,4 @@
+broker_data
 *.log
 backup.bin
 logs.log

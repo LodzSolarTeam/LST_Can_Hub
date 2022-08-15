@@ -46,12 +46,13 @@ async def main():
 
     loop.set_debug(False)
 
+    os.system("python3 run-cloud-sender.py &")
+    
     loop.run_forever()
 
 
 if __name__ == "__main__":
     os.system("mkdir ./logs")
-    os.system("python3 run-cloud-sender.py &")
     asyncio.run(
         main()
     )

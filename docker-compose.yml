@@ -1,13 +1,14 @@
 services:
     rabbitmq3:
+        hostname: 'surykatka'
         container_name: "rabbitmq"
-        image: rabbitmq:3.9-management-alpine
+        image: rabbitmq:3.9-alpine
         environment:
             - RABBITMQ_DEFAULT_USER=toor
             - RABBITMQ_DEFAULT_PASS=toor
         ports:
             # AMQP protocol port
             - '5672:5672'
-            # HTTP management UI
-            - '15672:15672'
+        volumes:
+        - "./broker_data:/var/lib/rabbitmq/"
 
