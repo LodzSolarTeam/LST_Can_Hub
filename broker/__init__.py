@@ -3,6 +3,7 @@ import logging
 import pika
 import aio_pika
 
+
 BROKER_USER = 'toor'
 BROKER_PASS = 'toor'
 
@@ -32,6 +33,7 @@ def get_channel():
     connection_param = pika.connection.ConnectionParameters(credentials=credentials)
     connection = pika.BlockingConnection(connection_param)
     return connection.channel()
+
 
 
 async def init_broker(channel: aio_pika.abc.AbstractChannel):

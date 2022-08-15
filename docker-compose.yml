@@ -10,3 +10,4 @@ services:
             - '5672:5672'
             # HTTP management UI
             - '15672:15672'
+
