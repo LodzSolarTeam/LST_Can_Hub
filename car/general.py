@@ -1,6 +1,8 @@
-from datahub.bytejoin import bytejoin
+from car.utils import bytejoin
 
-class CarGeneral:
+
+
+class General:
     def __init__(self):
         self.timestamp = bytearray(8)
         self.throttlePosition = bytearray(1)
@@ -14,10 +16,12 @@ class CarGeneral:
         self.cruiseEngaged = bytearray(1)
         self.horn = bytearray(1)
         self.handBrake = bytearray(1)
-        self.temperatures = bytearray(4)
         self.rpm = bytearray(2)
         self.solarRadiance = bytearray(2)
-        self.motorTemperature = bytearray(2)
-        
+        self.lMotorTemperature = bytearray(4)
+        self.rMotorTemperature = bytearray(4)
+        self.lControllerTemperature = bytearray(4)
+        self.rControllerTemperature = bytearray(4)
+
     def to_bytes(self):
         return bytejoin(self)

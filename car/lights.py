@@ -1,4 +1,5 @@
-from datahub.bytejoin import bytejoin
+from car.utils import bytejoin
+
 
 class Lights:
     def __init__(self):
@@ -10,6 +11,6 @@ class Lights:
         self.parkLights = bytearray(1)
         self.interiorLights = bytearray(1)
         self.emergencyLights = bytearray(1)
-        
+
     def to_bytes(self):
         return bytejoin(self)

@@ -1,4 +1,5 @@
-from datahub.bytejoin import bytejoin
+from car.utils import bytejoin
+
 
 class BatteryCells:
     def __init__(self):

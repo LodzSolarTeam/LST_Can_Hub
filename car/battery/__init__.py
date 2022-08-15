@@ -1,7 +1,8 @@
-from datahub.batterycells import BatteryCells
-from datahub.batteryerrors import BatteryErrors
-from datahub.batterywarnings import BatteryWarnings
-from datahub.bytejoin import bytejoin
+from car.battery.batterycells import BatteryCells
+from car.battery.batteryerrors import BatteryErrors
+from car.battery.batterywarnings import BatteryWarnings
+from car.utils import bytejoin
+
 
 class Battery:
     Warnings = BatteryWarnings()
@@ -30,9 +31,9 @@ class Battery:
         self.cellAvgVoltage = bytearray(2)
         self.packVoltage = bytearray(2)
         self.packCurrent = bytearray(2)
-    
+
     def to_bytes(self):
         return bytejoin(self) \
-            + self.Warnings.to_bytes() \
-            + self.Errors.to_bytes() \
-            + self.Cells.to_bytes()
+               + self.Warnings.to_bytes() \
+               + self.Errors.to_bytes() \
+               + self.Cells.to_bytes()

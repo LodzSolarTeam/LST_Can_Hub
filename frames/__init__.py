@@ -31,53 +31,53 @@ class Frames:
     mppt4TemperatureData = bytearray(8)
 
     def save_frame(self, id, data):
-        if(id == 321):
+        if (id == 321):
             self.engines = data
-        elif(id == 770):
+        elif (id == 770):
             self.lights = data
-        elif(id == 1475):
+        elif (id == 1475):
             self.batteryMainFrame = data
-        elif(id == 1412):
+        elif (id == 1412):
             self.speed = data
-        elif(id == 1029):
+        elif (id == 1029):
             self.sunSensor = data
-        elif(id == 1473):
+        elif (id == 1473):
             self.batteryVoltageCellsFrame = data
-        elif(id == 1474):
+        elif (id == 1474):
             self.batteryErrorFrame = data
-        elif(id == 1476):
+        elif (id == 1476):
             self.batteryTemperatureFrame = data
-        elif(id == 1477):
+        elif (id == 1477):
             self.batteryRemainingEnergyFrame = data
-        elif(id == 1478):
+        elif (id == 1478):
             self.batteryOtherDataFrame = data
-        elif(id == 403105268):
+        elif (id == 403105268):
             self.chargerFrame = data
-        elif(id == 31260673):
+        elif (id == 31260673):
             self.chargeControllerFrame = data
-        elif(id == 0):
+        elif (id == 0):
             self.errorFrame = data
-        elif(id == 384):
+        elif (id == 384):
             self.mppt1Input = data
-        elif(id == 640):
+        elif (id == 640):
             self.mppt1Output = data
-        elif(id == 1152):
+        elif (id == 1152):
             self.mppt1TemperatureData = data
-        elif(id == 385):
+        elif (id == 385):
             self.mppt2Input = data
-        elif(id == 641):
+        elif (id == 641):
             self.mppt2Output = data
-        elif(id == 1153):
+        elif (id == 1153):
             self.mppt2TemperatureData = data
-        elif(id == 386):
+        elif (id == 386):
             self.mppt3Input = data
-        elif(id == 642):
+        elif (id == 642):
             self.mppt3Output = data
-        elif(id == 1154):
+        elif (id == 1154):
             self.mppt3TemperatureData = data
-        elif(id == 387):
+        elif (id == 387):
             self.mppt4Input = data
-        elif(id == 643):
+        elif (id == 643):
             self.mppt4Output = data
-        elif(id == 1155):
+        elif (id == 1155):
             self.mppt4TemperatureData = data
