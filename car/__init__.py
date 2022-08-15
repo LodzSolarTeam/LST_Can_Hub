@@ -1,7 +1,3 @@
-import logging
-from datetime import datetime
-from struct import pack
-
 from car.battery import Battery
 from car.general import General
 from car.gps import Gps

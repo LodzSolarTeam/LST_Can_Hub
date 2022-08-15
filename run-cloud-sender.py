@@ -27,26 +27,28 @@ async def websocket_handler(frames_queue):
             logging.info(f"Websocket connection established")
             while True:
                 message: AbstractIncomingMessage = await frames_queue.get()
-                logging.info(f"Message receiver")
                 await websocket.send(message.body)
                 await message.ack()
-                logging.info(f"Message ACK")
+                logging.info(f"ACK")
         except KeyboardInterrupt:
             if message is not None:
                 await message.nack()
+                logging.warning(f"NACK")
             break
         except Exception as e:
             if message is not None:
                 await message.nack()
-            logging.warning(f"Sleep 1 seconds then reconnect. {e}")
+                logging.warning(f"NACK")
             await asyncio.sleep(1)
             continue
 
 
 async def main():
     frames_queue = asyncio.Queue(maxsize=1)
-    channel = await broker.get_channel_async()
+    channel = await ( await broker.get_connection_async()).channel()
+    logging.info("channel connection established")
     queue = await channel.get_queue(broker.CAR_FRAME_QUEUE)
+    logging.info("queue established")
 
     async def consume_car_frame_wrapper(message: AbstractIncomingMessage):
         await consume_car_frame(message, frames_queue)
@@ -56,7 +58,9 @@ async def main():
         timeout=3,
         exclusive=True,
     )
+    logging.info("broker consumer initalized")
     await websocket_handler(frames_queue)
+    logging.info("websocket handler initalized")
 
 
 

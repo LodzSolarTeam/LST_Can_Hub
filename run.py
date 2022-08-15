@@ -17,7 +17,7 @@ from send_scheduler import send_scheduler
 e = datetime.now()
 LOG_PATH = f"./logs/{e.year}-{e.month}-{e.day} {e.hour}:{e.minute}:{e.second} canhub_producer_logs.log"
 
-def main():
+async def main():
     logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)s [%(levelname)s] %(message)s",
@@ -28,9 +28,7 @@ def main():
     logging.info("==================================== Waiting for broker")
     while True:
         try:
-            connection = broker.get_connection()
-            broker.init_broker(connection.channel())
-            connection.close()
+            (await broker.get_connection_async()).close()
             break
         except Exception as e:
             logging.info("Connection with broker cant be established. Waiting 1 seconds to retry")
@@ -53,5 +51,7 @@ def main():
 
 if __name__ == "__main__":
     os.system("mkdir ./logs")
-    os.system("python3 consume_to_cloud.py &")
-    main()
+    os.system("python3 run-cloud-sender.py &")
+    asyncio.run(
+        main()
+    )
