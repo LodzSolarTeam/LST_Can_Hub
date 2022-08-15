@@ -52,15 +52,15 @@ async def gps_receiver(car: Car, set_mock_date: bool = True):
                         else:
                             logging.warning("[GPS] GGA is not valid")
                     if msg.sentence_type == 'RMC':
-                        if msg.is_valid:
-                            car.Gps.latitude = struct.pack('d', msg.latitude)
-                            car.Gps.latitudeDirection = struct.pack('B', ord(msg.lat_dir))
-                            car.Gps.longitude = struct.pack('d', msg.longitude)
-                            car.Gps.longitudeDirection = struct.pack('B', ord(msg.lon_dir))
-                            car.Gps.speedKilometers = struct.pack('d', msg.spd_over_grnd)
-                            logging.debug("[GPS] RMC gathered")
-                        else:
-                            logging.warning("[GPS] RMC is not valid")
+                            if msg.is_valid:
+                                car.Gps.latitude = struct.pack('d', msg.latitude)
+                                car.Gps.latitudeDirection = struct.pack('B', ord(msg.lat_dir))
+                                car.Gps.longitude = struct.pack('d', msg.longitude)
+                                car.Gps.longitudeDirection = struct.pack('B', ord(msg.lon_dir))
+                                car.Gps.speedKilometers = struct.pack('d', msg.spd_over_grnd)
+                                logging.debug("[GPS] RMC gathered")
+                            else:
+                                logging.warning("[GPS] RMC is not valid")
 
                     await loop.run_in_executor(None, time.sleep, 0)
                 except pynmea2.ParseError as e:

@@ -48,7 +48,6 @@ class Car:
         self.General.cruiseEngaged = self._byte_to_bit_array(frames.lights[1:2])[6:7]
         self.General.horn = self._byte_to_bit_array(frames.lights[0:1])[7:8]
         self.General.handBrake = self._byte_to_bit_array(frames.lights[1:2])[0:1]
-        # car.temperatures # not exisiting
         self.General.rpm = frames.speed[0:2][::-1]
         self.General.solarRadiance = frames.sunSensor[0:2]
         # BATTERY

@@ -7,8 +7,8 @@ from aio_pika.abc import AbstractIncomingMessage
 import broker
 from utils.web_socket import get_websocket_connection
 
-# URI_STRATEGY = "wss://test-lst-api.azurewebsites.net/api/WebSocket"
-URI_STRATEGY = "wss://lst-api-v1.azurewebsites.net/api/WebSocket"
+URI_STRATEGY = "wss://test-lst-api.azurewebsites.net/api/WebSocket"
+# URI_STRATEGY = "wss://lst-api-v1.azurewebsites.net/api/WebSocket"
 
 e = datetime.now()
 LOG_PATH = f"./logs/{e.year}-{e.month}-{e.day} {e.hour}:{e.minute}:{e.second} canhub_consumer_logs.log"

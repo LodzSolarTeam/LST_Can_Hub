@@ -43,7 +43,7 @@ def main():
     loop.create_task(motor_temperature_receiver(car))
     loop.create_task(bms_receiver(car)())
     loop.create_task(gps_receiver(car))
-    loop.create_task(can_receiver(car, mock=False))
+    loop.create_task(can_receiver(car, mock=True))
     loop.create_task(send_scheduler(car))
 
     loop.set_debug(False)
@@ -52,5 +52,6 @@ def main():
 
 
 if __name__ == "__main__":
+    os.system("mkdir ./logs")
     os.system("python3 consume_to_cloud.py &")
     main()
