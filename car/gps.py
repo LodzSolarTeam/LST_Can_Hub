@@ -3,12 +3,6 @@ from car.utils import bytejoin
 
 class Gps:
     def __init__(self):
-        self.dateDay = bytearray(1)
-        self.dateMonth = bytearray(1)
-        self.dateYear = bytearray(2)
-        self.timeHour = bytearray(1)
-        self.timeMin = bytearray(1)
-        self.timeSec = bytearray(1)
         self.latitude = bytearray(8)
         self.latitudeDirection = bytearray(1)
         self.longitude = bytearray(8)

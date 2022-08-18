@@ -42,7 +42,7 @@ async def main():
     manager.start()
     car = manager.Car()
 
-    MOCK = True
+    MOCK = False
     processes = []
 
     processes.append(Process(target=motor_temperature_receiver, args=[car], name="MT"))

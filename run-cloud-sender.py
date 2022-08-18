@@ -7,8 +7,8 @@ from aio_pika.abc import AbstractIncomingMessage
 import broker
 from utils.web_socket import get_websocket_connection
 
-URI_STRATEGY = "ws://10.11.11.50:55201/api/WebSocket"
-# URI_STRATEGY = "wss://test-lst-api.azurewebsites.net/api/WebSocket"
+# URI_STRATEGY = "ws://10.11.11.50:55201/api/WebSocket"
+URI_STRATEGY = "wss://test-lst-api.azurewebsites.net/api/WebSocket"
 # URI_STRATEGY = "wss://lst-api-v1.azurewebsites.net/api/WebSocket"
 
 e = datetime.now()
@@ -72,6 +72,5 @@ if __name__ == "__main__":
         format="%(asctime)s [%(levelname)s] %(message)s",
         handlers=[
             logging.FileHandler(LOG_PATH),
-            logging.StreamHandler()
         ])
     asyncio.run(main())
