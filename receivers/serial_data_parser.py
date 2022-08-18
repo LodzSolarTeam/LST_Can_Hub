@@ -1,5 +1,6 @@
 import glob
 import logging
+from multiprocessing import process
 import struct
 import asyncio
 import time
@@ -11,7 +12,7 @@ from car import Car
 BMS_INTERFACE = lambda: '' if not glob.glob('/dev/ttyUSB*') else glob.glob('/dev/ttyUSB*')[0]
 
 def bms_receiver(car: Car):
-    return SerialDataParser(car).start_listening
+    return SerialDataParser(car).start_listening()
 
 class SerialDataParser:
 
@@ -45,8 +46,9 @@ class SerialDataParser:
     MAX_LINE_LENGTH = 100
     ser = None
     def __init__(self, car: Car):
-        self.cells_voltage = car.Battery.Cells.voltages
-        self.cells_temperature = car.Battery.Cells.temperatures
+        self.car = car
+        self.cells_voltage = bytearray(64)
+        self.cells_temperature = bytearray(16)
 
         self._init_serial()
 
@@ -60,12 +62,12 @@ class SerialDataParser:
                             parity=serial.PARITY_NONE,
                             stopbits=serial.STOPBITS_ONE,
                             timeout=0.1)
-            logging.info("[BMS] Serial communication started succesfully")
+            logging.info("Serial communication started succesfully")
         except Exception as e:
-            logging.warning("[BMS] Failed to start serial communication")
+            logging.warning("Failed to start serial communication")
             self.ser = None
 
-    async def _readline_from_serial(self):
+    def _readline_from_serial(self):
         eol = b'\r'
         leneol = len(eol)
         line = bytearray()
@@ -94,18 +96,18 @@ class SerialDataParser:
         if length == 8:
             return struct.pack('<I', value)
 
-    async def start_listening(self):
-        loop = asyncio.get_event_loop()
-        logging.warning("[BMS] Initialization")
+    def start_listening(self):
+        logging.warning("Initialization")
         while True:
             try:
                 if not self.ser:
-                    await loop.run_in_executor(None, time.sleep, 5)
+                    time.sleep(5)
+                    logging.warning("Reinitalization")
                     self._init_serial()
                     continue
-                data = await self._readline_from_serial()
+                data = self._readline_from_serial()
                 if len(data) > self.CELL_TYPE_BYTE and data[0: self.CELL_TYPE_BYTE] in self.VOLTAGE_ROW_BEGINNING:
-                    logging.debug("[BMS] Messsage gathered")
+                    logging.debug("Messsage gathered")
                     frame_id = data[0: self.CELL_TYPE_BYTE]
                     if bytes([data[self.CELL_TYPE_BYTE]]) == self.VOLTAGE_FLAG:
                         if frame_id == b'r00017': # for this particular frame byte order needs to be changed
@@ -129,11 +131,11 @@ class SerialDataParser:
                             ] = self._get_value_from_message(
                                 data, self.PAYLOAD_START_BYTE + i*self.TEMPERATURE_VALUE_LEN, self.TEMPERATURE_VALUE_LEN
                             )
-
-                await loop.run_in_executor(None, time.sleep, 0)
+                    self.car.fill_bms_data(self.cells_temperature, self.cells_voltage)
+                    time.sleep(1/8)
             except CancelledError:
                 self.ser.close()
             except Exception as e:
-                logging.warning(f"[BMS] A problem occured during parsing serial data: {e}")
-                await loop.run_in_executor(None, time.sleep, 5)
+                logging.warning(f"A problem occured during parsing serial data: {e}")
+                time.sleep(5)
                 self._init_serial()

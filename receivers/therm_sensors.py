@@ -13,25 +13,18 @@ from car import Car
 
 
 
-async def motor_temperature_receiver(car: Car):
-    def map(id, value):
-        if id == "1":
-            car.General.lMotorTemperature = struct.pack("f", value)
-        elif id == "2":
-            car.General.rMotorTemperature = struct.pack("f", value)
-        elif id == "3":
-            car.General.lControllerTemperature = struct.pack("f", value)
-        elif id == "4":
-            car.General.rControllerTemperature = struct.pack("f", value)
-    loop = asyncio.get_event_loop()
+def motor_temperature_receiver(car: Car):
     while True:
         try:
             sensors = W1ThermSensor.get_available_sensors()
-            logging.debug(f"[Motor Temperature Receiver] {sensors}")
+            logging.info(f"{sensors}")
             for sensor in sensors:
-                logging.error(repr(sensor))
-                map(id, sensor.get_temperature())
-            await loop.run_in_executor(None, time.sleep, 1)
+                car.fill_motor_temperatures(sensor.id, sensor.get_temperature())
+            time.sleep(0.5)
         except Exception as e:
             logging.warning(str(e))
+
+
+    
+        
 

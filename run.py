@@ -1,11 +1,15 @@
 #!/usr/bin/env python
 
 import asyncio
-from datetime import datetime, tzinfo
+from datetime import datetime
 import os
 import time
 import logging
 import broker
+
+from multiprocessing import Process, Manager
+from multiprocessing.managers import BaseManager
+
 
 from car import Car
 from receivers.e2_can import can_receiver
@@ -20,35 +24,46 @@ LOG_PATH = f"./logs/{e.year}-{e.month}-{e.day} {e.hour}:{e.minute}:{e.second} ca
 async def main():
     logging.basicConfig(
         level=logging.INFO,
-        format="%(asctime)s [%(levelname)s] %(message)s",
+        format="%(asctime)s [%(levelname)s] [%(processName)s] %(message)s",
         handlers=[
             logging.FileHandler(LOG_PATH),
-            logging.StreamHandler()
         ])
     logging.info("==================================== Waiting for broker")
     while True:
         try:
-            (await broker.get_connection_async()).close()
+            await (await broker.get_connection_async()).close()
             break
         except Exception as e:
             logging.info("Connection with broker cant be established. Waiting 1 seconds to retry")
             time.sleep(1)
+        
+    BaseManager.register('Car', Car)
+    manager = BaseManager()
+    manager.start()
+    car = manager.Car()
 
+    MOCK = True
+    processes = []
 
-    car = Car()
-    loop = asyncio.get_event_loop()
+    processes.append(Process(target=motor_temperature_receiver, args=[car], name="MT"))
+    processes.append(Process(target=bms_receiver, args=[car], name="BMS"))
+    processes.append(Process(target=gps_receiver, args=[car], name="GPS"))
+    processes.append(Process(target=can_receiver, args=[car, MOCK], name="CAN"))
+    processes.append(Process(target=send_scheduler, args=[car], name="SendScheduler"))
 
-    loop.create_task(motor_temperature_receiver(car))
-    loop.create_task(bms_receiver(car)())
-    loop.create_task(gps_receiver(car))
-    loop.create_task(can_receiver(car, mock=True))
-    loop.create_task(send_scheduler(car))
+    os.system("python3 ./run-cloud-sender.py")
 
-    loop.set_debug(False)
+    for p in processes:
+        p.start()
 
-    os.system("python3 run-cloud-sender.py &")
-    
-    loop.run_forever()
+    try:
+        for p in processes:
+            p.join()
+        manager.join()
+    except KeyboardInterrupt:
+        for p in processes:
+            p.kill()
+        manager.kill()
 
 
 if __name__ == "__main__":

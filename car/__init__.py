@@ -1,19 +1,30 @@
+import datetime
+import logging
+import struct
 from car.battery import Battery
 from car.general import General
 from car.gps import Gps
 from car.lights import Lights
 from car.solar import Solar
 from car.tires import Tires
-
+import pynmea2
 
 class Car:
-    canStatus = False
     General = General()
     Battery = Battery()
     Lights = Lights()
     Solar = Solar()
     Tires = Tires()
     Gps = Gps()
+
+    def __init__(self):
+        mock_datetime = datetime.datetime(2005, 4, 2, 21, 37)
+        self.Gps.dateYear = struct.pack("H", mock_datetime.year)
+        self.Gps.dateMonth = struct.pack("B", mock_datetime.month)
+        self.Gps.dateDay = struct.pack("B", mock_datetime.day)
+        self.Gps.timeHour = struct.pack("B", mock_datetime.hour)
+        self.Gps.timeMin = struct.pack("B", mock_datetime.minute)
+        self.Gps.timeSec = struct.pack("B", mock_datetime.second)
 
     def to_bytes(self):
         return self.General.to_bytes() \
@@ -29,7 +40,52 @@ class Car:
         bits = list(map(int, bit_string))
         return bytearray(bits[::-1])
 
-    def fill_car_model(self, frames):
+    def fill_motor_temperatures(self, sensor_id, value):
+        if sensor_id == "01193a797781":
+            self.General.lControllerTemperature = struct.pack("f", value)
+        elif sensor_id == "01193a51b1d5":
+            self.General.rControllerTemperature = struct.pack("f", value)
+        elif sensor_id == "3":
+            self.General.lMotorTemperature = struct.pack("f", value)
+        elif sensor_id == "4":
+            self.General.rMotorTemperature = struct.pack("f", value)
+
+    def fill_timestamp(self, timestamp):
+        self.General.timestamp = struct.pack("q", timestamp)
+
+    def fill_bms_data(self, cells_temperature, cells_voltage):
+        self.Battery.Cells.temperatures = cells_temperature
+        self.Battery.Cells.voltages = cells_voltage
+
+    def fill_gps_data(self, msg: pynmea2.TalkerSentence):
+        logging.info(repr(msg))
+        if msg.sentence_type == 'GGA':
+            data: pynmea2.GGA = msg
+            if msg.is_valid:
+                msg
+                self.Gps.latitude = struct.pack('d', data.latitude)
+                self.Gps.latitudeDirection = struct.pack('B', ord(data.lat_dir))
+                self.Gps.longitude = struct.pack('d', msg.longitude)
+                self.Gps.longitudeDirection = struct.pack('B', ord(data.lon_dir))
+                self.Gps.altitude = struct.pack('d', data.altitude)
+                self.Gps.satellitesNumber = struct.pack('B', int(data.num_sats))
+                self.Gps.quality = struct.pack('b', data.gps_qual)
+                logging.debug("GGA gathered")
+            else:
+                logging.warning("GGA is not valid")
+        if msg.sentence_type == 'RMC':
+            data: pynmea2.RMC = msg
+            if msg.is_valid:
+                self.Gps.latitude = struct.pack('d', data.latitude)
+                self.Gps.latitudeDirection = struct.pack('B', ord(data.lat_dir))
+                self.Gps.longitude = struct.pack('d', data.longitude)
+                self.Gps.longitudeDirection = struct.pack('B', ord(data.lon_dir))
+                self.Gps.speedKilometers = struct.pack('d', data.spd_over_grnd)
+                logging.debug("RMC gathered")
+            else:
+                logging.warning("RMC is not valid")
+
+    def fill_can_data(self, frames):
         # GENERAL
         self.General.throttlePosition = frames.engines[0:1]
         self.General.motorController = frames.engines[1:2]
