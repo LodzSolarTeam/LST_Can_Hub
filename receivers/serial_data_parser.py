@@ -12,6 +12,7 @@ from car import Car
 BMS_INTERFACE = lambda: '' if not glob.glob('/dev/ttyUSB*') else glob.glob('/dev/ttyUSB*')[0]
 
 def bms_receiver(car: Car):
+    logging.info("Initialization")
     return SerialDataParser(car).start_listening()
 
 class SerialDataParser:

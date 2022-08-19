@@ -14,6 +14,7 @@ from car import Car
 
 
 def motor_temperature_receiver(car: Car):
+    logging.info("Initialization")
     while True:
         try:
             sensors = W1ThermSensor.get_available_sensors()

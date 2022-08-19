@@ -7,12 +7,11 @@ from aio_pika.abc import AbstractIncomingMessage
 import broker
 from utils.web_socket import get_websocket_connection
 
-# URI_STRATEGY = "ws://10.11.11.50:55201/api/WebSocket"
-URI_STRATEGY = "wss://test-lst-api.azurewebsites.net/api/WebSocket"
+URI_STRATEGY = "ws://10.11.11.50:55201/api/WebSocket"
+# URI_STRATEGY = "wss://test-lst-api.azurewebsites.net/api/WebSocket"
 # URI_STRATEGY = "wss://lst-api-v1.azurewebsites.net/api/WebSocket"
 
 e = datetime.now()
-LOG_PATH = f"./logs/{e.year}-{e.month}-{e.day} {e.hour}:{e.minute}:{e.second} canhub_consumer_logs.log"
 
 async def consume_car_frame(message: AbstractIncomingMessage, frames_queue) -> None:
     await frames_queue.put(message)
@@ -53,7 +52,6 @@ async def main():
 
     async def consume_car_frame_wrapper(message: AbstractIncomingMessage):
         await consume_car_frame(message, frames_queue)
-
     await queue.consume(
         consume_car_frame_wrapper,
         timeout=3,
@@ -66,11 +64,13 @@ async def main():
 
 
 
-if __name__ == "__main__":
+def cloud_sender():
     logging.basicConfig(
-        level=logging.INFO,
-        format="%(asctime)s [%(levelname)s] %(message)s",
+        level=logging.DEBUG,
+        format="%(asctime)s [%(levelname)s] [%(processName)s] %(message)s",
         handlers=[
-            logging.FileHandler(LOG_PATH),
-        ])
+            logging.StreamHandler()
+        ]) 
+    print("SSIJ MI CHUJA")
+    logging.info("suuck my kurwa dick")
     asyncio.run(main())

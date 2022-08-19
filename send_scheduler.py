@@ -7,15 +7,10 @@ import broker
 
 from car import Car
 
-INTERVAL_SEC = 1
+INTERVAL_SEC = 5
 
 
 def send_scheduler(car: Car):
-    def _parse_time(timestamp):
-        date = datetime.utcfromtimestamp(timestamp)
-        int_timestamp = round((date - datetime(1970, 1, 1)).total_seconds())
-        return struct.pack("Q", int_timestamp)
-
     while True:
         try:
             with broker.get_channel() as channel:
@@ -31,6 +26,7 @@ def send_scheduler(car: Car):
                                 delivery_mode=pika.DeliveryMode.Persistent
                             )
                         )
+                        car.init()
                         logging.info("[Send Scheduler] Messsage sent to broker")
                     except Exception as e:
                         logging.warning(f"Failed creating final message: " + str(e))

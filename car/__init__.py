@@ -10,6 +10,7 @@ from car.tires import Tires
 import pynmea2
 
 class Car:
+
     General = General()
     Battery = Battery()
     Lights = Lights()
@@ -18,6 +19,15 @@ class Car:
     Gps = Gps()
 
     def __init__(self):
+        self.init()
+
+    def init(self):
+        self.General = General()
+        self.Battery = Battery()
+        self.Lights = Lights()
+        self.Solar = Solar()
+        self.Tires = Tires()
+        self.Gps = Gps()
         mock_datetime = datetime.datetime(2005, 4, 2, 21, 37)
         self.Gps.dateYear = struct.pack("H", mock_datetime.year)
         self.Gps.dateMonth = struct.pack("B", mock_datetime.month)
@@ -41,6 +51,7 @@ class Car:
         return bytearray(bits[::-1])
 
     def fill_motor_temperatures(self, sensor_id, value):
+        logging.debug(f"motor temperatures gathered {sensor_id}")
         if sensor_id == "01193a797781":
             self.General.lControllerTemperature = struct.pack("f", value)
         elif sensor_id == "01193a51b1d5":
@@ -54,11 +65,11 @@ class Car:
         self.General.timestamp = struct.pack("q", timestamp)
 
     def fill_bms_data(self, cells_temperature, cells_voltage):
+        logging.debug("BMS gathered")
         self.Battery.Cells.temperatures = cells_temperature
         self.Battery.Cells.voltages = cells_voltage
 
     def fill_gps_data(self, msg: pynmea2.TalkerSentence):
-        logging.info(repr(msg))
         if msg.sentence_type == 'GGA':
             data: pynmea2.GGA = msg
             if msg.is_valid:

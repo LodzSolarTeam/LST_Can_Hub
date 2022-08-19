@@ -10,6 +10,7 @@ from frames import Frames
 
 CAN_INTERFACE = 'can0'
 def can_receiver(car: Car, mock=False):
+    logging.info("Initialization")
     global CAN_INTERFACE
     frames = Frames()
     while True:

@@ -3,15 +3,15 @@
 import asyncio
 from datetime import datetime
 import os
-import time
 import logging
 import broker
 
-from multiprocessing import Process, Manager
+from multiprocessing import Process
 from multiprocessing.managers import BaseManager
 
 
 from car import Car
+from cloud_sender import cloud_sender
 from receivers.e2_can import can_receiver
 from receivers.gps import gps_receiver
 from receivers.serial_data_parser import bms_receiver
@@ -19,42 +19,40 @@ from receivers.therm_sensors import motor_temperature_receiver
 from send_scheduler import send_scheduler
 
 e = datetime.now()
-LOG_PATH = f"./logs/{e.year}-{e.month}-{e.day} {e.hour}:{e.minute}:{e.second} canhub_producer_logs.log"
+LOG_PATH = f"./logs/{e.year}-{e.month}-{e.day} {e.hour}:{e.minute}:{e.second} canhub.log"
 
 async def main():
     logging.basicConfig(
-        level=logging.INFO,
+        level=logging.DEBUG,
         format="%(asctime)s [%(levelname)s] [%(processName)s] %(message)s",
         handlers=[
             logging.FileHandler(LOG_PATH),
-        ])
-    logging.info("==================================== Waiting for broker")
-    while True:
-        try:
-            await (await broker.get_connection_async()).close()
-            break
-        except Exception as e:
-            logging.info("Connection with broker cant be established. Waiting 1 seconds to retry")
-            time.sleep(1)
-        
+            logging.StreamHandler()
+        ]) 
+    logging.info("Waiting for broker")
+    c = await broker.get_connection_async()
+    await c.close()
+    logging.info("Broker OK")
+
     BaseManager.register('Car', Car)
     manager = BaseManager()
     manager.start()
     car = manager.Car()
 
-    MOCK = False
+    MOCK = True
     processes = []
+    processes.append(Process(target=motor_temperature_receiver, args=[car], name="Temperature-Receiver"))
+    processes.append(Process(target=bms_receiver, args=[car], name="BMS-Receiver"))
+    processes.append(Process(target=gps_receiver, args=[car], name="GPS-Receiver"))
+    processes.append(Process(target=can_receiver, args=[car, MOCK], name="CAN-Receiver"))
 
-    processes.append(Process(target=motor_temperature_receiver, args=[car], name="MT"))
-    processes.append(Process(target=bms_receiver, args=[car], name="BMS"))
-    processes.append(Process(target=gps_receiver, args=[car], name="GPS"))
-    processes.append(Process(target=can_receiver, args=[car, MOCK], name="CAN"))
-    processes.append(Process(target=send_scheduler, args=[car], name="SendScheduler"))
-
-    os.system("python3 ./run-cloud-sender.py")
+    processes.append(Process(target=send_scheduler, args=[car], name="Send-Scheduler"))
+    processes.append(Process(target=cloud_sender, name="Cloud-Sender"))
+    
 
     for p in processes:
         p.start()
+        logging.info(f"Starting {p.name}")
 
     try:
         for p in processes:
@@ -62,7 +60,9 @@ async def main():
         manager.join()
     except KeyboardInterrupt:
         for p in processes:
+            logging.info(f"Terminate {p.name}")
             p.kill()
+        logging.info(f"Terminate {manager.name}")
         manager.kill()
 
 
