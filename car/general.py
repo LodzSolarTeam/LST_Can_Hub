@@ -22,6 +22,7 @@ class General:
         self.rMotorTemperature = bytearray(4)
         self.lControllerTemperature = bytearray(4)
         self.rControllerTemperature = bytearray(4)
+        self.canStatus = bytearray(4)
 
     def to_bytes(self):
         return bytejoin(self)

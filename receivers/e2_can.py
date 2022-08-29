@@ -12,7 +12,6 @@ CAN_INTERFACE = 'can0'
 def can_receiver(car: Car, mock=False):
     logging.info("Initialization")
     global CAN_INTERFACE
-    frames = Frames()
     while True:
         try:
             global bus, message
@@ -22,6 +21,7 @@ def can_receiver(car: Car, mock=False):
                 logging.info("CAN: Bus ", bus)
 
             while True:
+                frames = Frames()
                 if not mock:
                     message = bus.recv(0.1)
                 else:

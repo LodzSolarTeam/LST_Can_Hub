@@ -104,6 +104,7 @@ class Car:
         self.General.regenerationBrake = frames.engines[2:3]
         self.General.cruiseThrottle = frames.engines[3:4]
         self.General.cruiseDesiredSpeed = frames.engines[4:5]
+
         self.General.batteryError = self._byte_to_bit_array(frames.lights[1:2])[1:2]
         self.General.engineError = self._byte_to_bit_array(frames.lights[1:2])[2:3]
         driveMode = self._byte_to_bit_array(frames.lights[1:2])
@@ -113,6 +114,7 @@ class Car:
         self.General.handBrake = self._byte_to_bit_array(frames.lights[1:2])[0:1]
         self.General.rpm = frames.speed[0:2][::-1]
         self.General.solarRadiance = frames.sunSensor[0:2]
+        self.General.canStatus = struct.pack("I", frames.canStatus)
         # BATTERY
         self.Battery.remainingChargeTime = frames.batteryRemainingEnergyFrame[0:2][::-1]
         self.Battery.remainingChargeTime.append(frames.batteryRemainingEnergyFrame[2])
