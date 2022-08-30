@@ -6,5 +6,8 @@ class Tires:
         self.pressures = bytearray(4)
         self.tiresTemperatures = bytearray(4)
 
+    def reset(self):
+        pass
+
     def to_bytes(self):
         return bytejoin(self)

@@ -1,8 +1,6 @@
 import glob
 import logging
-from multiprocessing import process
 import struct
-import asyncio
 import time
 import serial
 from asyncio.futures import CancelledError

@@ -12,5 +12,8 @@ class Lights:
         self.interiorLights = bytearray(1)
         self.emergencyLights = bytearray(1)
 
+    def reset(self):
+        pass
+
     def to_bytes(self):
         return bytejoin(self)

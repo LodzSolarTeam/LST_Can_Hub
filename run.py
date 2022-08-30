@@ -23,7 +23,7 @@ LOG_PATH = f"./logs/{e.year}-{e.month}-{e.day} {e.hour}:{e.minute}:{e.second} ca
 
 async def main():
     logging.basicConfig(
-        level=logging.DEBUG,
+        level=logging.INFO,
         format="%(asctime)s [%(levelname)s] [%(processName)s] %(message)s",
         handlers=[
             logging.FileHandler(LOG_PATH),
@@ -39,7 +39,7 @@ async def main():
     manager.start()
     car = manager.Car()
 
-    MOCK = True
+    MOCK = False
     processes = []
     processes.append(Process(target=motor_temperature_receiver, args=[car], name="Temperature-Receiver"))
     processes.append(Process(target=bms_receiver, args=[car], name="BMS-Receiver"))

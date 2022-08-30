@@ -1,5 +1,3 @@
-from datetime import datetime
-import struct
 import time
 import pika
 import logging
@@ -30,7 +28,7 @@ def send_scheduler(car: Car):
                                 delivery_mode=pika.DeliveryMode.Persistent
                             )
                         )
-                        car.init()
+                        car.reset()
                         logging.info("[Send Scheduler] Messsage sent to broker")
                     except Exception as e:
                         logging.warning(f"Failed creating final message: " + str(e))

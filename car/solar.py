@@ -10,5 +10,8 @@ class Solar:
         self.mpptPcbTemperature = bytearray(8)
         self.mpptMofsetTemperature = bytearray(8)
 
+    def reset(self):
+        pass
+
     def to_bytes(self):
         return bytejoin(self)

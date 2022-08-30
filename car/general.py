@@ -23,6 +23,11 @@ class General:
         self.lControllerTemperature = bytearray(4)
         self.rControllerTemperature = bytearray(4)
         self.canStatus = bytearray(4)
+    
+    def reset(self):
+        self.canStatus = bytearray(4)
+        self.batteryError = bytearray(1)
+        self.engineError = bytearray(1)
 
     def to_bytes(self):
         return bytejoin(self)

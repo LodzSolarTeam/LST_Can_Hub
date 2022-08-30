@@ -9,6 +9,8 @@ from car.solar import Solar
 from car.tires import Tires
 import pynmea2
 
+prev_canStatus = 0b0
+
 class Car:
 
     General = General()
@@ -21,6 +23,14 @@ class Car:
     def __init__(self):
         self.init()
 
+    def reset(self):
+        self.General.reset()
+        self.Battery.reset()
+        self.Lights.reset()
+        self.Solar.reset()
+        self.Tires.reset()
+        self.Gps.reset()
+
     def init(self):
         self.General = General()
         self.Battery = Battery()
@@ -28,13 +38,6 @@ class Car:
         self.Solar = Solar()
         self.Tires = Tires()
         self.Gps = Gps()
-        mock_datetime = datetime.datetime(2005, 4, 2, 21, 37)
-        self.Gps.dateYear = struct.pack("H", mock_datetime.year)
-        self.Gps.dateMonth = struct.pack("B", mock_datetime.month)
-        self.Gps.dateDay = struct.pack("B", mock_datetime.day)
-        self.Gps.timeHour = struct.pack("B", mock_datetime.hour)
-        self.Gps.timeMin = struct.pack("B", mock_datetime.minute)
-        self.Gps.timeSec = struct.pack("B", mock_datetime.second)
 
     def to_bytes(self):
         return self.General.to_bytes() \
@@ -51,7 +54,7 @@ class Car:
         return bytearray(bits[::-1])
 
     def fill_motor_temperatures(self, sensor_id, value):
-        logging.debug(f"motor temperatures gathered {sensor_id}")
+        logging.info(f"motor temperatures gathered {sensor_id} => {value}")
         if sensor_id == "01193a797781":
             self.General.lControllerTemperature = struct.pack("f", value)
         elif sensor_id == "01193a51b1d5":
@@ -114,7 +117,7 @@ class Car:
         self.General.handBrake = self._byte_to_bit_array(frames.lights[1:2])[0:1]
         self.General.rpm = frames.speed[0:2][::-1]
         self.General.solarRadiance = frames.sunSensor[0:2]
-        self.General.canStatus = struct.pack("I", frames.canStatus)
+        self.General.canStatus = struct.pack("I", struct.unpack("I", self.General.canStatus)[0] | frames.canStatus)
         # BATTERY
         self.Battery.remainingChargeTime = frames.batteryRemainingEnergyFrame[0:2][::-1]
         self.Battery.remainingChargeTime.append(frames.batteryRemainingEnergyFrame[2])

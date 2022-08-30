@@ -9,6 +9,7 @@ from utils.web_socket import get_websocket_connection
 
 # URI_STRATEGY = "ws://192.168.8.114:55201/api/WebSocket"
 # URI_STRATEGY = "ws://10.11.11.50:55201/api/WebSocket"
+# URI_STRATEGY = "ws://10.129.241.45:55201/api/WebSocket"
 URI_STRATEGY = "wss://test-lst-api.azurewebsites.net/api/WebSocket"
 # URI_STRATEGY = "wss://lst-api-v1.azurewebsites.net/api/WebSocket"
 
@@ -72,6 +73,4 @@ def cloud_sender():
         handlers=[
             logging.StreamHandler()
         ]) 
-    print("SSIJ MI CHUJA")
-    logging.info("suuck my kurwa dick")
     asyncio.run(main())

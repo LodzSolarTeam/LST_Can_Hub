@@ -32,6 +32,11 @@ class Battery:
         self.packVoltage = bytearray(2)
         self.packCurrent = bytearray(2)
 
+    def reset(self):
+        self.Warnings.reset()
+        self.Errors.reset()
+        self.Cells.reset()
+
     def to_bytes(self):
         return bytejoin(self) \
                + self.Warnings.to_bytes() \
