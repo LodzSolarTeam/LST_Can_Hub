@@ -62,7 +62,7 @@ class Car:
             self.General.rMotorTemperature = struct.pack("f", value)
 
     def fill_timestamp(self, timestamp):
-        self.General.timestamp = struct.pack("q", timestamp)
+        self.General.timestamp = struct.pack("Q", timestamp)
 
     def fill_bms_data(self, cells_temperature, cells_voltage):
         logging.debug("BMS gathered")
