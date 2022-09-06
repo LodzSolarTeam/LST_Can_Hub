@@ -4,6 +4,7 @@ import logging
 
 from aio_pika.abc import AbstractIncomingMessage
 
+import time
 import broker
 import struct 
 from utils.web_socket import get_websocket_connection
@@ -11,14 +12,15 @@ from utils.web_socket import get_websocket_connection
 # URI_STRATEGY = "ws://192.168.8.114:55201/api/WebSocket"
 # URI_STRATEGY = "ws://10.11.11.50:55201/api/WebSocket"
 # URI_STRATEGY = "ws://172.20.10.3:55201/api/WebSocket"
-URI_STRATEGY = "wss://test-lst-api.azurewebsites.net/api/WebSocket"
-# URI_STRATEGY = "wss://lst-api-v1.azurewebsites.net/api/WebSocket"
+URI_STRATEGY = "wss://test-lst-api.azurewebsites.net/api/WebSocket" 
+# URI_STRATEGY = "wss://lst-api-v1.azurewebsites.net/api/WebSocket" 
 
+time.sleep(5)
 e = datetime.datetime.now()
 
 async def consume_car_frame(message: AbstractIncomingMessage, frames_queue) -> None:
     await frames_queue.put(message)
-    logging.info(f"frame_queue.put()")
+    logging.info(f"frame_queue.put")
         
 
 async def websocket_handler(frames_queue: asyncio.Queue):
@@ -30,13 +32,16 @@ async def websocket_handler(frames_queue: asyncio.Queue):
             logging.info(f"Websocket connection established")
             while True:
                 if message is None:
+                    logging.info(f"before frames_queue.get")
                     message: AbstractIncomingMessage = await frames_queue.get()
+                    logging.info(f"after frames_queue.get")
                 #######################
                 target_datetime_ms = struct.unpack("Q", message.body[0:8])[0]
                 base_datetime = datetime.datetime(1970, 1, 1)
                 delta = datetime.timedelta(0, 0, 0, target_datetime_ms)
                 target_datetime = base_datetime + delta
                 #######################
+                logging.info(f"Sending")
                 await websocket.send(message.body)
                 await message.ack()
                 message = None
@@ -45,6 +50,9 @@ async def websocket_handler(frames_queue: asyncio.Queue):
             logging.info("END")
             break
         except Exception as e:
+            if message is not None:
+                logging.info(f"NACK {target_datetime}")
+                message.nack()
             logging.debug(f"Exception occured: {str(e)}")
             await asyncio.sleep(1)
 
