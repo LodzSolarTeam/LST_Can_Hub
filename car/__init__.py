@@ -1,4 +1,3 @@
-import datetime
 import logging
 import struct
 from car.battery import Battery
