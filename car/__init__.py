@@ -21,7 +21,12 @@ class Car:
     Gps = Gps()
 
     def __init__(self):
-        self.init()
+        self.General = General()
+        self.Battery = Battery()
+        self.Lights = Lights()
+        self.Solar = Solar()
+        self.Tires = Tires()
+        self.Gps = Gps()
 
     def reset(self):
         self.General.reset()
@@ -30,14 +35,6 @@ class Car:
         self.Solar.reset()
         self.Tires.reset()
         self.Gps.reset()
-
-    def init(self):
-        self.General = General()
-        self.Battery = Battery()
-        self.Lights = Lights()
-        self.Solar = Solar()
-        self.Tires = Tires()
-        self.Gps = Gps()
 
     def to_bytes(self):
         return self.General.to_bytes() \
@@ -56,13 +53,13 @@ class Car:
     def fill_motor_temperatures(self, sensor_id, value):
         logging.info(f"motor temperatures gathered {sensor_id} => {value}")
         if sensor_id == "01193a797781":
-            self.General.lControllerTemperature = struct.pack("f", value)
-        elif sensor_id == "01193a51b1d5":
-            self.General.rControllerTemperature = struct.pack("f", value)
-        elif sensor_id == "3":
             self.General.lMotorTemperature = struct.pack("f", value)
-        elif sensor_id == "4":
+        elif sensor_id == "01193a51b1d5":
             self.General.rMotorTemperature = struct.pack("f", value)
+        elif sensor_id == "3":
+            self.General.lControllerTemperature = struct.pack("f", value)
+        elif sensor_id == "4":
+            self.General.rControllerTemperature = struct.pack("f", value)
 
     def fill_timestamp(self, timestamp):
         self.General.timestamp = struct.pack("Q", timestamp)
@@ -115,7 +112,7 @@ class Car:
         self.General.cruiseEngaged = self._byte_to_bit_array(frames.lights[1:2])[6:7]
         self.General.horn = self._byte_to_bit_array(frames.lights[0:1])[7:8]
         self.General.handBrake = self._byte_to_bit_array(frames.lights[1:2])[0:1]
-        self.General.rpm = frames.speed[0:2][::-1]
+        self.General.rpm = frames.speed[0:2]
         self.General.solarRadiance = frames.sunSensor[0:2]
         self.General.canStatus = struct.pack("I", struct.unpack("I", self.General.canStatus)[0] | frames.canStatus)
         # BATTERY

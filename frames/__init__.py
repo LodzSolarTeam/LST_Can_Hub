@@ -1,3 +1,5 @@
+import logging
+
 class Frames:
     # CORE CAN:
     engines = bytearray(5)
@@ -33,6 +35,7 @@ class Frames:
     canStatus = 0b0000_0000_0000_0000_0000_0000_0000_0000 # 4 bytes
 
     def save_frame(self, id, data):
+        self.canStatus = 0b0
         if (id == 321):
             self.canStatus |= 0b1
             self.engines = data
@@ -45,6 +48,8 @@ class Frames:
         elif (id == 1412):
             self.canStatus |= 0b1 << 3
             self.speed = data
+        elif (id == 1413):
+            logging.info(f"temp {data}") # TODO TEMPERATURES 
         elif (id == 1029):
             self.canStatus |= 0b1 << 4
             self.sunSensor = data

@@ -15,7 +15,6 @@ from cloud_sender import cloud_sender
 from receivers.e2_can import can_receiver
 from receivers.gps import gps_receiver
 from receivers.serial_data_parser import bms_receiver
-from receivers.therm_sensors import motor_temperature_receiver
 from send_scheduler import send_scheduler
 
 e = datetime.now()
@@ -41,7 +40,6 @@ async def main():
 
     MOCK = False
     processes = []
-    processes.append(Process(target=motor_temperature_receiver, args=[car], name="Temperature-Receiver"))
     processes.append(Process(target=bms_receiver, args=[car], name="BMS-Receiver"))
     processes.append(Process(target=gps_receiver, args=[car], name="GPS-Receiver"))
     processes.append(Process(target=can_receiver, args=[car, MOCK], name="CAN-Receiver"))

@@ -12,4 +12,5 @@ services:
             - '15672:15672'
         volumes:
         - "./broker_data:/var/lib/rabbitmq/"
+        restart: on-failure:5 
 
