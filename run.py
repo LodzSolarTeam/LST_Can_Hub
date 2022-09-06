@@ -40,11 +40,11 @@ async def main():
 
     MOCK = False
     processes = []
-    processes.append(Process(target=bms_receiver, args=[car], name="BMS-Receiver"))
-    processes.append(Process(target=gps_receiver, args=[car], name="GPS-Receiver"))
-    processes.append(Process(target=can_receiver, args=[car, MOCK], name="CAN-Receiver"))
+    processes.append(Process(target=bms_receiver, args=(car), name="BMS-Receiver"))
+    processes.append(Process(target=gps_receiver, args=(car), name="GPS-Receiver"))
+    processes.append(Process(target=can_receiver, args=(car, MOCK), name="CAN-Receiver"))
 
-    processes.append(Process(target=send_scheduler, args=[car], name="Send-Scheduler"))
+    processes.append(Process(target=send_scheduler, args=(car), name="Send-Scheduler"))
     processes.append(Process(target=cloud_sender, name="Cloud-Sender"))
     
 

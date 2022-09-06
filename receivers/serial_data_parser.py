@@ -3,7 +3,6 @@ import logging
 import struct
 import time
 import serial
-from asyncio.futures import CancelledError
 
 from car import Car
 
