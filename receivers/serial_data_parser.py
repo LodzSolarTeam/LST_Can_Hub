@@ -1,3 +1,4 @@
+from asyncio import CancelledError
 import glob
 import logging
 import struct
@@ -9,7 +10,6 @@ from car import Car
 BMS_INTERFACE = lambda: '' if not glob.glob('/dev/ttyUSB*') else glob.glob('/dev/ttyUSB*')[0]
 
 def bms_receiver(car: Car):
-    logging.info("Initialization")
     return SerialDataParser(car).start_listening()
 
 class SerialDataParser:
@@ -54,7 +54,9 @@ class SerialDataParser:
         if self.ser:
             self.ser.close()
         try:
-            self.ser = serial.Serial(port=BMS_INTERFACE(),
+            interface = '/dev/ttyUSB1'
+            logging.info(interface)
+            self.ser = serial.Serial(port=interface,
                             baudrate=38400,
                             bytesize=serial.EIGHTBITS,
                             parity=serial.PARITY_NONE,
@@ -95,12 +97,12 @@ class SerialDataParser:
             return struct.pack('<I', value)
 
     def start_listening(self):
-        logging.warning("Initialization")
+        logging.info("start listening")
         while True:
             try:
                 if not self.ser:
+                    logging.info("Serial failed")
                     time.sleep(5)
-                    logging.warning("Reinitalization")
                     self._init_serial()
                     continue
                 data = self._readline_from_serial()
@@ -130,7 +132,7 @@ class SerialDataParser:
                                 data, self.PAYLOAD_START_BYTE + i*self.TEMPERATURE_VALUE_LEN, self.TEMPERATURE_VALUE_LEN
                             )
                     self.car.fill_bms_data(self.cells_temperature, self.cells_voltage)
-                    time.sleep(1/8)
+                    time.sleep(1/16)
             except CancelledError:
                 self.ser.close()
             except Exception as e:

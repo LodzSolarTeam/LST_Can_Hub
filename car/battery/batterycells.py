@@ -7,6 +7,8 @@ class BatteryCells:
         self.temperatures = bytearray(16)
 
     def reset(self):
+        self.voltages = bytearray(64)
+        self.temperatures = bytearray(16)
         pass
 
     def to_bytes(self):

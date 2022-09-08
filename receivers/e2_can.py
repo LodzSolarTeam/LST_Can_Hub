@@ -16,8 +16,8 @@ def can_receiver(car: Car, mock=False):
             global bus, message
 
             if not mock:
-                bus = can.interface.Bus(CAN_INTERFACE, bustype='socketcan_native')
-                logging.info("CAN: Bus ", bus)
+                bus = can.interface.Bus(CAN_INTERFACE, bustype='socketcan')
+                logging.info(f"CAN: Bu = {bus}")
 
             frames = Frames()
             while True:

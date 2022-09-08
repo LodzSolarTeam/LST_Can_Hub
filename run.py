@@ -8,6 +8,7 @@ import broker
 
 from multiprocessing import Process
 from multiprocessing.managers import BaseManager
+from can_time_sync import send_timesync
 
 
 from car import Car
@@ -46,6 +47,7 @@ async def main():
 
     processes.append(Process(target=send_scheduler, args=[car], name="Send-Scheduler"))
     processes.append(Process(target=cloud_sender, name="Cloud-Sender"))
+    processes.append(Process(target=send_timesync, name="Can-Time-Sync"))
     
 
     for p in processes:
