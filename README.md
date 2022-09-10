@@ -53,18 +53,19 @@ $HOME/lst_canhub_py/new
 ## Autorun script
 
 
-Project should start automatically with Raspberry.
+Project should start automatically after rabbitmq
 
 For that, there should be a script:
 
 ```bash
-/etc/init.d/can_receiver_startup
+/lib/systemd/system/lst_can_hub.service
 ```
 
 Available commands
 ```bash
-service can_receiver_startup - list process
-service can_receiver_startup start
-service can_receiver_startup stop
+sudo systemctl enablie lst_can_hub.service
+sudo systemctl disable lst_can_hub.service
+sudo systemctl restart lst_can_hub.service
+sudo systemctl status lst_can_hub.service
 ```
 

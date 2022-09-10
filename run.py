@@ -19,7 +19,7 @@ from receivers.serial_data_parser import bms_receiver
 from send_scheduler import send_scheduler
 
 e = datetime.now()
-LOG_PATH = f"./logs/{e.year}-{e.month}-{e.day} {e.hour}:{e.minute}:{e.second} canhub.log"
+LOG_PATH = f"/home/pi/LST_Can_Hub/logs/{e.year}-{e.month}-{e.day} {e.hour}:{e.minute}:{e.second} canhub.log"
 
 async def main():
     logging.basicConfig(
@@ -29,6 +29,13 @@ async def main():
             logging.FileHandler(LOG_PATH),
             logging.StreamHandler()
         ]) 
+
+    logging.info("Configuring CAN START")
+    os.system('sudo ifconfig can0 down')
+    os.system('sudo ip link set can0 type can bitrate 250000')
+    os.system('sudo ifconfig can0 up')
+    logging.info("Configuring CAN END")
+
     logging.info("Waiting for broker")
     c = await broker.get_connection_async()
     await c.close()
@@ -47,7 +54,7 @@ async def main():
 
     processes.append(Process(target=send_scheduler, args=[car], name="Send-Scheduler"))
     processes.append(Process(target=cloud_sender, name="Cloud-Sender"))
-    processes.append(Process(target=send_timesync, name="Can-Time-Sync"))
+    # processes.append(Process(target=send_timesync, name="Can-Time-Sync"))
     
 
     for p in processes:
@@ -67,7 +74,7 @@ async def main():
 
 
 if __name__ == "__main__":
-    os.system("mkdir ./logs")
+    os.system("mkdir /home/pi/LST_Can_Hub/logs")
     asyncio.run(
         main()
     )

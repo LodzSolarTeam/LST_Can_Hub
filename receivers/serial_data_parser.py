@@ -7,8 +7,6 @@ import serial
 
 from car import Car
 
-BMS_INTERFACE = lambda: '' if not glob.glob('/dev/ttyUSB*') else glob.glob('/dev/ttyUSB*')[0]
-
 def bms_receiver(car: Car):
     return SerialDataParser(car).start_listening()
 
@@ -54,9 +52,8 @@ class SerialDataParser:
         if self.ser:
             self.ser.close()
         try:
-            interface = '/dev/ttyUSB1'
-            logging.info(interface)
-            self.ser = serial.Serial(port=interface,
+            # https://www.freva.com/assign-fixed-usb-port-names-to-your-raspberry-pi/
+            self.ser = serial.Serial(port='/dev/ttyUSB_BMS',
                             baudrate=38400,
                             bytesize=serial.EIGHTBITS,
                             parity=serial.PARITY_NONE,
@@ -106,6 +103,8 @@ class SerialDataParser:
                     self._init_serial()
                     continue
                 data = self._readline_from_serial()
+                if (len(data) == 0):
+                    continue
                 if len(data) > self.CELL_TYPE_BYTE and data[0: self.CELL_TYPE_BYTE] in self.VOLTAGE_ROW_BEGINNING:
                     logging.debug("Messsage gathered")
                     frame_id = data[0: self.CELL_TYPE_BYTE]

@@ -1,4 +1,3 @@
-import glob
 import io
 import logging
 import time
@@ -9,15 +8,13 @@ from car import Car
 
 GPS_BAUD_RATE = 38400
 
-GPS_INTERFACE = lambda: '' if not glob.glob('/dev/gps*') else glob.glob('/dev/gps*')[0]
-
 def gps_receiver(car: Car):
     logging.info("Initialization")
     # connection loop
     while True: 
         try:
             logging.info(f"Connecting")
-            ser = serial.Serial(GPS_INTERFACE(), baudrate=GPS_BAUD_RATE, timeout=0.5)
+            ser = serial.Serial("/dev/ttyUSB_GPS", baudrate=GPS_BAUD_RATE, timeout=0.5)
             sio = io.TextIOWrapper(io.BufferedRWPair(ser, ser))
             logging.info(f"Connected")
             while True:

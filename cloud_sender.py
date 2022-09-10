@@ -4,7 +4,6 @@ import logging
 
 from aio_pika.abc import AbstractIncomingMessage
 
-import time
 import broker
 import struct 
 from utils.web_socket import get_websocket_connection
@@ -14,9 +13,6 @@ from utils.web_socket import get_websocket_connection
 # URI_STRATEGY = "ws://172.20.10.3:55201/api/WebSocket"
 URI_STRATEGY = "wss://test-lst-api.azurewebsites.net/api/WebSocket" 
 # URI_STRATEGY = "wss://lst-api-v1.azurewebsites.net/api/WebSocket" 
-
-time.sleep(5)
-e = datetime.datetime.now()
 
 async def consume_car_frame(message: AbstractIncomingMessage, frames_queue) -> None:
     await frames_queue.put(message)
