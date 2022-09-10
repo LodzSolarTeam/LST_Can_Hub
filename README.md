@@ -1,5 +1,10 @@
 # LST_CanHub
 
+Logs on RPI available via command 
+```bash
+journalctl -fu lst_can_hub.service
+```
+
 ## Table of contents
 
 1. [Setup](#setup)
