@@ -26,7 +26,7 @@ async def main():
         level=logging.INFO,
         format="%(asctime)s [%(levelname)s] [%(processName)s] %(message)s",
         handlers=[
-            logging.FileHandler(LOG_PATH),
+            # logging.FileHandler(LOG_PATH),
             logging.StreamHandler()
         ]) 
 
