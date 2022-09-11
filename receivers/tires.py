@@ -77,6 +77,7 @@ class TiresReceiver:
         return None
 
     def _decode_tire(self, data: str):
+        # source: https://github.com/ra6070/BLE-TPMS
         unpacked = unpack("HIIIBB", bytes.fromhex(data))
 
         pressure = unpacked[2] / 1000 # kPa
