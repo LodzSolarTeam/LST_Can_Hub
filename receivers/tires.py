@@ -79,8 +79,8 @@ class TiresReceiver:
     def _decode_tire(self, data: str):
         unpacked = unpack("HIIIBB", bytes.fromhex(data))
 
-        pressure = unpacked[2]
-        temperature = unpacked[3] // 100
+        pressure = unpacked[2] / 1000 # kPa
+        temperature = unpacked[3] / 100 # C
         # battery = unpacked[4]
 
         return (pressure, temperature)
@@ -98,8 +98,8 @@ class TiresReceiver:
 
                 pressure, temperature = self._decode_tire(manufacturer_data)
 
-                self._pressures[wheel] = pressure // 1000
-                self._temperatures[wheel] = temperature
+                self._pressures[wheel] = int(pressure)
+                self._temperatures[wheel] = int(temperature)
 
                 print(wheel, pressure, temperature)
 
