@@ -16,6 +16,7 @@ from cloud_sender import cloud_sender
 from receivers.e2_can import can_receiver
 from receivers.gps import gps_receiver
 from receivers.serial_data_parser import bms_receiver
+from receivers.tires import tires_receiver
 from send_scheduler import send_scheduler
 
 e = datetime.now()
@@ -28,7 +29,7 @@ async def main():
         handlers=[
             # logging.FileHandler(LOG_PATH),
             logging.StreamHandler()
-        ]) 
+        ])
 
     logging.info("Configuring CAN START")
     os.system('sudo ifconfig can0 down')
@@ -51,11 +52,12 @@ async def main():
     processes.append(Process(target=bms_receiver, args=[car], name="BMS-Receiver"))
     processes.append(Process(target=gps_receiver, args=[car], name="GPS-Receiver"))
     processes.append(Process(target=can_receiver, args=[car, MOCK], name="CAN-Receiver"))
+    processes.append(Process(target=tires_receiver, args=[car], name="TIRES-Receiver"))
 
     processes.append(Process(target=send_scheduler, args=[car], name="Send-Scheduler"))
     processes.append(Process(target=cloud_sender, name="Cloud-Sender"))
     # processes.append(Process(target=send_timesync, name="Can-Time-Sync"))
-    
+
 
     for p in processes:
         p.start()
