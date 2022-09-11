@@ -20,11 +20,11 @@ DEVICE_DICT = {
 }
 
 
-def tires_receiver(car: Car):
-    TiresReceiver(car).run()
+def tpms_receiver(car: Car):
+    TPMSReceiver(car).run()
 
 
-class TiresReceiver:
+class TPMSReceiver:
     def __init__(self, car: Car) -> None:
         self._car = car
         self._scanner = Scanner()
@@ -76,7 +76,7 @@ class TiresReceiver:
 
         return None
 
-    def _decode_tire(self, data: str):
+    def _decode_data(self, data: str):
         # source: https://github.com/ra6070/BLE-TPMS
         unpacked = unpack("HIIIBB", bytes.fromhex(data))
 
@@ -97,7 +97,7 @@ class TiresReceiver:
                 if manufacturer_data == None:
                     continue
 
-                pressure, temperature = self._decode_tire(manufacturer_data)
+                pressure, temperature = self._decode_data(manufacturer_data)
 
                 self._pressures[wheel] = int(pressure)
                 self._temperatures[wheel] = int(temperature)
