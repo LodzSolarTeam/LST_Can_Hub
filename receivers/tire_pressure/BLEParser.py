@@ -1,3 +1,4 @@
+from struct import unpack
 from TPMSCanSender import TPMSCanSender, Wheel
 
 DEVICE_MAP = {
@@ -6,12 +7,6 @@ DEVICE_MAP = {
     '82:ea:ca:30:04:0e': Wheel.REAR_LEFT,
     '83:ea:ca:40:03:2e': Wheel.REAR_RIGHT,
 }
-
-# PRESSURE_STARTING_BIT = 8
-# TEMPERATURE_STARTING_BIT = 12
-# PURE_TEMPERATURE_TO_CELCIUS = 0.01
-# DATA_LENGTH = 36
-# INT_32_BIT_LENGTH = 4
 
 
 class BLEParser:
@@ -25,7 +20,6 @@ class BLEParser:
             if manufacturer_data:
                 pressure = self._decode_pressure(manufacturer_data)
                 self._sender.set_pressure(DEVICE_MAP[device_addr], pressure)
-                self._sender.send()
 
     def get_devices_addr(self):
         return list(DEVICE_MAP.keys())
@@ -38,4 +32,10 @@ class BLEParser:
         assert None
 
     def _decode_pressure(self, data):
-        return 0
+        unpacked = unpack("HIIIBB", bytes.fromhex(data))
+
+        pressure = unpacked[2]
+        temperature = unpacked[3] * 0.01
+        battery = unpacked[4]
+
+        return pressure

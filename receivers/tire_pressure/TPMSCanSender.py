@@ -20,16 +20,16 @@ class TPMSCanSender:
 
     def set_pressure(self, wheel: Wheel, pressure: int):
         self._pressure[wheel] = pressure
+        # print(self._pressure)
 
     def send(self):
         bus = can.Bus(interface='socketcan_ctypes',
                       channel='vcan0')
 
-        data = list(self._pressure.items())
+        data = list(self._pressure.values())
 
         message = can.Message(arbitration_id=123,
                               is_extended_id=False,
                               data=data)
 
         bus.send(message, timeout=0.2)
-

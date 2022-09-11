@@ -1,5 +1,5 @@
-from subprocess import call
 from bluepy.btle import Scanner
+
 
 class DeviceScanner:
     def __init__(self) -> None:
@@ -21,6 +21,5 @@ class DeviceScanner:
             devices = scanner.scan()
 
             for dev in devices:
-                if dev.addr in self.device_filter:
+                if dev.addr in self._device_filter:
                     self._callback(dev.addr, dev.getScanData())
-
