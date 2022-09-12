@@ -95,6 +95,10 @@ class Car:
             else:
                 logging.warning("RMC is not valid")
 
+    def fill_tire_data(self, pressures, temperatures):
+        self.Tires.pressures = struct.pack("BBBB", pressures[0], pressures[1], pressures[2], pressures[3])
+        self.Tires.tiresTemperatures = struct.pack("bbbb", temperatures[0], temperatures[1], temperatures[2], temperatures[3])
+
     def fill_can_data(self, frames):
         # GENERAL
         self.General.throttlePosition = frames.engines[0:1]
