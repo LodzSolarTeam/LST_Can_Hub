@@ -1,8 +1,11 @@
 from enum import Enum
+import logging
 from struct import unpack
+import struct
 from car import Car
 from bluepy.btle import Scanner
 import can
+from receivers.e2_can import CAN_INTERFACE
 
 
 class Wheel(Enum):
@@ -26,6 +29,8 @@ def tpms_receiver(car: Car):
 
 class TPMSReceiver:
     def __init__(self, car: Car) -> None:
+        logging.info("Initializing.")
+
         self._car = car
         self._scanner = Scanner()
 
@@ -55,16 +60,21 @@ class TPMSReceiver:
         return result
 
     def _send_to_can(self):
-        bus = can.Bus(interface='socketcan_ctypes',
-                      channel='vcan0')
+        with can.interface.Bus(CAN_INTERFACE, bustype='socketcan') as bus:
 
-        data = list(self._pressure.values())
+            data = struct.pack('HHHH',
+                               int(self._pressures[Wheel.FRONT_LEFT]),
+                               int(self._pressures[Wheel.FRONT_RIGHT]),
+                               int(self._pressures[Wheel.REAR_LEFT]),
+                               int(self._pressures[Wheel.REAR_RIGHT]))
 
-        message = can.Message(arbitration_id=123,
-                              is_extended_id=False,
-                              data=data)
+            message = can.Message(arbitration_id=123, data=data)
 
-        bus.send(message, timeout=0.2)
+            try:
+                bus.send(message)
+                logging.info(f"Message sent on {bus.channel_info}")
+            except can.CanError as e:
+                logging.warn(f"Cannot send message {e}")
 
     def _fill_car(self):
         self._car.fill_tire_data(list(self._pressures.values()), list(self._temperatures.values()))
@@ -80,14 +90,14 @@ class TPMSReceiver:
         # source: https://github.com/ra6070/BLE-TPMS
         unpacked = unpack("HIIIBB", bytes.fromhex(data))
 
-        pressure = unpacked[2] / 1000 # kPa
-        temperature = unpacked[3] / 100 # C
+        pressure = unpacked[2] / 1000  # kPa
+        temperature = unpacked[3] / 100  # C
         # battery = unpacked[4]
 
         return (pressure, temperature)
 
     def run(self):
-        print("Starting...")
+        logging.info("Starting.")
         while True:
             devices = self._scan_devices()
 
@@ -95,6 +105,7 @@ class TPMSReceiver:
                 manufacturer_data = self._get_manufacturer_data(data)
 
                 if manufacturer_data == None:
+                    logging.warn("No manufacturer data.")
                     continue
 
                 pressure, temperature = self._decode_data(manufacturer_data)
@@ -102,7 +113,7 @@ class TPMSReceiver:
                 self._pressures[wheel] = int(pressure)
                 self._temperatures[wheel] = int(temperature)
 
-                print(wheel, pressure, temperature)
+                logging.debug(f"{wheel} pressure: {pressure} temperature: {temperature}")
 
             self._send_to_can()
             self._fill_car()
