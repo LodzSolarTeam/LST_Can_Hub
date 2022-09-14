@@ -14,7 +14,7 @@ def gps_receiver(car: Car):
     while True: 
         try:
             logging.info(f"Connecting")
-            ser = serial.Serial("/dev/ttyUSB_GPS", baudrate=GPS_BAUD_RATE, timeout=0.5)
+            ser = serial.Serial("/dev/ttyUSB_GPS", baudrate=GPS_BAUD_RATE)
             sio = io.TextIOWrapper(io.BufferedRWPair(ser, ser))
             logging.info(f"Connected")
             while True:
