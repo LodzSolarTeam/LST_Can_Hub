@@ -56,7 +56,7 @@ async def main():
 
     processes.append(Process(target=send_scheduler, args=[car], name="Send-Scheduler"))
     processes.append(Process(target=cloud_sender, name="Cloud-Sender"))
-    # processes.append(Process(target=send_timesync, name="Can-Time-Sync"))
+    processes.append(Process(target=send_timesync, name="Can-Time-Sync"))
 
 
     for p in processes:

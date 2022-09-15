@@ -90,7 +90,7 @@ class TPMSReceiver:
         # source: https://github.com/ra6070/BLE-TPMS
         unpacked = unpack("HIIIBB", bytes.fromhex(data))
 
-        pressure = unpacked[2] / 1000  # kPa
+        pressure = unpacked[2] / 10000  # bars * 10
         temperature = unpacked[3] / 100  # C
         # battery = unpacked[4]
 
