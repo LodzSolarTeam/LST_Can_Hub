@@ -92,9 +92,9 @@ class TPMSReceiver:
 
         pressure = unpacked[2] / 10000  # bars * 10
         temperature = unpacked[3] / 100  # C
-        # battery = unpacked[4]
+        battery = unpacked[4]
 
-        return (pressure, temperature)
+        return (pressure, temperature, battery)
 
     def run(self):
         logging.info("Starting.")
@@ -110,12 +110,12 @@ class TPMSReceiver:
                     logging.warn("No manufacturer data.")
                     continue
 
-                pressure, temperature = self._decode_data(manufacturer_data)
+                pressure, temperature, battery = self._decode_data(manufacturer_data)
 
                 self._pressures[wheel] = int(pressure)
                 self._temperatures[wheel] = int(temperature)
 
-                logging.info(f"{wheel} pressure: {pressure} temperature: {temperature}")
+                logging.info(f"{wheel} pressure: {pressure} temperature: {temperature} battery: {battery}")
                 data_changed = True
 
             if data_changed:
