@@ -101,6 +101,8 @@ class TPMSReceiver:
         while True:
             devices = self._scan_devices()
 
+            data_changed = False
+
             for wheel, data in devices.items():
                 manufacturer_data = self._get_manufacturer_data(data)
 
@@ -113,7 +115,9 @@ class TPMSReceiver:
                 self._pressures[wheel] = int(pressure)
                 self._temperatures[wheel] = int(temperature)
 
-                logging.debug(f"{wheel} pressure: {pressure} temperature: {temperature}")
+                logging.info(f"{wheel} pressure: {pressure} temperature: {temperature}")
+                data_changed = True
 
-            self._send_to_can()
-            self._fill_car()
+            if data_changed:
+                self._fill_car()
+                self._send_to_can()
