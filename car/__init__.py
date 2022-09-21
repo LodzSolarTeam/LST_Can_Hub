@@ -8,6 +8,8 @@ from car.solar import Solar
 from car.tires import Tires
 import pynmea2
 
+from frames import Frames
+
 prev_canStatus = 0b0
 
 class Car:
@@ -101,7 +103,7 @@ class Car:
         self.Tires.tiresTemperatures = struct.pack("bbbb", temperatures[0], temperatures[1], temperatures[2], temperatures[3])
         self.Tires.save_cache()
 
-    def fill_can_data(self, frames):
+    def fill_can_data(self, frames: Frames):
         # GENERAL
         self.General.throttlePosition = frames.engines[0:1]
         self.General.motorController = frames.engines[1:2]
@@ -120,6 +122,13 @@ class Car:
         self.General.rpm = frames.speed[0:2]
         self.General.solarRadiance = frames.sunSensor[0:2]
         self.General.canStatus = struct.pack("I", struct.unpack("I", self.General.canStatus)[0] | frames.canStatus)
+
+        temperatures = struct.unpack("HHHH", frames.temperatures)
+        # logging.info(repr(temperatures))
+        self.General.rMotorTemperature = struct.pack("f", temperatures[0] / 100)
+        self.General.lMotorTemperature = struct.pack("f", temperatures[1] / 100)
+        self.General.lControllerTemperature = struct.pack("f", temperatures[2] / 100)
+        self.General.rControllerTemperature = struct.pack("f", temperatures[3] / 100)
         # BATTERY
         self.Battery.remainingChargeTime = frames.batteryRemainingEnergyFrame[0:2][::-1]
         self.Battery.remainingChargeTime.append(frames.batteryRemainingEnergyFrame[2])

@@ -1,4 +1,5 @@
 import logging
+import struct 
 
 class Frames:
     # CORE CAN:
@@ -31,6 +32,7 @@ class Frames:
     mppt4Input = bytearray(8)
     mppt4Output = bytearray(8)
     mppt4TemperatureData = bytearray(8)
+    temperatures = bytearray(8)
 
     canStatus = 0b0000_0000_0000_0000_0000_0000_0000_0000 # 4 bytes
 
@@ -49,7 +51,7 @@ class Frames:
             self.canStatus |= 0b1 << 3
             self.speed = data
         elif (id == 1413):
-            logging.info(f"temp {data}") # TODO TEMPERATURES 
+            self.temperatures = data
         elif (id == 1029):
             self.canStatus |= 0b1 << 4
             self.sunSensor = data

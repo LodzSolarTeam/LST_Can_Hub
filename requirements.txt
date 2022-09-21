@@ -5,3 +5,4 @@ pyserial==3.5
 python_can==3.0.0
 w1thermsensor==1.0.5
 websockets==10.3
+haversine=2.7.0

@@ -16,10 +16,10 @@ class Wheel(Enum):
 
 
 DEVICE_DICT = {
-    '80:ea:ca:10:06:7d': Wheel.FRONT_LEFT,
-    '81:ea:ca:20:06:55': Wheel.FRONT_RIGHT,
-    '82:ea:ca:30:04:0e': Wheel.REAR_LEFT,
-    '83:ea:ca:40:03:2e': Wheel.REAR_RIGHT,
+    '80:ea:ca:10:06:7d': Wheel.FRONT_RIGHT,
+    '81:ea:ca:20:06:55': Wheel.REAR_LEFT,#
+    '82:ea:ca:30:04:0e': Wheel.REAR_RIGHT,#
+    '83:ea:ca:40:03:2e': Wheel.FRONT_LEFT,
 }
 
 

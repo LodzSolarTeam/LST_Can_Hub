@@ -57,7 +57,9 @@ class SerialDataParser:
                             baudrate=38400,
                             bytesize=serial.EIGHTBITS,
                             parity=serial.PARITY_NONE,
-                            stopbits=serial.STOPBITS_ONE)
+                            stopbits=serial.STOPBITS_ONE,
+                            timeout=5
+                            )
             logging.info("Serial communication started succesfully")
         except Exception as e:
             logging.warning("Failed to start serial communication")
