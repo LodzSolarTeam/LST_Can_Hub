@@ -1,3 +1,3 @@
-[submodule "eagle2-can-dbc"]
-	path = eagle2-can-dbc
+[submodule "eagle-two-dbc"]
+	path = eagle-two-dbc
 	url = https://github.com/LodzSolarTeam/Eagle2-DBC.git
