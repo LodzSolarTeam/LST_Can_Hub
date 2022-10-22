@@ -14,55 +14,62 @@ from receivers.e2_can import can_receiver
 from utils.can_faker import can_faker
 
 
+async def main(config: dict[str, any]):
+    use_vcan = config['vcan']
+    can_interface = 'vcan0' if use_vcan else 'can0'
 
-async def main(config):
-    BaseManager.register('Car', Car)
-    manager = BaseManager()
-    manager.start()
-    car = manager.Car()
+    BaseManager.register('car', Car)
+    car_manager = BaseManager()
+    car_manager.start()
+    car = car_manager.car()
 
-    USE_VCAN = config['vcan']
-
-    if USE_VCAN:
-        os.system('modprobe vcan')
-        os.system('ip link add dev vcan0 type vcan')
-        os.system('ip link set up vcan0')
+    if use_vcan:
+        os.system('sudo modprobe vcan')
+        os.system('sudo ip link add dev vcan0 type vcan')
+        os.system('sudo ip link set up vcan0')
     else:
-        os.system('ifconfig can0 down')
-        os.system('ip link set can0 type can bitrate 250000')
-        os.system('ifconfig can0 up')
+        os.system('sudo ifconfig can0 down')
+        os.system('sudo ip link set can0 type can bitrate 250000')
+        os.system('sudo ifconfig can0 up')
 
-    CAN_INTERFACE = 'vcan0' if USE_VCAN else 'can0'
-    
     processes = []
     # processes.append(Process(target=bms_receiver, args=[car], name="BMS-Receiver"))
     # processes.append(Process(target=gps_receiver, args=[car], name="GPS-Receiver"))
 
-    if USE_VCAN:
+    if use_vcan:
         processes.append(Process(target=can_faker, name="CAN-Faker"))
-    processes.append(Process(target=can_receiver, args=(car, CAN_INTERFACE, ), name="CAN-Receiver"))
+    processes.append(Process(target=can_receiver, args=(car, can_interface,), name="CAN-Receiver"))
 
     # processes.append(Process(target=tpms_receiver, args=[car], name="TPMS-Receiver"))
-
     # processes.append(Process(target=car_send_scheduler, args=(car,), name="Send-Scheduler"))
     # processes.append(Process(target=send_timesync, name="Can-Time-Sync"))   
 
     for p in processes:
         p.start()
         logging.info(f"Starting {p.name}")
+    try:
+        for p in processes:
+            p.join()
+        car_manager.join()
+    except KeyboardInterrupt:
+        for p in processes:
+            logging.info(f"Terminate {p.name}")
+            p.kill()
+        logging.info(f"Terminate {repr(car_manager)}")
 
 
 if __name__ == "__main__":
+    DIR = "/home/pi/LST_Can_Hub/logs"
 
-    parser = argparse.ArgumentParser(description="Eeagle Two Hub", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser = argparse.ArgumentParser(description="Eeagle Two Hub",
+                                     formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("--vcan", action='store_true', help="Use virtual can interface and send mocked data to it")
-    config = vars(parser.parse_args())
+    args_config = vars(parser.parse_args())
 
     e = datetime.now()
-    dir = "/home/pi/LST_Can_Hub/logs"
 
-    os.system(f"mkdir {dir}")
-    LOG_PATH = f"{dir}/{e.year}-{e.month}-{e.day} {e.hour}:{e.minute}:{e.second} canhub.log"
+    os.system(f"mkdir {DIR}")
+    LOG_PATH = f"{DIR}/{e.year}-{e.month}-{e.day} {e.hour}:{e.minute}:{e.second} canhub.log"
 
     logging.basicConfig(
         level=logging.INFO,
@@ -73,5 +80,5 @@ if __name__ == "__main__":
         ])
 
     asyncio.run(
-        main(config)
+        main(args_config)
     )
