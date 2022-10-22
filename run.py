@@ -10,7 +10,9 @@ from multiprocessing.managers import BaseManager
 import argparse
 from car import Car
 from receivers.e2_can import can_receiver
+
 from utils.can_faker import can_faker
+
 
 
 async def main(config):
@@ -35,9 +37,11 @@ async def main(config):
     processes = []
     # processes.append(Process(target=bms_receiver, args=[car], name="BMS-Receiver"))
     # processes.append(Process(target=gps_receiver, args=[car], name="GPS-Receiver"))
+
     if USE_VCAN:
         processes.append(Process(target=can_faker, name="CAN-Faker"))
     processes.append(Process(target=can_receiver, args=(car, CAN_INTERFACE, ), name="CAN-Receiver"))
+
     # processes.append(Process(target=tpms_receiver, args=[car], name="TPMS-Receiver"))
 
     # processes.append(Process(target=car_send_scheduler, args=(car,), name="Send-Scheduler"))
@@ -49,6 +53,7 @@ async def main(config):
 
 
 if __name__ == "__main__":
+
     parser = argparse.ArgumentParser(description="Eeagle Two Hub", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("--vcan", action='store_true', help="Use virtual can interface and send mocked data to it")
     config = vars(parser.parse_args())

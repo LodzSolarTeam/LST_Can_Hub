@@ -1,7 +1,4 @@
-import logging
-import os
-
-import can
+import logging, os, can
 import cantools.database
 
 from car import Car
@@ -17,7 +14,6 @@ def can_receiver(car: Car, CAN_INTERFACE):
             print(data)
         except KeyError as e:
             logging.info(f"Messaged decoding from can failed. {e}")
-
 
     # while True:
     #     try:
