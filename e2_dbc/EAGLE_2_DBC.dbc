@@ -1,0 +1,244 @@
+VERSION ""
+
+
+NS_ : 
+	NS_DESC_
+	CM_
+	BA_DEF_
+	BA_
+	VAL_
+	CAT_DEF_
+	CAT_
+	FILTER
+	BA_DEF_DEF_
+	EV_DATA_
+	ENVVAR_DATA_
+	SGTYPE_
+	SGTYPE_VAL_
+	BA_DEF_SGTYPE_
+	BA_SGTYPE_
+	SIG_TYPE_REF_
+	VAL_TABLE_
+	SIG_GROUP_
+	SIG_VALTYPE_
+	SIGTYPE_VALTYPE_
+	BO_TX_BU_
+	BA_DEF_REL_
+	BA_REL_
+	BA_DEF_DEF_REL_
+	BU_SG_REL_
+	BU_EV_REL_
+	BU_BO_REL_
+	SG_MUL_VAL_
+
+BS_:
+
+BU_:
+
+
+BO_ 3221225472 VECTOR__INDEPENDENT_SIG_MSG: 0 Vector__XXX
+ SG_ NewSignal_0001 : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 384 MPPT_1_PART_1: 8 Vector__XXX
+ SG_ MPPT_1_Current_IN : 7|32@0- (1,0) [0|0] "mA" Vector__XXX
+ SG_ MPPT_1_Voltage_IN : 39|32@0- (1,0) [0|0] "V" Vector__XXX
+
+BO_ 640 MPPT_1_PART_2: 8 Vector__XXX
+ SG_ MPPT_1_Voltage_OUT : 0|32@1- (1,0) [0|0] "V" Vector__XXX
+ SG_ MPPT_1_Power_IN : 32|32@1- (0.001,0) [0|0] "W" Vector__XXX
+
+BO_ 1152 MPPT_1_PART_3: 4 Vector__XXX
+ SG_ MPPT_1_PCB_TEMP : 0|16@1- (1,0) [0|0] "Celsius" Vector__XXX
+ SG_ MPPT_1_MOSFET_TEMP : 16|16@1- (1,0) [0|0] "Celsius" Vector__XXX
+
+BO_ 385 MPPT_2_PART_1: 8 Vector__XXX
+ SG_ MPPT_2_Current_IN : 7|32@0- (1,0) [0|0] "mA" Vector__XXX
+ SG_ MPPT_2_Voltage_IN : 39|32@0- (1,0) [0|0] "V" Vector__XXX
+
+BO_ 641 MPPT_2_PART_2: 8 Vector__XXX
+ SG_ MPPT_2_Voltage_OUT : 0|32@1- (1,0) [0|0] "V" Vector__XXX
+ SG_ MPPT_2_Power_IN : 32|32@1- (0.001,0) [0|0] "W" Vector__XXX
+
+BO_ 1153 MPPT_2_PART_3: 4 Vector__XXX
+ SG_ MPPT_2_PCB_TEMP : 0|16@1- (1,0) [0|0] "Celsius" Vector__XXX
+ SG_ MPPT_2_MOSFET_TEMP : 16|16@1- (1,0) [0|0] "Celsius" Vector__XXX
+
+BO_ 386 MPPT_3_PART_1: 8 Vector__XXX
+ SG_ MPPT_3_Current_IN : 7|32@0- (1,0) [0|0] "mA" Vector__XXX
+ SG_ MPPT_3_Voltage_IN : 39|32@0- (1,0) [0|0] "V" Vector__XXX
+
+BO_ 642 MPPT_3_PART_2: 8 Vector__XXX
+ SG_ MPPT_3_Power_IN : 32|32@1- (0.001,0) [0|0] "W" Vector__XXX
+ SG_ MPPT_3_Voltage_OUT : 0|32@1- (1,0) [0|0] "V" Vector__XXX
+
+BO_ 1154 MPPT_3_PART_3: 4 Vector__XXX
+ SG_ MPPT_3_MOSFET_TEMP : 16|16@1- (1,0) [0|0] "Celsius" Vector__XXX
+ SG_ MPPT_3_PCB_TEMP : 0|16@1- (1,0) [0|0] "Celsius" Vector__XXX
+
+BO_ 387 MPPT_4_PART_1: 8 Vector__XXX
+ SG_ MPPT_4_Current_IN : 7|32@0- (1,0) [0|0] "mA" Vector__XXX
+ SG_ MPPT_4_Voltage_IN : 39|32@0- (1,0) [0|0] "V" Vector__XXX
+
+BO_ 643 MPPT_4_PART_2: 8 Vector__XXX
+ SG_ MPPT_4_Voltage_OUT : 0|32@1- (1,0) [0|0] "V" Vector__XXX
+ SG_ MPPT_4_Power_IN : 32|32@1- (0.001,0) [0|0] "W" Vector__XXX
+
+BO_ 1155 MPPT_4_PART_3: 4 Vector__XXX
+ SG_ MPPT_4_MOSFET_TEMP : 16|16@1- (1,0) [0|0] "Celsius" Vector__XXX
+ SG_ MPPT_4_PCB_TEMP : 0|16@1- (1,0) [0|0] "Celsius" Vector__XXX
+
+BO_ 1473 BMS_PART_1: 8 Vector__XXX
+ SG_ BMS_AVG_CELL_VOLTAGE : 7|16@0- (1,0) [0|0] "mV" Vector__XXX
+ SG_ BMS_CELL_W_LOWEST_VOLTAGE : 16|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ BMS_CELL_VOLTAGE_MIN : 31|16@0- (1,0) [0|0] "mV" Vector__XXX
+ SG_ BMS_CELL_W_HIGHEST_VOLTAGE : 40|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ BMS_CELL_VOLTAGE_MAX : 55|16@0- (1,0) [0|0] "mV" Vector__XXX
+
+BO_ 1474 BMS_PART_2: 8 Vector__XXX
+ SG_ BMS_ERROR_FLAGS : 0|32@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ BMS_WARNING_FLAGS : 32|32@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 1475 BMS_PART_3: 8 Vector__XXX
+ SG_ BMS_PACK_VOLTAGE : 0|16@1- (10,0) [0|0] "V" Vector__XXX
+ SG_ BMS_PACK_CURRENT : 16|16@1- (10,0) [0|0] "A" Vector__XXX
+ SG_ BMS_SYSTEM_STATE : 32|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ BMS_SOC : 40|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ BMS_CHARGER_ENABLED : 48|8@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 1476 BMS_PART_4: 8 Vector__XXX
+ SG_ BMS_PACK_TEMP_HIGH : 0|8@1- (1,0) [0|0] "Celsius" Vector__XXX
+ SG_ BMS_LMU_W_HIGHEST_TEMP : 8|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ BMS_PACK_TEMP_LOW : 16|8@1- (1,0) [0|0] "Celsius" Vector__XXX
+ SG_ BMS_LMU_W_LOWEST_TEMP : 24|8@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 1477 BMS_PART_5: 8 Vector__XXX
+ SG_ BMS_REMAINING_CHARGE_TIME : 0|24@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ BMS_REMAINING_ENERGY : 24|16@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 1478 BMS_PART_6: 8 Vector__XXX
+ SG_ BMS_SOH : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ BMS_CELLS_CONNECTED : 8|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ BMS_POST_PROC_2 : 16|16@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ BMS_IO_STATE : 32|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ BMS_PACK_C_RATE : 40|16@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 2550588916 CHARGER_FRAME: 8 Vector__XXX
+ SG_ CHARGER_FRAME_MAX_DC_V : 0|16@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ CHARGER_FRAME_MAX_DC_I : 16|16@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ CHARGER_FRAME_IDK : 32|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ CHARGER_FRAME_IDK2 : 40|24@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 770 LIGHTS: 2 Vector__XXX
+ SG_ LIGHTS_STOP : 0|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ LIGHTS_LOW_BEAM : 1|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ LIGHTS_HIGH_BEAM : 2|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ LIGHTS_RIGHT_INDICATOR : 3|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ LIGHTS_LEFT_INDICATOR : 4|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ LIGHTS_PARK : 5|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ LIGHTS_HAZARD : 6|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ LIGHTS_HORN : 7|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ LIGHTS_HANDBRAKE : 8|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ LIGHTS_BATT_ERROR : 9|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ LIGHTS_ENGIN_ERROR : 10|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ LIGHTS_DRIVEMODE : 11|2@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ LIGHTS_INTERIOR : 13|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ LIGHTS_CRUISE_ON : 14|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ LIGHTS_CRUISE_MODE : 15|1@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 321 MOTOR_CONTROLLER: 1 Vector__XXX
+ SG_ MOTOR_CONTROLLER_MAIN_SWITCH : 0|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ MOTOR_CONTROLLER_DIRECTION : 1|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ MOTOR_CONTROLLER_ECO_POWER : 2|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ MOTOR_CONTROLLER_BATT_ENG_ERROR : 3|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ MOTOR_CONTROLLER_FILL : 4|4@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 1412 MOTOR_FRAME: 2 Vector__XXX
+ SG_ MOTOR_CONTROLLER_RPM_HI : 0|8@1+ (1,0) [0|0] "RPM" Vector__XXX
+ SG_ MOTOR_CONTROLLER_RPM_LO : 8|8@1+ (1,0) [0|0] "RPM" Vector__XXX
+
+BO_ 1560 NGL5_CHARGER: 6 Vector__XXX
+ SG_ NGL5_CHARGER_CAN_ENABLE : 7|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ NGL5_CHARGER_CLEAR_ERROR_LATCH : 6|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ NGL5_CHARGER_CONTROLL_PILOT_VENT : 5|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ NGL5_CHARGER_MAINS_CURRENT_MAX : 8|2@1+ (1,0) [0|50] "A" Vector__XXX
+ SG_ NGL5_CHARGER_OUT_VOLTAGE_COMMAND : 24|2@1+ (1,0) [0|1000] "V" Vector__XXX
+ SG_ NGL5_CHARGER_OUT_CURRENT_COMMAND : 40|2@1+ (1,0) [0|150] "A" Vector__XXX
+
+
+
+CM_ BO_ 384 "Contains Input Current and Voltage";
+CM_ BO_ 640 "Contains Voltage Output and Power Input";
+CM_ BO_ 1152 "Contains Temps of PCB and MOSFETS";
+CM_ BO_ 385 "Contains Input Current and Voltage";
+CM_ BO_ 641 "Contains Voltage Output and Power Input";
+CM_ BO_ 1153 "Contains Temps of PCB and MOSFETS";
+CM_ BO_ 386 "Contains Input Current and Voltage";
+CM_ BO_ 642 "Contains Voltage Output and Power Input";
+CM_ BO_ 1154 "Contains Temps of PCB and MOSFETS";
+CM_ BO_ 387 "Contains Input Current and Voltage";
+CM_ BO_ 643 "Contains Voltage Output and Power Input";
+CM_ BO_ 1155 "Contains Temps of PCB and MOSFETS";
+CM_ BO_ 1473 "Contains BMS Hi/Low cells data";
+CM_ SG_ 1473 BMS_AVG_CELL_VOLTAGE "Data indentifier: 2061";
+CM_ SG_ 1473 BMS_CELL_W_LOWEST_VOLTAGE "Data indentifier: 2025";
+CM_ SG_ 1473 BMS_CELL_VOLTAGE_MIN "Data indentifier: 2002";
+CM_ SG_ 1473 BMS_CELL_W_HIGHEST_VOLTAGE "Data indentifier: 2024";
+CM_ SG_ 1473 BMS_CELL_VOLTAGE_MAX "Data indentifier: 2000";
+CM_ BO_ 1474 "Contains BMS Warning/Error flags";
+CM_ SG_ 1474 BMS_ERROR_FLAGS "Data indentifier: 2012";
+CM_ SG_ 1474 BMS_WARNING_FLAGS "Data indentifier: 2016";
+CM_ BO_ 1475 "Cantains BMS Pack info";
+CM_ SG_ 1475 BMS_PACK_VOLTAGE "About 100V should be showing up, adjust mult if not correct. 
+Data indentifier: 2008";
+CM_ SG_ 1475 BMS_PACK_CURRENT "Raw data is in 100mA, adjust mult. 
+Data indentifier: 2010";
+CM_ SG_ 1475 BMS_SYSTEM_STATE "Data indentifier: 2006";
+CM_ SG_ 1475 BMS_SOC "Data indentifier: 2021";
+CM_ SG_ 1475 BMS_CHARGER_ENABLED "Data indentifier: 2119";
+CM_ BO_ 1476 "Contains BMS Pack/LMU temps";
+CM_ SG_ 1476 BMS_PACK_TEMP_HIGH "Data indentifier: 2004";
+CM_ SG_ 1476 BMS_LMU_W_HIGHEST_TEMP "Data indentifier: 2026";
+CM_ SG_ 1476 BMS_PACK_TEMP_LOW "Data indentifier: 2005";
+CM_ SG_ 1476 BMS_LMU_W_LOWEST_TEMP "Data indentifier: 2027";
+CM_ BO_ 1477 "Contains BMS Remaining Charge/Energy";
+CM_ SG_ 1477 BMS_REMAINING_CHARGE_TIME "Brak danych o jednostce 
+Data indentifier: 2067";
+CM_ SG_ 1477 BMS_REMAINING_ENERGY "Brak danych o jednostce 
+Data indentifier: 2065";
+CM_ BO_ 1478 "Contains BMS additional info";
+CM_ SG_ 1478 BMS_SOH "Data indentifier: 2020";
+CM_ SG_ 1478 BMS_CELLS_CONNECTED "Data indentifier: 2034";
+CM_ SG_ 1478 BMS_POST_PROC_2 "Data indentifier: 2072";
+CM_ SG_ 1478 BMS_IO_STATE "Data indentifier: 2007";
+CM_ SG_ 1478 BMS_PACK_C_RATE "Data indentifier: 2028";
+CM_ BO_ 2550588916 "Contains Charger supported values";
+CM_ SG_ 2550588916 CHARGER_FRAME_MAX_DC_V "Data indentifier: 2112";
+CM_ SG_ 2550588916 CHARGER_FRAME_MAX_DC_I "Data indentifier: 2117";
+CM_ SG_ 2550588916 CHARGER_FRAME_IDK "Data indentifier: 2121";
+CM_ BO_ 770 "Contains lights status";
+CM_ BO_ 321 "Contains motor controller stuff ";
+CM_ BO_ 1412 "Contains motor RPMs";
+CM_ BO_ 1560 "Contains info about charging from mains";
+CM_ SG_ 1560 NGL5_CHARGER_CAN_ENABLE "if CAN enable and power enable are active and no error occurs, the NLG5 is ready for charging";
+CM_ SG_ 1560 NGL5_CHARGER_CLEAR_ERROR_LATCH "Error should only be cleared, when command values are zero";
+CM_ SG_ 1560 NGL5_CHARGER_CONTROLL_PILOT_VENT "relevant only at a corresponding control pilot socket";
+VAL_ 770 LIGHTS_DRIVEMODE 1 "NEUTRAL" 3 "FORWARD" 2 "ECO" 0 "REVERSE" ;
+VAL_ 770 LIGHTS_CRUISE_ON 1 "TRUE" 0 "FALSE" ;
+VAL_ 770 LIGHTS_CRUISE_MODE 1 "POWER_CONTROLL" 2 "SPEED_CONTROLL" ;
+SIG_VALTYPE_ 384 MPPT_1_Current_IN : 1;
+SIG_VALTYPE_ 384 MPPT_1_Voltage_IN : 1;
+SIG_VALTYPE_ 640 MPPT_1_Voltage_OUT : 1;
+SIG_VALTYPE_ 640 MPPT_1_Power_IN : 1;
+SIG_VALTYPE_ 385 MPPT_2_Current_IN : 1;
+SIG_VALTYPE_ 385 MPPT_2_Voltage_IN : 1;
+SIG_VALTYPE_ 641 MPPT_2_Voltage_OUT : 1;
+SIG_VALTYPE_ 641 MPPT_2_Power_IN : 1;
+SIG_VALTYPE_ 386 MPPT_3_Current_IN : 1;
+SIG_VALTYPE_ 386 MPPT_3_Voltage_IN : 1;
+SIG_VALTYPE_ 642 MPPT_3_Power_IN : 1;
+SIG_VALTYPE_ 642 MPPT_3_Voltage_OUT : 1;
+SIG_VALTYPE_ 387 MPPT_4_Current_IN : 1;
+SIG_VALTYPE_ 387 MPPT_4_Voltage_IN : 1;
+SIG_VALTYPE_ 643 MPPT_4_Voltage_OUT : 1;
+SIG_VALTYPE_ 643 MPPT_4_Power_IN : 1;
+

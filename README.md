@@ -51,12 +51,11 @@ If necessary, you can login to RPi. Use:
 
 Project directory 
 ```bash
-$HOME/lst_canhub_py/new
+$HOME/LST_CAN_HUB
 ```
 
 
 ## Autorun script
-
 
 Project should start automatically after rabbitmq
 

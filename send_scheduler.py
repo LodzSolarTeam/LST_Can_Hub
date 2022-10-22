@@ -13,6 +13,7 @@ CONNECTION_STRING = "HostName=lst-mqtt.azure-devices.net;DeviceId=eagletwo;Share
 
 queue = persistqueue.SQLiteAckQueue('./car_queue', auto_commit=True, multithreading=True)
 
+
 def car_send_scheduler(car: Car):
     t = Thread(target=send_to_iot_hub, name="Azure-IoT-Hub")
     t.daemon = True
@@ -22,8 +23,8 @@ def car_send_scheduler(car: Car):
         car.fill_timestamp(time.time_ns() // 1_000_000)
         finalMessage = car.to_bytes()
         queue.put(finalMessage)
-        car.reset()
         logging.info("Queue put")
+        car.reset()
 
     # sleep na sterydach -> https://stackoverflow.com/a/54161792/7598740
     cptr = 0
@@ -37,7 +38,7 @@ def car_send_scheduler(car: Car):
 
         cptr += 1
         time_start = time.time()
-        time.sleep(((time_init + (INTERVAL_SEC * cptr)) - time_start ))
+        time.sleep(((time_init + (INTERVAL_SEC * cptr)) - time_start))
 
 
 def send_to_iot_hub():
@@ -48,7 +49,7 @@ def send_to_iot_hub():
         try:
             message = Message(msg, message_id="car")
             client.send_message(message)
-            queue.ack(msg)    
+            queue.ack(msg)
             logging.info(f"Acked message.")
         except ConnectionFailedError as e:
             queue.nack(msg)

@@ -7,47 +7,58 @@ import logging
 
 from multiprocessing import Process
 from multiprocessing.managers import BaseManager
-
+import argparse
 from car import Car
-from send_scheduler import car_send_scheduler
+from receivers.e2_can import can_receiver
+from utils.can_faker import can_faker
 
-e = datetime.now()
-LOG_PATH = f"/home/pi/LST_Can_Hub/logs/{e.year}-{e.month}-{e.day} {e.hour}:{e.minute}:{e.second} canhub.log"
 
-async def main():
+async def main(config):
     BaseManager.register('Car', Car)
     manager = BaseManager()
     manager.start()
     car = manager.Car()
 
-    MOCK = False
+    USE_VCAN = config['vcan']
+
+    if USE_VCAN:
+        os.system('modprobe vcan')
+        os.system('ip link add dev vcan0 type vcan')
+        os.system('ip link set up vcan0')
+    else:
+        os.system('ifconfig can0 down')
+        os.system('ip link set can0 type can bitrate 250000')
+        os.system('ifconfig can0 up')
+
+    CAN_INTERFACE = 'vcan0' if USE_VCAN else 'can0'
+    
     processes = []
     # processes.append(Process(target=bms_receiver, args=[car], name="BMS-Receiver"))
     # processes.append(Process(target=gps_receiver, args=[car], name="GPS-Receiver"))
-    # processes.append(Process(target=can_receiver, args=[car, MOCK], name="CAN-Receiver"))
+    if USE_VCAN:
+        processes.append(Process(target=can_faker, name="CAN-Faker"))
+    processes.append(Process(target=can_receiver, args=(car, CAN_INTERFACE, ), name="CAN-Receiver"))
     # processes.append(Process(target=tpms_receiver, args=[car], name="TPMS-Receiver"))
 
-    processes.append(Process(target=car_send_scheduler, args=[car], name="Send-Scheduler"))
+    # processes.append(Process(target=car_send_scheduler, args=(car,), name="Send-Scheduler"))
     # processes.append(Process(target=send_timesync, name="Can-Time-Sync"))   
-
 
     for p in processes:
         p.start()
         logging.info(f"Starting {p.name}")
 
-    try:
-        for p in processes:
-            p.join()
-        manager.join()
-    except KeyboardInterrupt:
-        for p in processes:
-            logging.info(f"Terminate {p.name}")
-            p.kill()
-        logging.info(f"Terminate {manager.name}")
-        manager.kill()
-
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Eeagle Two Hub", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser.add_argument("--vcan", action='store_true', help="Use virtual can interface and send mocked data to it")
+    config = vars(parser.parse_args())
+
+    e = datetime.now()
+    dir = "/home/pi/LST_Can_Hub/logs"
+
+    os.system(f"mkdir {dir}")
+    LOG_PATH = f"{dir}/{e.year}-{e.month}-{e.day} {e.hour}:{e.minute}:{e.second} canhub.log"
+
     logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)s [%(levelname)s] [%(processName)s] %(message)s",
@@ -56,11 +67,6 @@ if __name__ == "__main__":
             logging.StreamHandler()
         ])
 
-    os.system("mkdir /home/pi/LST_Can_Hub/logs")
-    os.system('ifconfig can0 down')
-    os.system('ip link set can0 type can bitrate 250000')
-    os.system('ifconfig can0 up')
-
     asyncio.run(
-        main()
+        main(config)
     )
