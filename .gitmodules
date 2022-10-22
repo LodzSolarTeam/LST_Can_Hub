@@ -1,0 +1,4 @@
+
+[submodule "Eagle2-DBC"]
+	path = Eagle2-DBC
+	url = https://github.com/LodzSolarTeam/Eagle2-DBC.git

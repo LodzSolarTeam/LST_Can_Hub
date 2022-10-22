@@ -4,7 +4,7 @@ import cantools.database
 from car import Car
 
 def can_receiver(car: Car, CAN_INTERFACE):
-    db = cantools.database.load_file('./e2_dbc/EAGLE_2_DBC.dbc')
+    db = cantools.database.load_file('./Eagle2-DBC/EAGLE_2_DBC.dbc')
     can_bus = can.interface.Bus(CAN_INTERFACE, bustype='socketcan')
 
     while True:
