@@ -12,8 +12,8 @@ from frames import Frames
 
 prev_canStatus = 0b0
 
-class Car:
 
+class Car:
     General = General()
     Battery = Battery()
     Lights = Lights()
@@ -45,7 +45,6 @@ class Car:
                + self.Solar.to_bytes() \
                + self.Tires.to_bytes() \
                + self.Gps.to_bytes()
-
 
     def _byte_to_bit_array(self, byte):
         bit_string = ''.join(format(ord(byte), '08b'))
@@ -100,7 +99,8 @@ class Car:
 
     def fill_tire_data(self, pressures, temperatures):
         self.Tires.pressures = struct.pack("BBBB", pressures[0], pressures[1], pressures[2], pressures[3])
-        self.Tires.tiresTemperatures = struct.pack("bbbb", temperatures[0], temperatures[1], temperatures[2], temperatures[3])
+        self.Tires.tiresTemperatures = struct.pack("bbbb", temperatures[0], temperatures[1], temperatures[2],
+                                                   temperatures[3])
         self.Tires.save_cache()
 
     def fill_can_data(self, frames: Frames):

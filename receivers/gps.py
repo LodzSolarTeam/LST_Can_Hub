@@ -4,18 +4,16 @@ import time
 import pynmea2
 import serial
 
-# import haversine as hs
-# from haversine import Unit
-
 from car import Car
 
 finish_line = (50.9888409, 5.2552022)
 GPS_BAUD_RATE = 38400
 
+
 def gps_receiver(car: Car):
     logging.info("Initialization")
     # connection loop
-    while True: 
+    while True:
         try:
             logging.info(f"Connecting")
             ser = serial.Serial("/dev/ttyUSB_GPS", baudrate=GPS_BAUD_RATE, timeout=3)
@@ -27,12 +25,6 @@ def gps_receiver(car: Car):
                     if len(line) == 0 or line[0] == '\n':
                         continue
                     msg = pynmea2.parse(line)
-                    # if msg.sentence_type == 'RMC':
-                    #     data: pynmea2.RMC = msg
-                    #     if data.is_valid:
-                    #         pos = (data.latitude, data.longitude)
-                    #         if (hs.haversine(finish_line,pos,unit=Unit.METERS)) < 30:
-                    #             pass
                     car.fill_gps_data(msg)
                 except pynmea2.ParseError as e:
                     logging.warning(f"Data parsing error: {e}")
