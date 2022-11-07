@@ -1,17 +1,15 @@
-import asyncio
 import logging
-import threading
-import time
-from persistqueue import SQLiteAckQueue
-from paho.mqtt.client import Client
-from paho.mqtt.publish import single
+from threading import Thread
 
-host = "127.0.0.1"
+from paho.mqtt.client import Client
+
+host = "123.123.123.123"
 # host = "<URL TO REMOTE MQTT BROKER>"
 
-class CloudSender:
-    def __init__(self):
-        self.queue = SQLiteAckQueue('./car_queue')
+class MQTTTransmitter(Thread):
+    def __init__(self, queue):
+        super().__init__(name="MQTT-Transmitter")
+        self.queue = queue
         self.mqtt_client = Client()
         self.mqtt_client.on_connect = self.on_connect
 
@@ -29,27 +27,18 @@ class CloudSender:
                 logging.info(f"get {self.current_message}")
 
                 info = self.mqtt_client.publish("eagle2", self.current_message)
+                logging.info("wait_for_publish")
                 info.wait_for_publish()
+                logging.info("published")
 
                 self.queue.ack(self.current_message)
+            except KeyboardInterrupt:
+                self.mqtt_client.loop_stop()
+                break
             except Exception as e:
                 logging.error(f"Error: {e}")
                 self.queue.nack(self.current_message)
-
             self.current_message = None
-
-        self.mqtt_client.loop_stop()
 
     def on_connect(self, client, userdata, flags, rc):
         logging.info("Connected with result code " + str(rc))
-
-async def main():
-    cloud_sender = CloudSender()
-    cloud_sender.run()
-
-def cloud_sender():
-    asyncio.run(main())
-
-if __name__ == "__main__":
-    logging.basicConfig(level=logging.DEBUG)
-    cloud_sender()
