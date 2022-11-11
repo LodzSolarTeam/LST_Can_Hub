@@ -1,0 +1,128 @@
+syntax = "proto3";
+
+package eagle;
+
+enum DriveMode {
+  REVERSE = 0;
+  NEUTRAL = 1;
+  ECO = 2;
+  FORWARD = 3;
+}
+
+message Battery {
+  optional uint32 remainingChargeTime = 1; // BMS_REMAINING_CHARGE_TIME
+  optional bool chargerEnabled = 2; // BMS_CHARGE_EN
+  optional uint32 systemState = 3; // BMS_SYSTEM_STATE
+  optional uint32 packCRate = 4; // BMS_PACK_C_RATE
+  optional uint32 stateOfCharge = 5; // BMS_SOC
+  optional uint32 stateOfHealth = 6; // BMS_SOH
+  optional uint32 cellsConnected = 7; // BMS_CELLS_CONNECTED
+  optional uint32 remainingEnergy = 8; // BMS_REMAINING_ENERGY
+
+  // System State
+  optional bool relayFault = 10; // BMS_RELAY_FAULT
+  optional bool k3RelayState = 11; // BMS_K3_RELAY_STATE
+  optional bool k2RelayState = 12; // BMS_K2_RELAY_STATE
+  optional bool k1RelayState = 13; // BMS_K1_RELAY_STATE
+  optional bool batteryInFaultState = 14; // BMS_BATTERY_IN_FAULT_STATE
+  // Temperatures
+  optional int32 packTemperatureMax = 15; // BMS_PACK_TEMP_HIGH
+  optional uint32 lmuNumberWithTemperatureMax = 16; // BMS_LMU_W_HIGHEST_TEMP
+  optional int32 packTemperatureMin = 17; // BMS_PACK_TEMP_LOW
+  optional uint32 lmuNumberWithTemperatureMin = 18; // BMS_LMU_W_LOWEST_TEMP
+
+  // Voltages
+  optional uint32 deviationOfVoltages = 9; // BMS_POST_PROC_2 FIXME trzeba sie upewnic
+  optional int32 cellVoltageMax = 19; // BMS_CELL_VOLTAGE_MAX
+  optional uint32 cellNumberWithVoltageMax = 20; // BMS_CELL_W_HIGHEST_VOLTAGE
+  optional int32 cellVoltageMin = 21; // BMS_CELL_VOLTAGE_MIN
+  optional uint32 cellNumberWithVoltageMin = 22; // BMS_CELL_W_LOWEST_VOLTAGE
+  optional int32 cellVoltageAvg = 23; // BMS_AVG_CELL_VOLTAGE
+
+  optional int32 packVoltage = 24; // BMS_PACK_VOLTAGE
+  optional int32 packCurrent = 25; // BMS_PACK_CURRENT
+  optional int32 packPower = 26; // BMS_PACK_VOLTAGE * BMS_PACK_CURRENT
+
+  repeated uint32 voltages = 27; // BMS
+  repeated uint32 temperatures = 28; // BMS
+
+  optional uint32 errors = 29;
+  optional uint32 warnings = 30;
+}
+
+message Mppt {
+  optional float currentIn = 1; // MPPT_x_Current_IN
+  optional float voltageIn = 2; // MPPT_x_Voltage_IN
+  optional float voltageOut = 3; // MPPT_x_Voltage_OUT
+  optional int32 mosfetTemp = 4; // MPPT_x_MOSFET_TEMP
+  optional int32 pcbTemp = 5; // MPPT_x_PCB_TEMP
+  optional float powerIn = 6; // MPPT_x_Power_IN
+}
+
+message Lights {
+  optional bool stop = 1; // STOP
+  optional bool lowBeam = 2; // LOW_BEAM
+  optional bool highBeam = 3; // HIGH_BEAM
+  optional bool rightIndicator = 4; // RIGHT_INDICATOR
+  optional bool leftIndicator = 5; // LEFT_INDICATOR
+  optional bool park = 6; // PARK
+  optional bool interior = 7; // INTERIOR
+  optional bool emergency = 8; // HAZARD
+
+}
+message Gps {
+  optional float latitude = 1;
+  optional string latitudeDirection = 2;
+  optional float longitude = 3;
+  optional string longitudeDirection = 4;
+  optional float altitude = 5;
+  optional float speedKnots = 6;
+  optional float speedKilometers = 7;
+  optional uint32 satellitesNumber = 8;
+  optional uint32 quality = 9;
+}
+message TiresPressure {
+  repeated int32 frontLeft = 1; // TPMS_INFO->PRESSURE_FRONT_LEFT
+  repeated int32 frontRight = 2;  // TPMS_INFO->PRESSURE_FRONT_RIGHT
+  repeated int32 rearLeft = 3;  // TPMS_INFO->PRESSURE_REAR_LEFT
+  repeated int32 rearRight = 4;  // TPMS_INFO->PRESSURE_REAR_RIGHT
+}
+message Engine {
+  optional float motorTemperature = 1; // w1thermalsensors
+  optional float controllerTemperature = 2; // w1thermalsensors
+}
+
+message MotorControl {
+  optional bool mainSwitch = 1;
+  optional bool cruiseOn = 2; // CRUISE_ON
+  optional bool cruiseActive = 3; // CRUISE_ACTIVE
+  optional uint32 desiredSpeed = 4; // CRUISE_SET_SPEED
+  optional uint32 desiredThrottle = 5; // CRUISE_THROTTLE
+  optional uint32 throttle = 6;
+  optional uint32 regen = 7;
+  optional DriveMode driveMode = 8; // DRIVEMODE
+}
+
+message EagleTwo {
+  uint32 timestamp = 1;
+
+  optional int32 usedEnergy = 2; // needs to be calculated manually based on packPower
+  optional int32 totalMillage = 3; // needs to be calculated manually based on rpm
+  optional bool handBrake = 4; // HANDBRAKE
+  optional bool batteryError = 5; // BATTERY_ERROR
+  optional bool engineError = 6; // ENGINE_ERROR
+  optional bool horn = 7; // HORN
+
+  optional Battery battery = 8;
+  repeated Mppt mppt = 9;
+  optional Lights lights = 10;
+  optional Gps gps = 11;
+  optional TiresPressure tires = 12;
+  optional Engine leftEngine = 13;
+  optional Engine rightEngine = 14;
+  optional MotorControl motorControl = 15;
+}
+
+message EagleTwoSeries {
+  repeated EagleTwo frame = 1;
+}
