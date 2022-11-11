@@ -24,7 +24,6 @@ class CarSendScheduler(Thread):
                 finalMessage = self.car.to_bytes()
                 self.queue.put(finalMessage)
                 self.queue.task_done()
-                logging.info("Queue put")
                 self.car.reset()
             except Exception as e:
                 logging.warning(f"Failed creating final message: " + str(e))

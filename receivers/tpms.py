@@ -5,7 +5,6 @@ import struct
 from car import Car
 from bluepy.btle import Scanner
 import can
-from receivers.e2_can import CAN_INTERFACE
 
 
 class Wheel(Enum):
@@ -23,15 +22,15 @@ DEVICE_DICT = {
 }
 
 
-def tpms_receiver(car: Car):
-    TPMSReceiver(car).run()
+def tpms_receiver():
+    TPMSReceiver().run()
 
+# TODO przerobić na klasę dziedziczącą po Process i przekazać can_interface z run.py
 
 class TPMSReceiver:
-    def __init__(self, car: Car) -> None:
+    def __init__(self) -> None:
         logging.info("Initializing.")
 
-        self._car = car
         self._scanner = Scanner()
 
         self._pressures = {
@@ -76,9 +75,6 @@ class TPMSReceiver:
             except can.CanError as e:
                 logging.warn(f"Cannot send message {e}")
 
-    def _fill_car(self):
-        self._car.fill_tire_data(list(self._pressures.values()), list(self._temperatures.values()))
-
     def _get_manufacturer_data(self, device_data):
         for data in device_data:
             if data[1] == "Manufacturer":
@@ -119,5 +115,4 @@ class TPMSReceiver:
                 data_changed = True
 
             if data_changed:
-                self._fill_car()
                 self._send_to_can()

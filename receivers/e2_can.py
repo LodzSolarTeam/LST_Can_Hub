@@ -1,4 +1,5 @@
 import logging, can
+
 import cantools.database
 
 from car import Car
@@ -6,13 +7,13 @@ from car import Car
 
 def can_receiver(car: Car, can_interface):
     db = cantools.database.load_file('./Eagle2-DBC/EAGLE_2_DBC.dbc')
-    can_bus = can.interface.Bus(can_interface, bustype='socketcan')
+    can_bus = can.interface.Bus(bustype='socketcan', channel=can_interface, bitrate=250000)
 
     while True:
         message = can_bus.recv()
         try:
             data = db.decode_message(message.arbitration_id, message.data)
-            print(data)
+            logging.info(data)
         except KeyError as e:
             logging.info(f"Messaged decoding from can failed. {e}")
         except Exception as e:

@@ -3,7 +3,7 @@ from threading import Thread
 
 from paho.mqtt.client import Client
 
-host = "123.123.123.123"
+host = "127.0.0.1"
 # host = "<URL TO REMOTE MQTT BROKER>"
 
 class MQTTTransmitter(Thread):
@@ -24,12 +24,10 @@ class MQTTTransmitter(Thread):
         while True:
             try:
                 self.current_message = self.queue.get()
-                logging.info(f"get {self.current_message}")
-
                 info = self.mqtt_client.publish("eagle2", self.current_message)
-                logging.info("wait_for_publish")
+                logging.debug("wait_for_publish")
                 info.wait_for_publish()
-                logging.info("published")
+                logging.debug("published")
 
                 self.queue.ack(self.current_message)
             except KeyboardInterrupt:

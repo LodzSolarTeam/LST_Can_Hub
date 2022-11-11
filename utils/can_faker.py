@@ -28,7 +28,7 @@ class CanFaker(Process):
                         data=data
                     )
                     can_bus.send(msg)
-                    time.sleep(0.1)
+                    time.sleep(0.001)
                 except KeyboardInterrupt:
                     exit('Aborting at {} lines'.format(i))
                 except Exception as e:

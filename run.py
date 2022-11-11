@@ -4,11 +4,13 @@ import asyncio
 from datetime import datetime
 import os
 import logging
+from multiprocessing import Process
 
 from multiprocessing.managers import BaseManager
 import argparse
 
 from car import Car
+from receivers.e2_can import can_receiver
 from transmiter import EagleTransmitter
 
 from utils.can_faker import CanFaker
@@ -35,11 +37,12 @@ async def main(config: dict[str, any]):
     processes = []
     # processes.append(Process(target=bms_receiver, args=[car], name="BMS-Receiver"))
     # processes.append(Process(target=gps_receiver, args=[car], name="GPS-Receiver"))
+    processes.append(Process(target=can_receiver, args=(car, can_interface, ), name="CAN-Receiver"))
 
     if use_vcan:
         processes.append(CanFaker())
 
-    # processes.append(Process(target=tpms_receiver, args=[car], name="TPMS-Receiver"))
+    # processes.append(Process(target=tpms_receiver, args=[], name="TPMS-Receiver"))
     # processes.append(Process(target=send_timesync, name="Can-Time-Sync"))
 
     processes.append(EagleTransmitter(car))
