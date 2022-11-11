@@ -65,7 +65,7 @@ message Lights {
   optional bool highBeam = 3; // HIGH_BEAM
   optional bool rightIndicator = 4; // RIGHT_INDICATOR
   optional bool leftIndicator = 5; // LEFT_INDICATOR
-  optional bool park = 6; // PARK_INDICATOR
+  optional bool park = 6; // PARK
   optional bool interior = 7; // INTERIOR
   optional bool emergency = 8; // HAZARD
 
