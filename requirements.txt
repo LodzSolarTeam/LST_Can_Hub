@@ -6,4 +6,5 @@ w1thermsensor==1.0.5
 websockets==10.3
 python_can==3.0.0
 cantools==37.2.0
-persist-queue==0.2.0
+persist-queue==0.8.0
+paho-mqtt==1.6.1
