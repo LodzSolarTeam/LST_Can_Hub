@@ -10,7 +10,7 @@ import argparse
 import params
 from src.communication.can_receiver import can_receiver
 from src.communication.mock.can_mock import CanMock
-from src.transmitter import Transmitter
+from src.transmitter_process import Transmitter
 
 
 async def main(config: dict[str, any]):

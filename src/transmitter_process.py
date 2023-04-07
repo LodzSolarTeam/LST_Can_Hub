@@ -3,8 +3,8 @@ from signal import pthread_kill, SIGTSTP
 
 import persistqueue
 
-from src.transmitter_scheduler import TransmitterScheduler
-from src.transmitter_mqtt import TransmitterMqtt
+from src.transmitter_schedule_thread import TransmitterScheduler
+from src.transmitter_mqtt_thread import TransmitterMqtt
 
 
 class Transmitter(Process):

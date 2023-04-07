@@ -8,4 +8,5 @@ pyserial==3.5
 websockets==10.3
 mypy==0.982
 mypy-protobuf==3.4.0
+xia-easy-proto==1.0.3
 paho-mqtt==1.6.1

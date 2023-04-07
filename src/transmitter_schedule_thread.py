@@ -35,6 +35,6 @@ class TransmitterScheduler(Thread):
             except Exception as e:
                 logging.warning(f"Failed creating final message: " + self.managed_dict.copy())
 
-            cptr += 0.1
+            cptr += 1
             time_start = time.time()
             time.sleep(((time_init + (INTERVAL_SEC * cptr)) - time_start))

@@ -12,10 +12,6 @@ def create_managed_params(_manager: multiprocessing.Manager, _params: dict):
 
 lst_param = {
     #
-    'MOTOR_LEFT_TEMPERATURE': '3b23507c-09c5-40c2-93c5-4be21d461a98',
-    'MOTOR_RIGHT_TEMPERATURE': '7de01773-2efa-4e1a-8bbc-3c55a6fd6174',
-    'CONTROLLER_LEFT_TEMPERATURE': '0d865620-ab05-4394-8e61-5b0e8585346d',
-    'CONTROLLER_RIGHT_TEMPERATURE': 'c611cd24-c07f-46d0-8826-3e781e9460d5',
     'BMS_VOLTAGE_CELL_1': '8e5e26d3-a18e-4ebf-aba9-e8338767ba2d',
     'BMS_VOLTAGE_CELL_2': '541b5344-d88b-43d2-a404-c000c0e37f39',
     'BMS_VOLTAGE_CELL_3': '8a1ed91c-c4c7-4fe1-b6a8-7662d219807c',
