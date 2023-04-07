@@ -9,7 +9,7 @@ DEVICE_ID = "ec69637a-89cb-4976-9a73-2979adf3e484"
 host = "192.168.1.27"
 
 
-class MQTTTransmitter(Thread):
+class TransmitterMqtt(Thread):
     is_running: bool
     is_connection_established: bool
     queue: persistqueue.SQLiteAckQueue

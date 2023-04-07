@@ -14,7 +14,7 @@ class NamedSignalValueEncoder(json.JSONEncoder):
             return obj.name
         return super().default(obj)
 
-class DataSendScheduler(Thread):
+class TransmitterScheduler(Thread):
     def __init__(self, managed_dict: dict, queue: persistqueue.SQLiteAckQueue):
         super().__init__(name="data-send-scheduler")
         self.managed_dict = managed_dict

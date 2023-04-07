@@ -10,7 +10,7 @@ import argparse
 import params
 from src.communication.can_receiver import can_receiver
 from src.communication.mock.can_mock import CanMock
-from src.communication.transmiter import EagleTransmitter
+from src.transmitter import Transmitter
 
 
 async def main(config: dict[str, any]):
@@ -32,7 +32,7 @@ async def main(config: dict[str, any]):
     # processes.append(Process(target=tpms_receiver, args=[], name="TPMS-Receiver"))
     # processes.append(Process(target=send_timesync, name="Can-Time-Sync"))
 
-    processes.append(EagleTransmitter(managed_params))
+    processes.append(Transmitter(managed_params))
 
     for p in processes:
         p.start()
