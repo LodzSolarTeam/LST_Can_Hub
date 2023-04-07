@@ -115,7 +115,7 @@ fi
 #
 # LST Commands
 #
-
+alias lst="cat README.md | grep '## Scripts' -A 50"
 alias lston="sudo systemctl enable --now lst_can_hub.service"
 alias lstoff="sudo systemctl disable --now lst_can_hub.service"
 alias lstrestart="sudo systemctl restart lst_can_hub.service"

@@ -9,7 +9,7 @@ journalctl -fu lst_can_hub.service
 
 1. [Setup](#setup)
 2. [Views for data](#views-for-data)
-3. [Autorun script](#autorun-script)
+3. [Scripts](#Scripts)
 4. [Login to RPi](#login-to-rpi)
 
 ## Setup
@@ -55,11 +55,7 @@ $HOME/LST_CAN_HUB
 ```
 
 
-## Autorun script
-
-Project should start automatically after rabbitmq
-
-For that, there should be a script:
+## Scripts
 
 ```bash
 /lib/systemd/system/lst_can_hub.service
