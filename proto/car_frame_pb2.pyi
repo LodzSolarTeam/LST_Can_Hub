@@ -6,610 +6,550 @@ import builtins
 import collections.abc
 import google.protobuf.descriptor
 import google.protobuf.internal.containers
-import google.protobuf.internal.enum_type_wrapper
 import google.protobuf.message
 import sys
 import typing
 
-if sys.version_info >= (3, 10):
+if sys.version_info >= (3, 8):
     import typing as typing_extensions
 else:
     import typing_extensions
 
 DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
 
-class _DriveMode:
-    ValueType = typing.NewType("ValueType", builtins.int)
-    V: typing_extensions.TypeAlias = ValueType
-
-class _DriveModeEnumTypeWrapper(google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[_DriveMode.ValueType], builtins.type):
-    DESCRIPTOR: google.protobuf.descriptor.EnumDescriptor
-    REVERSE: _DriveMode.ValueType  # 0
-    NEUTRAL: _DriveMode.ValueType  # 1
-    ECO: _DriveMode.ValueType  # 2
-    FORWARD: _DriveMode.ValueType  # 3
-
-class DriveMode(_DriveMode, metaclass=_DriveModeEnumTypeWrapper): ...
-
-REVERSE: DriveMode.ValueType  # 0
-NEUTRAL: DriveMode.ValueType  # 1
-ECO: DriveMode.ValueType  # 2
-FORWARD: DriveMode.ValueType  # 3
-global___DriveMode = DriveMode
-
-@typing_extensions.final
-class Battery(google.protobuf.message.Message):
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
-
-    REMAININGCHARGETIME_FIELD_NUMBER: builtins.int
-    CHARGERENABLED_FIELD_NUMBER: builtins.int
-    SYSTEMSTATE_FIELD_NUMBER: builtins.int
-    PACKCRATE_FIELD_NUMBER: builtins.int
-    STATEOFCHARGE_FIELD_NUMBER: builtins.int
-    STATEOFHEALTH_FIELD_NUMBER: builtins.int
-    CELLSCONNECTED_FIELD_NUMBER: builtins.int
-    REMAININGENERGY_FIELD_NUMBER: builtins.int
-    RELAYFAULT_FIELD_NUMBER: builtins.int
-    K3RELAYSTATE_FIELD_NUMBER: builtins.int
-    K2RELAYSTATE_FIELD_NUMBER: builtins.int
-    K1RELAYSTATE_FIELD_NUMBER: builtins.int
-    BATTERYINFAULTSTATE_FIELD_NUMBER: builtins.int
-    PACKTEMPERATUREMAX_FIELD_NUMBER: builtins.int
-    LMUNUMBERWITHTEMPERATUREMAX_FIELD_NUMBER: builtins.int
-    PACKTEMPERATUREMIN_FIELD_NUMBER: builtins.int
-    LMUNUMBERWITHTEMPERATUREMIN_FIELD_NUMBER: builtins.int
-    DEVIATIONOFVOLTAGES_FIELD_NUMBER: builtins.int
-    CELLVOLTAGEMAX_FIELD_NUMBER: builtins.int
-    CELLNUMBERWITHVOLTAGEMAX_FIELD_NUMBER: builtins.int
-    CELLVOLTAGEMIN_FIELD_NUMBER: builtins.int
-    CELLNUMBERWITHVOLTAGEMIN_FIELD_NUMBER: builtins.int
-    CELLVOLTAGEAVG_FIELD_NUMBER: builtins.int
-    PACKVOLTAGE_FIELD_NUMBER: builtins.int
-    PACKCURRENT_FIELD_NUMBER: builtins.int
-    PACKPOWER_FIELD_NUMBER: builtins.int
-    VOLTAGES_FIELD_NUMBER: builtins.int
-    TEMPERATURES_FIELD_NUMBER: builtins.int
-    ERRORS_FIELD_NUMBER: builtins.int
-    WARNINGS_FIELD_NUMBER: builtins.int
-    remainingChargeTime: builtins.int
-    """BMS_REMAINING_CHARGE_TIME"""
-    chargerEnabled: builtins.bool
-    """BMS_CHARGE_EN"""
-    systemState: builtins.int
-    """BMS_SYSTEM_STATE"""
-    packCRate: builtins.int
-    """BMS_PACK_C_RATE"""
-    stateOfCharge: builtins.int
-    """BMS_SOC"""
-    stateOfHealth: builtins.int
-    """BMS_SOH"""
-    cellsConnected: builtins.int
-    """BMS_CELLS_CONNECTED"""
-    remainingEnergy: builtins.int
-    """BMS_REMAINING_ENERGY"""
-    relayFault: builtins.bool
-    """System State
-    BMS_RELAY_FAULT
-    """
-    k3RelayState: builtins.bool
-    """BMS_K3_RELAY_STATE"""
-    k2RelayState: builtins.bool
-    """BMS_K2_RELAY_STATE"""
-    k1RelayState: builtins.bool
-    """BMS_K1_RELAY_STATE"""
-    batteryInFaultState: builtins.bool
-    """BMS_BATTERY_IN_FAULT_STATE"""
-    packTemperatureMax: builtins.int
-    """Temperatures
-    BMS_PACK_TEMP_HIGH
-    """
-    lmuNumberWithTemperatureMax: builtins.int
-    """BMS_LMU_W_HIGHEST_TEMP"""
-    packTemperatureMin: builtins.int
-    """BMS_PACK_TEMP_LOW"""
-    lmuNumberWithTemperatureMin: builtins.int
-    """BMS_LMU_W_LOWEST_TEMP"""
-    deviationOfVoltages: builtins.int
-    """Voltages
-    BMS_POST_PROC_2 FIXME trzeba sie upewnic
-    """
-    cellVoltageMax: builtins.int
-    """BMS_CELL_VOLTAGE_MAX"""
-    cellNumberWithVoltageMax: builtins.int
-    """BMS_CELL_W_HIGHEST_VOLTAGE"""
-    cellVoltageMin: builtins.int
-    """BMS_CELL_VOLTAGE_MIN"""
-    cellNumberWithVoltageMin: builtins.int
-    """BMS_CELL_W_LOWEST_VOLTAGE"""
-    cellVoltageAvg: builtins.int
-    """BMS_AVG_CELL_VOLTAGE"""
-    packVoltage: builtins.int
-    """BMS_PACK_VOLTAGE"""
-    packCurrent: builtins.int
-    """BMS_PACK_CURRENT"""
-    packPower: builtins.int
-    """BMS_PACK_VOLTAGE * BMS_PACK_CURRENT"""
-    @property
-    def voltages(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.int]:
-        """BMS"""
-    @property
-    def temperatures(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.int]:
-        """BMS"""
-    errors: builtins.int
-    warnings: builtins.int
-    def __init__(
-        self,
-        *,
-        remainingChargeTime: builtins.int | None = ...,
-        chargerEnabled: builtins.bool | None = ...,
-        systemState: builtins.int | None = ...,
-        packCRate: builtins.int | None = ...,
-        stateOfCharge: builtins.int | None = ...,
-        stateOfHealth: builtins.int | None = ...,
-        cellsConnected: builtins.int | None = ...,
-        remainingEnergy: builtins.int | None = ...,
-        relayFault: builtins.bool | None = ...,
-        k3RelayState: builtins.bool | None = ...,
-        k2RelayState: builtins.bool | None = ...,
-        k1RelayState: builtins.bool | None = ...,
-        batteryInFaultState: builtins.bool | None = ...,
-        packTemperatureMax: builtins.int | None = ...,
-        lmuNumberWithTemperatureMax: builtins.int | None = ...,
-        packTemperatureMin: builtins.int | None = ...,
-        lmuNumberWithTemperatureMin: builtins.int | None = ...,
-        deviationOfVoltages: builtins.int | None = ...,
-        cellVoltageMax: builtins.int | None = ...,
-        cellNumberWithVoltageMax: builtins.int | None = ...,
-        cellVoltageMin: builtins.int | None = ...,
-        cellNumberWithVoltageMin: builtins.int | None = ...,
-        cellVoltageAvg: builtins.int | None = ...,
-        packVoltage: builtins.int | None = ...,
-        packCurrent: builtins.int | None = ...,
-        packPower: builtins.int | None = ...,
-        voltages: collections.abc.Iterable[builtins.int] | None = ...,
-        temperatures: collections.abc.Iterable[builtins.int] | None = ...,
-        errors: builtins.int | None = ...,
-        warnings: builtins.int | None = ...,
-    ) -> None: ...
-    def HasField(self, field_name: typing_extensions.Literal["_batteryInFaultState", b"_batteryInFaultState", "_cellNumberWithVoltageMax", b"_cellNumberWithVoltageMax", "_cellNumberWithVoltageMin", b"_cellNumberWithVoltageMin", "_cellVoltageAvg", b"_cellVoltageAvg", "_cellVoltageMax", b"_cellVoltageMax", "_cellVoltageMin", b"_cellVoltageMin", "_cellsConnected", b"_cellsConnected", "_chargerEnabled", b"_chargerEnabled", "_deviationOfVoltages", b"_deviationOfVoltages", "_errors", b"_errors", "_k1RelayState", b"_k1RelayState", "_k2RelayState", b"_k2RelayState", "_k3RelayState", b"_k3RelayState", "_lmuNumberWithTemperatureMax", b"_lmuNumberWithTemperatureMax", "_lmuNumberWithTemperatureMin", b"_lmuNumberWithTemperatureMin", "_packCRate", b"_packCRate", "_packCurrent", b"_packCurrent", "_packPower", b"_packPower", "_packTemperatureMax", b"_packTemperatureMax", "_packTemperatureMin", b"_packTemperatureMin", "_packVoltage", b"_packVoltage", "_relayFault", b"_relayFault", "_remainingChargeTime", b"_remainingChargeTime", "_remainingEnergy", b"_remainingEnergy", "_stateOfCharge", b"_stateOfCharge", "_stateOfHealth", b"_stateOfHealth", "_systemState", b"_systemState", "_warnings", b"_warnings", "batteryInFaultState", b"batteryInFaultState", "cellNumberWithVoltageMax", b"cellNumberWithVoltageMax", "cellNumberWithVoltageMin", b"cellNumberWithVoltageMin", "cellVoltageAvg", b"cellVoltageAvg", "cellVoltageMax", b"cellVoltageMax", "cellVoltageMin", b"cellVoltageMin", "cellsConnected", b"cellsConnected", "chargerEnabled", b"chargerEnabled", "deviationOfVoltages", b"deviationOfVoltages", "errors", b"errors", "k1RelayState", b"k1RelayState", "k2RelayState", b"k2RelayState", "k3RelayState", b"k3RelayState", "lmuNumberWithTemperatureMax", b"lmuNumberWithTemperatureMax", "lmuNumberWithTemperatureMin", b"lmuNumberWithTemperatureMin", "packCRate", b"packCRate", "packCurrent", b"packCurrent", "packPower", b"packPower", "packTemperatureMax", b"packTemperatureMax", "packTemperatureMin", b"packTemperatureMin", "packVoltage", b"packVoltage", "relayFault", b"relayFault", "remainingChargeTime", b"remainingChargeTime", "remainingEnergy", b"remainingEnergy", "stateOfCharge", b"stateOfCharge", "stateOfHealth", b"stateOfHealth", "systemState", b"systemState", "warnings", b"warnings"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing_extensions.Literal["_batteryInFaultState", b"_batteryInFaultState", "_cellNumberWithVoltageMax", b"_cellNumberWithVoltageMax", "_cellNumberWithVoltageMin", b"_cellNumberWithVoltageMin", "_cellVoltageAvg", b"_cellVoltageAvg", "_cellVoltageMax", b"_cellVoltageMax", "_cellVoltageMin", b"_cellVoltageMin", "_cellsConnected", b"_cellsConnected", "_chargerEnabled", b"_chargerEnabled", "_deviationOfVoltages", b"_deviationOfVoltages", "_errors", b"_errors", "_k1RelayState", b"_k1RelayState", "_k2RelayState", b"_k2RelayState", "_k3RelayState", b"_k3RelayState", "_lmuNumberWithTemperatureMax", b"_lmuNumberWithTemperatureMax", "_lmuNumberWithTemperatureMin", b"_lmuNumberWithTemperatureMin", "_packCRate", b"_packCRate", "_packCurrent", b"_packCurrent", "_packPower", b"_packPower", "_packTemperatureMax", b"_packTemperatureMax", "_packTemperatureMin", b"_packTemperatureMin", "_packVoltage", b"_packVoltage", "_relayFault", b"_relayFault", "_remainingChargeTime", b"_remainingChargeTime", "_remainingEnergy", b"_remainingEnergy", "_stateOfCharge", b"_stateOfCharge", "_stateOfHealth", b"_stateOfHealth", "_systemState", b"_systemState", "_warnings", b"_warnings", "batteryInFaultState", b"batteryInFaultState", "cellNumberWithVoltageMax", b"cellNumberWithVoltageMax", "cellNumberWithVoltageMin", b"cellNumberWithVoltageMin", "cellVoltageAvg", b"cellVoltageAvg", "cellVoltageMax", b"cellVoltageMax", "cellVoltageMin", b"cellVoltageMin", "cellsConnected", b"cellsConnected", "chargerEnabled", b"chargerEnabled", "deviationOfVoltages", b"deviationOfVoltages", "errors", b"errors", "k1RelayState", b"k1RelayState", "k2RelayState", b"k2RelayState", "k3RelayState", b"k3RelayState", "lmuNumberWithTemperatureMax", b"lmuNumberWithTemperatureMax", "lmuNumberWithTemperatureMin", b"lmuNumberWithTemperatureMin", "packCRate", b"packCRate", "packCurrent", b"packCurrent", "packPower", b"packPower", "packTemperatureMax", b"packTemperatureMax", "packTemperatureMin", b"packTemperatureMin", "packVoltage", b"packVoltage", "relayFault", b"relayFault", "remainingChargeTime", b"remainingChargeTime", "remainingEnergy", b"remainingEnergy", "stateOfCharge", b"stateOfCharge", "stateOfHealth", b"stateOfHealth", "systemState", b"systemState", "temperatures", b"temperatures", "voltages", b"voltages", "warnings", b"warnings"]) -> None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_batteryInFaultState", b"_batteryInFaultState"]) -> typing_extensions.Literal["batteryInFaultState"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_cellNumberWithVoltageMax", b"_cellNumberWithVoltageMax"]) -> typing_extensions.Literal["cellNumberWithVoltageMax"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_cellNumberWithVoltageMin", b"_cellNumberWithVoltageMin"]) -> typing_extensions.Literal["cellNumberWithVoltageMin"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_cellVoltageAvg", b"_cellVoltageAvg"]) -> typing_extensions.Literal["cellVoltageAvg"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_cellVoltageMax", b"_cellVoltageMax"]) -> typing_extensions.Literal["cellVoltageMax"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_cellVoltageMin", b"_cellVoltageMin"]) -> typing_extensions.Literal["cellVoltageMin"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_cellsConnected", b"_cellsConnected"]) -> typing_extensions.Literal["cellsConnected"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_chargerEnabled", b"_chargerEnabled"]) -> typing_extensions.Literal["chargerEnabled"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_deviationOfVoltages", b"_deviationOfVoltages"]) -> typing_extensions.Literal["deviationOfVoltages"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_errors", b"_errors"]) -> typing_extensions.Literal["errors"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_k1RelayState", b"_k1RelayState"]) -> typing_extensions.Literal["k1RelayState"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_k2RelayState", b"_k2RelayState"]) -> typing_extensions.Literal["k2RelayState"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_k3RelayState", b"_k3RelayState"]) -> typing_extensions.Literal["k3RelayState"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_lmuNumberWithTemperatureMax", b"_lmuNumberWithTemperatureMax"]) -> typing_extensions.Literal["lmuNumberWithTemperatureMax"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_lmuNumberWithTemperatureMin", b"_lmuNumberWithTemperatureMin"]) -> typing_extensions.Literal["lmuNumberWithTemperatureMin"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_packCRate", b"_packCRate"]) -> typing_extensions.Literal["packCRate"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_packCurrent", b"_packCurrent"]) -> typing_extensions.Literal["packCurrent"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_packPower", b"_packPower"]) -> typing_extensions.Literal["packPower"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_packTemperatureMax", b"_packTemperatureMax"]) -> typing_extensions.Literal["packTemperatureMax"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_packTemperatureMin", b"_packTemperatureMin"]) -> typing_extensions.Literal["packTemperatureMin"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_packVoltage", b"_packVoltage"]) -> typing_extensions.Literal["packVoltage"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_relayFault", b"_relayFault"]) -> typing_extensions.Literal["relayFault"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_remainingChargeTime", b"_remainingChargeTime"]) -> typing_extensions.Literal["remainingChargeTime"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_remainingEnergy", b"_remainingEnergy"]) -> typing_extensions.Literal["remainingEnergy"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_stateOfCharge", b"_stateOfCharge"]) -> typing_extensions.Literal["stateOfCharge"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_stateOfHealth", b"_stateOfHealth"]) -> typing_extensions.Literal["stateOfHealth"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_systemState", b"_systemState"]) -> typing_extensions.Literal["systemState"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_warnings", b"_warnings"]) -> typing_extensions.Literal["warnings"] | None: ...
-
-global___Battery = Battery
-
-@typing_extensions.final
-class Mppt(google.protobuf.message.Message):
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
-
-    CURRENTIN_FIELD_NUMBER: builtins.int
-    VOLTAGEIN_FIELD_NUMBER: builtins.int
-    VOLTAGEOUT_FIELD_NUMBER: builtins.int
-    MOSFETTEMP_FIELD_NUMBER: builtins.int
-    PCBTEMP_FIELD_NUMBER: builtins.int
-    POWERIN_FIELD_NUMBER: builtins.int
-    currentIn: builtins.float
-    """MPPT_x_Current_IN"""
-    voltageIn: builtins.float
-    """MPPT_x_Voltage_IN"""
-    voltageOut: builtins.float
-    """MPPT_x_Voltage_OUT"""
-    mosfetTemp: builtins.int
-    """MPPT_x_MOSFET_TEMP"""
-    pcbTemp: builtins.int
-    """MPPT_x_PCB_TEMP"""
-    powerIn: builtins.float
-    """MPPT_x_Power_IN"""
-    def __init__(
-        self,
-        *,
-        currentIn: builtins.float | None = ...,
-        voltageIn: builtins.float | None = ...,
-        voltageOut: builtins.float | None = ...,
-        mosfetTemp: builtins.int | None = ...,
-        pcbTemp: builtins.int | None = ...,
-        powerIn: builtins.float | None = ...,
-    ) -> None: ...
-    def HasField(self, field_name: typing_extensions.Literal["_currentIn", b"_currentIn", "_mosfetTemp", b"_mosfetTemp", "_pcbTemp", b"_pcbTemp", "_powerIn", b"_powerIn", "_voltageIn", b"_voltageIn", "_voltageOut", b"_voltageOut", "currentIn", b"currentIn", "mosfetTemp", b"mosfetTemp", "pcbTemp", b"pcbTemp", "powerIn", b"powerIn", "voltageIn", b"voltageIn", "voltageOut", b"voltageOut"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing_extensions.Literal["_currentIn", b"_currentIn", "_mosfetTemp", b"_mosfetTemp", "_pcbTemp", b"_pcbTemp", "_powerIn", b"_powerIn", "_voltageIn", b"_voltageIn", "_voltageOut", b"_voltageOut", "currentIn", b"currentIn", "mosfetTemp", b"mosfetTemp", "pcbTemp", b"pcbTemp", "powerIn", b"powerIn", "voltageIn", b"voltageIn", "voltageOut", b"voltageOut"]) -> None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_currentIn", b"_currentIn"]) -> typing_extensions.Literal["currentIn"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_mosfetTemp", b"_mosfetTemp"]) -> typing_extensions.Literal["mosfetTemp"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_pcbTemp", b"_pcbTemp"]) -> typing_extensions.Literal["pcbTemp"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_powerIn", b"_powerIn"]) -> typing_extensions.Literal["powerIn"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_voltageIn", b"_voltageIn"]) -> typing_extensions.Literal["voltageIn"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_voltageOut", b"_voltageOut"]) -> typing_extensions.Literal["voltageOut"] | None: ...
-
-global___Mppt = Mppt
-
-@typing_extensions.final
-class Lights(google.protobuf.message.Message):
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
-
-    STOP_FIELD_NUMBER: builtins.int
-    LOWBEAM_FIELD_NUMBER: builtins.int
-    HIGHBEAM_FIELD_NUMBER: builtins.int
-    RIGHTINDICATOR_FIELD_NUMBER: builtins.int
-    LEFTINDICATOR_FIELD_NUMBER: builtins.int
-    PARK_FIELD_NUMBER: builtins.int
-    INTERIOR_FIELD_NUMBER: builtins.int
-    EMERGENCY_FIELD_NUMBER: builtins.int
-    stop: builtins.bool
-    """STOP"""
-    lowBeam: builtins.bool
-    """LOW_BEAM"""
-    highBeam: builtins.bool
-    """HIGH_BEAM"""
-    rightIndicator: builtins.bool
-    """RIGHT_INDICATOR"""
-    leftIndicator: builtins.bool
-    """LEFT_INDICATOR"""
-    park: builtins.bool
-    """PARK"""
-    interior: builtins.bool
-    """INTERIOR"""
-    emergency: builtins.bool
-    """HAZARD"""
-    def __init__(
-        self,
-        *,
-        stop: builtins.bool | None = ...,
-        lowBeam: builtins.bool | None = ...,
-        highBeam: builtins.bool | None = ...,
-        rightIndicator: builtins.bool | None = ...,
-        leftIndicator: builtins.bool | None = ...,
-        park: builtins.bool | None = ...,
-        interior: builtins.bool | None = ...,
-        emergency: builtins.bool | None = ...,
-    ) -> None: ...
-    def HasField(self, field_name: typing_extensions.Literal["_emergency", b"_emergency", "_highBeam", b"_highBeam", "_interior", b"_interior", "_leftIndicator", b"_leftIndicator", "_lowBeam", b"_lowBeam", "_park", b"_park", "_rightIndicator", b"_rightIndicator", "_stop", b"_stop", "emergency", b"emergency", "highBeam", b"highBeam", "interior", b"interior", "leftIndicator", b"leftIndicator", "lowBeam", b"lowBeam", "park", b"park", "rightIndicator", b"rightIndicator", "stop", b"stop"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing_extensions.Literal["_emergency", b"_emergency", "_highBeam", b"_highBeam", "_interior", b"_interior", "_leftIndicator", b"_leftIndicator", "_lowBeam", b"_lowBeam", "_park", b"_park", "_rightIndicator", b"_rightIndicator", "_stop", b"_stop", "emergency", b"emergency", "highBeam", b"highBeam", "interior", b"interior", "leftIndicator", b"leftIndicator", "lowBeam", b"lowBeam", "park", b"park", "rightIndicator", b"rightIndicator", "stop", b"stop"]) -> None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_emergency", b"_emergency"]) -> typing_extensions.Literal["emergency"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_highBeam", b"_highBeam"]) -> typing_extensions.Literal["highBeam"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_interior", b"_interior"]) -> typing_extensions.Literal["interior"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_leftIndicator", b"_leftIndicator"]) -> typing_extensions.Literal["leftIndicator"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_lowBeam", b"_lowBeam"]) -> typing_extensions.Literal["lowBeam"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_park", b"_park"]) -> typing_extensions.Literal["park"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_rightIndicator", b"_rightIndicator"]) -> typing_extensions.Literal["rightIndicator"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_stop", b"_stop"]) -> typing_extensions.Literal["stop"] | None: ...
-
-global___Lights = Lights
-
-@typing_extensions.final
-class Gps(google.protobuf.message.Message):
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
-
-    LATITUDE_FIELD_NUMBER: builtins.int
-    LATITUDEDIRECTION_FIELD_NUMBER: builtins.int
-    LONGITUDE_FIELD_NUMBER: builtins.int
-    LONGITUDEDIRECTION_FIELD_NUMBER: builtins.int
-    ALTITUDE_FIELD_NUMBER: builtins.int
-    SPEEDKNOTS_FIELD_NUMBER: builtins.int
-    SPEEDKILOMETERS_FIELD_NUMBER: builtins.int
-    SATELLITESNUMBER_FIELD_NUMBER: builtins.int
-    QUALITY_FIELD_NUMBER: builtins.int
-    latitude: builtins.float
-    latitudeDirection: builtins.str
-    longitude: builtins.float
-    longitudeDirection: builtins.str
-    altitude: builtins.float
-    speedKnots: builtins.float
-    speedKilometers: builtins.float
-    satellitesNumber: builtins.int
-    quality: builtins.int
-    def __init__(
-        self,
-        *,
-        latitude: builtins.float | None = ...,
-        latitudeDirection: builtins.str | None = ...,
-        longitude: builtins.float | None = ...,
-        longitudeDirection: builtins.str | None = ...,
-        altitude: builtins.float | None = ...,
-        speedKnots: builtins.float | None = ...,
-        speedKilometers: builtins.float | None = ...,
-        satellitesNumber: builtins.int | None = ...,
-        quality: builtins.int | None = ...,
-    ) -> None: ...
-    def HasField(self, field_name: typing_extensions.Literal["_altitude", b"_altitude", "_latitude", b"_latitude", "_latitudeDirection", b"_latitudeDirection", "_longitude", b"_longitude", "_longitudeDirection", b"_longitudeDirection", "_quality", b"_quality", "_satellitesNumber", b"_satellitesNumber", "_speedKilometers", b"_speedKilometers", "_speedKnots", b"_speedKnots", "altitude", b"altitude", "latitude", b"latitude", "latitudeDirection", b"latitudeDirection", "longitude", b"longitude", "longitudeDirection", b"longitudeDirection", "quality", b"quality", "satellitesNumber", b"satellitesNumber", "speedKilometers", b"speedKilometers", "speedKnots", b"speedKnots"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing_extensions.Literal["_altitude", b"_altitude", "_latitude", b"_latitude", "_latitudeDirection", b"_latitudeDirection", "_longitude", b"_longitude", "_longitudeDirection", b"_longitudeDirection", "_quality", b"_quality", "_satellitesNumber", b"_satellitesNumber", "_speedKilometers", b"_speedKilometers", "_speedKnots", b"_speedKnots", "altitude", b"altitude", "latitude", b"latitude", "latitudeDirection", b"latitudeDirection", "longitude", b"longitude", "longitudeDirection", b"longitudeDirection", "quality", b"quality", "satellitesNumber", b"satellitesNumber", "speedKilometers", b"speedKilometers", "speedKnots", b"speedKnots"]) -> None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_altitude", b"_altitude"]) -> typing_extensions.Literal["altitude"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_latitude", b"_latitude"]) -> typing_extensions.Literal["latitude"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_latitudeDirection", b"_latitudeDirection"]) -> typing_extensions.Literal["latitudeDirection"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_longitude", b"_longitude"]) -> typing_extensions.Literal["longitude"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_longitudeDirection", b"_longitudeDirection"]) -> typing_extensions.Literal["longitudeDirection"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_quality", b"_quality"]) -> typing_extensions.Literal["quality"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_satellitesNumber", b"_satellitesNumber"]) -> typing_extensions.Literal["satellitesNumber"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_speedKilometers", b"_speedKilometers"]) -> typing_extensions.Literal["speedKilometers"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_speedKnots", b"_speedKnots"]) -> typing_extensions.Literal["speedKnots"] | None: ...
-
-global___Gps = Gps
-
-@typing_extensions.final
-class TiresPressure(google.protobuf.message.Message):
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
-
-    FRONTLEFT_FIELD_NUMBER: builtins.int
-    FRONTRIGHT_FIELD_NUMBER: builtins.int
-    REARLEFT_FIELD_NUMBER: builtins.int
-    REARRIGHT_FIELD_NUMBER: builtins.int
-    @property
-    def frontLeft(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.int]:
-        """TPMS_INFO->PRESSURE_FRONT_LEFT"""
-    @property
-    def frontRight(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.int]:
-        """TPMS_INFO->PRESSURE_FRONT_RIGHT"""
-    @property
-    def rearLeft(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.int]:
-        """TPMS_INFO->PRESSURE_REAR_LEFT"""
-    @property
-    def rearRight(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.int]:
-        """TPMS_INFO->PRESSURE_REAR_RIGHT"""
-    def __init__(
-        self,
-        *,
-        frontLeft: collections.abc.Iterable[builtins.int] | None = ...,
-        frontRight: collections.abc.Iterable[builtins.int] | None = ...,
-        rearLeft: collections.abc.Iterable[builtins.int] | None = ...,
-        rearRight: collections.abc.Iterable[builtins.int] | None = ...,
-    ) -> None: ...
-    def ClearField(self, field_name: typing_extensions.Literal["frontLeft", b"frontLeft", "frontRight", b"frontRight", "rearLeft", b"rearLeft", "rearRight", b"rearRight"]) -> None: ...
-
-global___TiresPressure = TiresPressure
-
-@typing_extensions.final
-class Engine(google.protobuf.message.Message):
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
-
-    MOTORTEMPERATURE_FIELD_NUMBER: builtins.int
-    CONTROLLERTEMPERATURE_FIELD_NUMBER: builtins.int
-    motorTemperature: builtins.float
-    """w1thermalsensors"""
-    controllerTemperature: builtins.float
-    """w1thermalsensors"""
-    def __init__(
-        self,
-        *,
-        motorTemperature: builtins.float | None = ...,
-        controllerTemperature: builtins.float | None = ...,
-    ) -> None: ...
-    def HasField(self, field_name: typing_extensions.Literal["_controllerTemperature", b"_controllerTemperature", "_motorTemperature", b"_motorTemperature", "controllerTemperature", b"controllerTemperature", "motorTemperature", b"motorTemperature"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing_extensions.Literal["_controllerTemperature", b"_controllerTemperature", "_motorTemperature", b"_motorTemperature", "controllerTemperature", b"controllerTemperature", "motorTemperature", b"motorTemperature"]) -> None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_controllerTemperature", b"_controllerTemperature"]) -> typing_extensions.Literal["controllerTemperature"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_motorTemperature", b"_motorTemperature"]) -> typing_extensions.Literal["motorTemperature"] | None: ...
-
-global___Engine = Engine
-
-@typing_extensions.final
-class MotorControl(google.protobuf.message.Message):
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
-
-    MAINSWITCH_FIELD_NUMBER: builtins.int
-    CRUISEON_FIELD_NUMBER: builtins.int
-    CRUISEACTIVE_FIELD_NUMBER: builtins.int
-    DESIREDSPEED_FIELD_NUMBER: builtins.int
-    DESIREDTHROTTLE_FIELD_NUMBER: builtins.int
-    THROTTLE_FIELD_NUMBER: builtins.int
-    REGEN_FIELD_NUMBER: builtins.int
-    DRIVEMODE_FIELD_NUMBER: builtins.int
-    mainSwitch: builtins.bool
-    cruiseOn: builtins.bool
-    """CRUISE_ON"""
-    cruiseActive: builtins.bool
-    """CRUISE_ACTIVE"""
-    desiredSpeed: builtins.int
-    """CRUISE_SET_SPEED"""
-    desiredThrottle: builtins.int
-    """CRUISE_THROTTLE"""
-    throttle: builtins.int
-    regen: builtins.int
-    driveMode: global___DriveMode.ValueType
-    """DRIVEMODE"""
-    def __init__(
-        self,
-        *,
-        mainSwitch: builtins.bool | None = ...,
-        cruiseOn: builtins.bool | None = ...,
-        cruiseActive: builtins.bool | None = ...,
-        desiredSpeed: builtins.int | None = ...,
-        desiredThrottle: builtins.int | None = ...,
-        throttle: builtins.int | None = ...,
-        regen: builtins.int | None = ...,
-        driveMode: global___DriveMode.ValueType | None = ...,
-    ) -> None: ...
-    def HasField(self, field_name: typing_extensions.Literal["_cruiseActive", b"_cruiseActive", "_cruiseOn", b"_cruiseOn", "_desiredSpeed", b"_desiredSpeed", "_desiredThrottle", b"_desiredThrottle", "_driveMode", b"_driveMode", "_mainSwitch", b"_mainSwitch", "_regen", b"_regen", "_throttle", b"_throttle", "cruiseActive", b"cruiseActive", "cruiseOn", b"cruiseOn", "desiredSpeed", b"desiredSpeed", "desiredThrottle", b"desiredThrottle", "driveMode", b"driveMode", "mainSwitch", b"mainSwitch", "regen", b"regen", "throttle", b"throttle"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing_extensions.Literal["_cruiseActive", b"_cruiseActive", "_cruiseOn", b"_cruiseOn", "_desiredSpeed", b"_desiredSpeed", "_desiredThrottle", b"_desiredThrottle", "_driveMode", b"_driveMode", "_mainSwitch", b"_mainSwitch", "_regen", b"_regen", "_throttle", b"_throttle", "cruiseActive", b"cruiseActive", "cruiseOn", b"cruiseOn", "desiredSpeed", b"desiredSpeed", "desiredThrottle", b"desiredThrottle", "driveMode", b"driveMode", "mainSwitch", b"mainSwitch", "regen", b"regen", "throttle", b"throttle"]) -> None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_cruiseActive", b"_cruiseActive"]) -> typing_extensions.Literal["cruiseActive"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_cruiseOn", b"_cruiseOn"]) -> typing_extensions.Literal["cruiseOn"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_desiredSpeed", b"_desiredSpeed"]) -> typing_extensions.Literal["desiredSpeed"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_desiredThrottle", b"_desiredThrottle"]) -> typing_extensions.Literal["desiredThrottle"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_driveMode", b"_driveMode"]) -> typing_extensions.Literal["driveMode"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_mainSwitch", b"_mainSwitch"]) -> typing_extensions.Literal["mainSwitch"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_regen", b"_regen"]) -> typing_extensions.Literal["regen"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_throttle", b"_throttle"]) -> typing_extensions.Literal["throttle"] | None: ...
-
-global___MotorControl = MotorControl
-
 @typing_extensions.final
 class EagleTwo(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
     TIMESTAMP_FIELD_NUMBER: builtins.int
-    USEDENERGY_FIELD_NUMBER: builtins.int
-    TOTALMILLAGE_FIELD_NUMBER: builtins.int
     HANDBRAKE_FIELD_NUMBER: builtins.int
-    BATTERYERROR_FIELD_NUMBER: builtins.int
-    ENGINEERROR_FIELD_NUMBER: builtins.int
+    BATT_ERROR_FIELD_NUMBER: builtins.int
+    ENGINE_ERROR_FIELD_NUMBER: builtins.int
     HORN_FIELD_NUMBER: builtins.int
-    BATTERY_FIELD_NUMBER: builtins.int
-    MPPT_FIELD_NUMBER: builtins.int
-    LIGHTS_FIELD_NUMBER: builtins.int
-    GPS_FIELD_NUMBER: builtins.int
-    TIRES_FIELD_NUMBER: builtins.int
-    LEFTENGINE_FIELD_NUMBER: builtins.int
-    RIGHTENGINE_FIELD_NUMBER: builtins.int
-    MOTORCONTROL_FIELD_NUMBER: builtins.int
-    timestamp: builtins.int
-    usedEnergy: builtins.int
-    """needs to be calculated manually based on packPower"""
-    totalMillage: builtins.int
-    """needs to be calculated manually based on rpm"""
-    handBrake: builtins.bool
+    BMS_REMAINING_CHARGE_TIME_FIELD_NUMBER: builtins.int
+    BMS_CHARGE_EN_FIELD_NUMBER: builtins.int
+    BMS_SYSTEM_STATE_FIELD_NUMBER: builtins.int
+    BMS_PACK_C_RATE_FIELD_NUMBER: builtins.int
+    BMS_SOC_FIELD_NUMBER: builtins.int
+    BMS_SOH_FIELD_NUMBER: builtins.int
+    BMS_CELLS_CONNECTED_FIELD_NUMBER: builtins.int
+    BMS_REMAINING_ENERGY_FIELD_NUMBER: builtins.int
+    BMS_RELAY_FAULT_FIELD_NUMBER: builtins.int
+    BMS_K3_RELAY_STATE_FIELD_NUMBER: builtins.int
+    BMS_K2_RELAY_STATE_FIELD_NUMBER: builtins.int
+    BMS_K1_RELAY_STATE_FIELD_NUMBER: builtins.int
+    BMS_BATTERY_IN_FAULT_STATE_FIELD_NUMBER: builtins.int
+    BMS_PACK_TEMP_HIGH_FIELD_NUMBER: builtins.int
+    BMS_LMU_W_HIGHEST_TEMP_FIELD_NUMBER: builtins.int
+    BMS_PACK_TEMP_LOW_FIELD_NUMBER: builtins.int
+    BMS_LMU_W_LOWEST_TEMP_FIELD_NUMBER: builtins.int
+    BMS_POST_PROC_2_FIELD_NUMBER: builtins.int
+    BMS_CELL_VOLTAGE_MAX_FIELD_NUMBER: builtins.int
+    BMS_CELL_W_HIGHEST_VOLTAGE_FIELD_NUMBER: builtins.int
+    BMS_CELL_VOLTAGE_MIN_FIELD_NUMBER: builtins.int
+    BMS_CELL_W_LOWEST_VOLTAGE_FIELD_NUMBER: builtins.int
+    BMS_AVG_CELL_VOLTAGE_FIELD_NUMBER: builtins.int
+    BMS_PACK_VOLTAGE_FIELD_NUMBER: builtins.int
+    BMS_PACK_CURRENT_FIELD_NUMBER: builtins.int
+    BMS_ERROR_FLAGS_FIELD_NUMBER: builtins.int
+    BMS_WARNING_FLAGS_FIELD_NUMBER: builtins.int
+    MPPT_1_CURRENT_IN_FIELD_NUMBER: builtins.int
+    MPPT_1_VOLTAGE_IN_FIELD_NUMBER: builtins.int
+    MPPT_1_VOLTAGE_OUT_FIELD_NUMBER: builtins.int
+    MPPT_1_MOSFET_TEMP_FIELD_NUMBER: builtins.int
+    MPPT_1_PCB_TEMP_FIELD_NUMBER: builtins.int
+    MPPT_1_POWER_IN_FIELD_NUMBER: builtins.int
+    MPPT_2_CURRENT_IN_FIELD_NUMBER: builtins.int
+    MPPT_2_VOLTAGE_IN_FIELD_NUMBER: builtins.int
+    MPPT_2_VOLTAGE_OUT_FIELD_NUMBER: builtins.int
+    MPPT_2_MOSFET_TEMP_FIELD_NUMBER: builtins.int
+    MPPT_2_PCB_TEMP_FIELD_NUMBER: builtins.int
+    MPPT_2_POWER_IN_FIELD_NUMBER: builtins.int
+    MPPT_3_CURRENT_IN_FIELD_NUMBER: builtins.int
+    MPPT_3_VOLTAGE_IN_FIELD_NUMBER: builtins.int
+    MPPT_3_VOLTAGE_OUT_FIELD_NUMBER: builtins.int
+    MPPT_3_MOSFET_TEMP_FIELD_NUMBER: builtins.int
+    MPPT_3_PCB_TEMP_FIELD_NUMBER: builtins.int
+    MPPT_3_POWER_IN_FIELD_NUMBER: builtins.int
+    MPPT_4_CURRENT_IN_FIELD_NUMBER: builtins.int
+    MPPT_4_VOLTAGE_IN_FIELD_NUMBER: builtins.int
+    MPPT_4_VOLTAGE_OUT_FIELD_NUMBER: builtins.int
+    MPPT_4_MOSFET_TEMP_FIELD_NUMBER: builtins.int
+    MPPT_4_PCB_TEMP_FIELD_NUMBER: builtins.int
+    MPPT_4_POWER_IN_FIELD_NUMBER: builtins.int
+    STOP_FIELD_NUMBER: builtins.int
+    LOW_BEAM_FIELD_NUMBER: builtins.int
+    HIGH_BEAM_FIELD_NUMBER: builtins.int
+    RIGHT_INDICATOR_FIELD_NUMBER: builtins.int
+    LEFT_INDICATOR_FIELD_NUMBER: builtins.int
+    PARK_FIELD_NUMBER: builtins.int
+    INTERIOR_FIELD_NUMBER: builtins.int
+    HAZARD_FIELD_NUMBER: builtins.int
+    GPS_LATITUDE_FIELD_NUMBER: builtins.int
+    GPS_LATITUDE_DIRECTION_FIELD_NUMBER: builtins.int
+    GPS_LONGITUDE_FIELD_NUMBER: builtins.int
+    GPS_LONGITUDE_DIRECTION_FIELD_NUMBER: builtins.int
+    GPS_ALTITUDE_FIELD_NUMBER: builtins.int
+    GPS_SPEED_KNOTS_FIELD_NUMBER: builtins.int
+    GPS_SPEED_KILOMETERS_FIELD_NUMBER: builtins.int
+    GPS_SATELLITES_NUMBER_FIELD_NUMBER: builtins.int
+    GPS_QUALITY_FIELD_NUMBER: builtins.int
+    PRESSURE_FRONT_LEFT_FIELD_NUMBER: builtins.int
+    PRESSURE_FRONT_RIGHT_FIELD_NUMBER: builtins.int
+    PRESSURE_REAR_LEFT_FIELD_NUMBER: builtins.int
+    PRESSURE_REAR_RIGHT_FIELD_NUMBER: builtins.int
+    TEMP_LEFT_MOTOR_FIELD_NUMBER: builtins.int
+    TEMP_RIGHT_MOTOR_FIELD_NUMBER: builtins.int
+    TEMP_RIGHT_DRIVER_FIELD_NUMBER: builtins.int
+    TEMP_LEFT_DRIVER_FIELD_NUMBER: builtins.int
+    MAIN_SWITCH_FIELD_NUMBER: builtins.int
+    CRUISE_ON_FIELD_NUMBER: builtins.int
+    CRUISE_ACTIVE_FIELD_NUMBER: builtins.int
+    CRUISE_SET_SPEED_FIELD_NUMBER: builtins.int
+    CRUISE_THROTTLE_FIELD_NUMBER: builtins.int
+    THROTTLE_FIELD_NUMBER: builtins.int
+    REGEN_FIELD_NUMBER: builtins.int
+    DRIVEMODE_FIELD_NUMBER: builtins.int
+    TIMESTAMP: builtins.int
+    HANDBRAKE: builtins.bool
     """HANDBRAKE"""
-    batteryError: builtins.bool
+    BATT_ERROR: builtins.bool
     """BATTERY_ERROR"""
-    engineError: builtins.bool
+    ENGINE_ERROR: builtins.bool
     """ENGINE_ERROR"""
-    horn: builtins.bool
+    HORN: builtins.bool
     """HORN"""
-    @property
-    def battery(self) -> global___Battery: ...
-    @property
-    def mppt(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___Mppt]: ...
-    @property
-    def lights(self) -> global___Lights: ...
-    @property
-    def gps(self) -> global___Gps: ...
-    @property
-    def tires(self) -> global___TiresPressure: ...
-    @property
-    def leftEngine(self) -> global___Engine: ...
-    @property
-    def rightEngine(self) -> global___Engine: ...
-    @property
-    def motorControl(self) -> global___MotorControl: ...
+    BMS_REMAINING_CHARGE_TIME: builtins.int
+    """BMS_REMAINING_CHARGE_TIME"""
+    BMS_CHARGE_EN: builtins.bool
+    """BMS_CHARGE_EN"""
+    BMS_SYSTEM_STATE: builtins.int
+    """BMS_SYSTEM_STATE"""
+    BMS_PACK_C_RATE: builtins.int
+    """BMS_PACK_C_RATE"""
+    BMS_SOC: builtins.int
+    """BMS_SOC"""
+    BMS_SOH: builtins.int
+    """BMS_SOH"""
+    BMS_CELLS_CONNECTED: builtins.int
+    """BMS_CELLS_CONNECTED"""
+    BMS_REMAINING_ENERGY: builtins.int
+    """BMS_REMAINING_ENERGY"""
+    BMS_RELAY_FAULT: builtins.bool
+    """System State
+    BMS_RELAY_FAULT
+    """
+    BMS_K3_RELAY_STATE: builtins.bool
+    """BMS_K3_RELAY_STATE"""
+    BMS_K2_RELAY_STATE: builtins.bool
+    """BMS_K2_RELAY_STATE"""
+    BMS_K1_RELAY_STATE: builtins.bool
+    """BMS_K1_RELAY_STATE"""
+    BMS_BATTERY_IN_FAULT_STATE: builtins.bool
+    """BMS_BATTERY_IN_FAULT_STATE"""
+    BMS_PACK_TEMP_HIGH: builtins.int
+    """Temperatures
+    BMS_PACK_TEMP_HIGH
+    """
+    BMS_LMU_W_HIGHEST_TEMP: builtins.int
+    """BMS_LMU_W_HIGHEST_TEMP"""
+    BMS_PACK_TEMP_LOW: builtins.int
+    """BMS_PACK_TEMP_LOW"""
+    BMS_LMU_W_LOWEST_TEMP: builtins.int
+    """BMS_LMU_W_LOWEST_TEMP"""
+    BMS_POST_PROC_2: builtins.int
+    """Voltages
+    BMS_POST_PROC_2 FIXME trzeba sie upewnic
+    """
+    BMS_CELL_VOLTAGE_MAX: builtins.int
+    """BMS_CELL_VOLTAGE_MAX"""
+    BMS_CELL_W_HIGHEST_VOLTAGE: builtins.int
+    """BMS_CELL_W_HIGHEST_VOLTAGE"""
+    BMS_CELL_VOLTAGE_MIN: builtins.int
+    """BMS_CELL_VOLTAGE_MIN"""
+    BMS_CELL_W_LOWEST_VOLTAGE: builtins.int
+    """BMS_CELL_W_LOWEST_VOLTAGE"""
+    BMS_AVG_CELL_VOLTAGE: builtins.int
+    """BMS_AVG_CELL_VOLTAGE"""
+    BMS_PACK_VOLTAGE: builtins.int
+    """BMS_PACK_VOLTAGE"""
+    BMS_PACK_CURRENT: builtins.int
+    """BMS_PACK_CURRENT"""
+    BMS_ERROR_FLAGS: builtins.int
+    BMS_WARNING_FLAGS: builtins.int
+    MPPT_1_Current_IN: builtins.float
+    """MPPT_x_Current_IN"""
+    MPPT_1_Voltage_IN: builtins.float
+    """MPPT_x_Voltage_IN"""
+    MPPT_1_Voltage_OUT: builtins.float
+    """MPPT_x_Voltage_OUT"""
+    MPPT_1_MOSFET_TEMP: builtins.int
+    """MPPT_x_MOSFET_TEMP"""
+    MPPT_1_PCB_TEMP: builtins.int
+    """MPPT_x_PCB_TEMP"""
+    MPPT_1_Power_IN: builtins.float
+    """MPPT_x_Power_IN"""
+    MPPT_2_Current_IN: builtins.float
+    """MPPT_x_Current_IN"""
+    MPPT_2_Voltage_IN: builtins.float
+    """MPPT_x_Voltage_IN"""
+    MPPT_2_Voltage_OUT: builtins.float
+    """MPPT_x_Voltage_OUT"""
+    MPPT_2_MOSFET_TEMP: builtins.int
+    """MPPT_x_MOSFET_TEMP"""
+    MPPT_2_PCB_TEMP: builtins.int
+    """MPPT_x_PCB_TEMP"""
+    MPPT_2_Power_IN: builtins.float
+    """MPPT_x_Power_IN"""
+    MPPT_3_Current_IN: builtins.float
+    """MPPT_x_Current_IN"""
+    MPPT_3_Voltage_IN: builtins.float
+    """MPPT_x_Voltage_IN"""
+    MPPT_3_Voltage_OUT: builtins.float
+    """MPPT_x_Voltage_OUT"""
+    MPPT_3_MOSFET_TEMP: builtins.int
+    """MPPT_x_MOSFET_TEMP"""
+    MPPT_3_PCB_TEMP: builtins.int
+    """MPPT_x_PCB_TEMP"""
+    MPPT_3_Power_IN: builtins.float
+    """MPPT_x_Power_IN"""
+    MPPT_4_Current_IN: builtins.float
+    """MPPT_x_Current_IN"""
+    MPPT_4_Voltage_IN: builtins.float
+    """MPPT_x_Voltage_IN"""
+    MPPT_4_Voltage_OUT: builtins.float
+    """MPPT_x_Voltage_OUT"""
+    MPPT_4_MOSFET_TEMP: builtins.int
+    """MPPT_x_MOSFET_TEMP"""
+    MPPT_4_PCB_TEMP: builtins.int
+    """MPPT_x_PCB_TEMP"""
+    MPPT_4_Power_IN: builtins.float
+    """MPPT_x_Power_IN"""
+    STOP: builtins.bool
+    """STOP"""
+    LOW_BEAM: builtins.bool
+    """LOW_BEAM"""
+    HIGH_BEAM: builtins.bool
+    """HIGH_BEAM"""
+    RIGHT_INDICATOR: builtins.bool
+    """RIGHT_INDICATOR"""
+    LEFT_INDICATOR: builtins.bool
+    """LEFT_INDICATOR"""
+    PARK: builtins.bool
+    """PARK"""
+    INTERIOR: builtins.bool
+    """INTERIOR"""
+    HAZARD: builtins.bool
+    """HAZARD"""
+    GPS_LATITUDE: builtins.float
+    GPS_LATITUDE_DIRECTION: builtins.str
+    GPS_LONGITUDE: builtins.float
+    GPS_LONGITUDE_DIRECTION: builtins.str
+    GPS_ALTITUDE: builtins.float
+    GPS_SPEED_KNOTS: builtins.float
+    GPS_SPEED_KILOMETERS: builtins.float
+    GPS_SATELLITES_NUMBER: builtins.int
+    GPS_QUALITY: builtins.int
+    PRESSURE_FRONT_LEFT: builtins.int
+    """TPMS_INFO->PRESSURE_FRONT_LEFT"""
+    PRESSURE_FRONT_RIGHT: builtins.int
+    """TPMS_INFO->PRESSURE_FRONT_RIGHT"""
+    PRESSURE_REAR_LEFT: builtins.int
+    """TPMS_INFO->PRESSURE_REAR_LEFT"""
+    PRESSURE_REAR_RIGHT: builtins.int
+    """TPMS_INFO->PRESSURE_REAR_RIGHT"""
+    TEMP_LEFT_MOTOR: builtins.float
+    """w1thermalsensors"""
+    TEMP_RIGHT_MOTOR: builtins.float
+    """w1thermalsensors"""
+    TEMP_RIGHT_DRIVER: builtins.float
+    """w1thermalsensors"""
+    TEMP_LEFT_DRIVER: builtins.float
+    """w1thermalsensors"""
+    MAIN_SWITCH: builtins.bool
+    CRUISE_ON: builtins.bool
+    """CRUISE_ON"""
+    CRUISE_ACTIVE: builtins.bool
+    """CRUISE_ACTIVE"""
+    CRUISE_SET_SPEED: builtins.int
+    """CRUISE_SET_SPEED"""
+    CRUISE_THROTTLE: builtins.int
+    """CRUISE_THROTTLE"""
+    THROTTLE: builtins.int
+    REGEN: builtins.int
+    DRIVEMODE: builtins.int
+    """DRIVEMODE"""
     def __init__(
         self,
         *,
-        timestamp: builtins.int = ...,
-        usedEnergy: builtins.int | None = ...,
-        totalMillage: builtins.int | None = ...,
-        handBrake: builtins.bool | None = ...,
-        batteryError: builtins.bool | None = ...,
-        engineError: builtins.bool | None = ...,
-        horn: builtins.bool | None = ...,
-        battery: global___Battery | None = ...,
-        mppt: collections.abc.Iterable[global___Mppt] | None = ...,
-        lights: global___Lights | None = ...,
-        gps: global___Gps | None = ...,
-        tires: global___TiresPressure | None = ...,
-        leftEngine: global___Engine | None = ...,
-        rightEngine: global___Engine | None = ...,
-        motorControl: global___MotorControl | None = ...,
+        TIMESTAMP: builtins.int = ...,
+        HANDBRAKE: builtins.bool | None = ...,
+        BATT_ERROR: builtins.bool | None = ...,
+        ENGINE_ERROR: builtins.bool | None = ...,
+        HORN: builtins.bool | None = ...,
+        BMS_REMAINING_CHARGE_TIME: builtins.int | None = ...,
+        BMS_CHARGE_EN: builtins.bool | None = ...,
+        BMS_SYSTEM_STATE: builtins.int | None = ...,
+        BMS_PACK_C_RATE: builtins.int | None = ...,
+        BMS_SOC: builtins.int | None = ...,
+        BMS_SOH: builtins.int | None = ...,
+        BMS_CELLS_CONNECTED: builtins.int | None = ...,
+        BMS_REMAINING_ENERGY: builtins.int | None = ...,
+        BMS_RELAY_FAULT: builtins.bool | None = ...,
+        BMS_K3_RELAY_STATE: builtins.bool | None = ...,
+        BMS_K2_RELAY_STATE: builtins.bool | None = ...,
+        BMS_K1_RELAY_STATE: builtins.bool | None = ...,
+        BMS_BATTERY_IN_FAULT_STATE: builtins.bool | None = ...,
+        BMS_PACK_TEMP_HIGH: builtins.int | None = ...,
+        BMS_LMU_W_HIGHEST_TEMP: builtins.int | None = ...,
+        BMS_PACK_TEMP_LOW: builtins.int | None = ...,
+        BMS_LMU_W_LOWEST_TEMP: builtins.int | None = ...,
+        BMS_POST_PROC_2: builtins.int | None = ...,
+        BMS_CELL_VOLTAGE_MAX: builtins.int | None = ...,
+        BMS_CELL_W_HIGHEST_VOLTAGE: builtins.int | None = ...,
+        BMS_CELL_VOLTAGE_MIN: builtins.int | None = ...,
+        BMS_CELL_W_LOWEST_VOLTAGE: builtins.int | None = ...,
+        BMS_AVG_CELL_VOLTAGE: builtins.int | None = ...,
+        BMS_PACK_VOLTAGE: builtins.int | None = ...,
+        BMS_PACK_CURRENT: builtins.int | None = ...,
+        BMS_ERROR_FLAGS: builtins.int | None = ...,
+        BMS_WARNING_FLAGS: builtins.int | None = ...,
+        MPPT_1_Current_IN: builtins.float | None = ...,
+        MPPT_1_Voltage_IN: builtins.float | None = ...,
+        MPPT_1_Voltage_OUT: builtins.float | None = ...,
+        MPPT_1_MOSFET_TEMP: builtins.int | None = ...,
+        MPPT_1_PCB_TEMP: builtins.int | None = ...,
+        MPPT_1_Power_IN: builtins.float | None = ...,
+        MPPT_2_Current_IN: builtins.float | None = ...,
+        MPPT_2_Voltage_IN: builtins.float | None = ...,
+        MPPT_2_Voltage_OUT: builtins.float | None = ...,
+        MPPT_2_MOSFET_TEMP: builtins.int | None = ...,
+        MPPT_2_PCB_TEMP: builtins.int | None = ...,
+        MPPT_2_Power_IN: builtins.float | None = ...,
+        MPPT_3_Current_IN: builtins.float | None = ...,
+        MPPT_3_Voltage_IN: builtins.float | None = ...,
+        MPPT_3_Voltage_OUT: builtins.float | None = ...,
+        MPPT_3_MOSFET_TEMP: builtins.int | None = ...,
+        MPPT_3_PCB_TEMP: builtins.int | None = ...,
+        MPPT_3_Power_IN: builtins.float | None = ...,
+        MPPT_4_Current_IN: builtins.float | None = ...,
+        MPPT_4_Voltage_IN: builtins.float | None = ...,
+        MPPT_4_Voltage_OUT: builtins.float | None = ...,
+        MPPT_4_MOSFET_TEMP: builtins.int | None = ...,
+        MPPT_4_PCB_TEMP: builtins.int | None = ...,
+        MPPT_4_Power_IN: builtins.float | None = ...,
+        STOP: builtins.bool | None = ...,
+        LOW_BEAM: builtins.bool | None = ...,
+        HIGH_BEAM: builtins.bool | None = ...,
+        RIGHT_INDICATOR: builtins.bool | None = ...,
+        LEFT_INDICATOR: builtins.bool | None = ...,
+        PARK: builtins.bool | None = ...,
+        INTERIOR: builtins.bool | None = ...,
+        HAZARD: builtins.bool | None = ...,
+        GPS_LATITUDE: builtins.float | None = ...,
+        GPS_LATITUDE_DIRECTION: builtins.str | None = ...,
+        GPS_LONGITUDE: builtins.float | None = ...,
+        GPS_LONGITUDE_DIRECTION: builtins.str | None = ...,
+        GPS_ALTITUDE: builtins.float | None = ...,
+        GPS_SPEED_KNOTS: builtins.float | None = ...,
+        GPS_SPEED_KILOMETERS: builtins.float | None = ...,
+        GPS_SATELLITES_NUMBER: builtins.int | None = ...,
+        GPS_QUALITY: builtins.int | None = ...,
+        PRESSURE_FRONT_LEFT: builtins.int | None = ...,
+        PRESSURE_FRONT_RIGHT: builtins.int | None = ...,
+        PRESSURE_REAR_LEFT: builtins.int | None = ...,
+        PRESSURE_REAR_RIGHT: builtins.int | None = ...,
+        TEMP_LEFT_MOTOR: builtins.float | None = ...,
+        TEMP_RIGHT_MOTOR: builtins.float | None = ...,
+        TEMP_RIGHT_DRIVER: builtins.float | None = ...,
+        TEMP_LEFT_DRIVER: builtins.float | None = ...,
+        MAIN_SWITCH: builtins.bool | None = ...,
+        CRUISE_ON: builtins.bool | None = ...,
+        CRUISE_ACTIVE: builtins.bool | None = ...,
+        CRUISE_SET_SPEED: builtins.int | None = ...,
+        CRUISE_THROTTLE: builtins.int | None = ...,
+        THROTTLE: builtins.int | None = ...,
+        REGEN: builtins.int | None = ...,
+        DRIVEMODE: builtins.int | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing_extensions.Literal["_battery", b"_battery", "_batteryError", b"_batteryError", "_engineError", b"_engineError", "_gps", b"_gps", "_handBrake", b"_handBrake", "_horn", b"_horn", "_leftEngine", b"_leftEngine", "_lights", b"_lights", "_motorControl", b"_motorControl", "_rightEngine", b"_rightEngine", "_tires", b"_tires", "_totalMillage", b"_totalMillage", "_usedEnergy", b"_usedEnergy", "battery", b"battery", "batteryError", b"batteryError", "engineError", b"engineError", "gps", b"gps", "handBrake", b"handBrake", "horn", b"horn", "leftEngine", b"leftEngine", "lights", b"lights", "motorControl", b"motorControl", "rightEngine", b"rightEngine", "tires", b"tires", "totalMillage", b"totalMillage", "usedEnergy", b"usedEnergy"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing_extensions.Literal["_battery", b"_battery", "_batteryError", b"_batteryError", "_engineError", b"_engineError", "_gps", b"_gps", "_handBrake", b"_handBrake", "_horn", b"_horn", "_leftEngine", b"_leftEngine", "_lights", b"_lights", "_motorControl", b"_motorControl", "_rightEngine", b"_rightEngine", "_tires", b"_tires", "_totalMillage", b"_totalMillage", "_usedEnergy", b"_usedEnergy", "battery", b"battery", "batteryError", b"batteryError", "engineError", b"engineError", "gps", b"gps", "handBrake", b"handBrake", "horn", b"horn", "leftEngine", b"leftEngine", "lights", b"lights", "motorControl", b"motorControl", "mppt", b"mppt", "rightEngine", b"rightEngine", "timestamp", b"timestamp", "tires", b"tires", "totalMillage", b"totalMillage", "usedEnergy", b"usedEnergy"]) -> None: ...
+    def HasField(self, field_name: typing_extensions.Literal["BATT_ERROR", b"BATT_ERROR", "BMS_AVG_CELL_VOLTAGE", b"BMS_AVG_CELL_VOLTAGE", "BMS_BATTERY_IN_FAULT_STATE", b"BMS_BATTERY_IN_FAULT_STATE", "BMS_CELLS_CONNECTED", b"BMS_CELLS_CONNECTED", "BMS_CELL_VOLTAGE_MAX", b"BMS_CELL_VOLTAGE_MAX", "BMS_CELL_VOLTAGE_MIN", b"BMS_CELL_VOLTAGE_MIN", "BMS_CELL_W_HIGHEST_VOLTAGE", b"BMS_CELL_W_HIGHEST_VOLTAGE", "BMS_CELL_W_LOWEST_VOLTAGE", b"BMS_CELL_W_LOWEST_VOLTAGE", "BMS_CHARGE_EN", b"BMS_CHARGE_EN", "BMS_ERROR_FLAGS", b"BMS_ERROR_FLAGS", "BMS_K1_RELAY_STATE", b"BMS_K1_RELAY_STATE", "BMS_K2_RELAY_STATE", b"BMS_K2_RELAY_STATE", "BMS_K3_RELAY_STATE", b"BMS_K3_RELAY_STATE", "BMS_LMU_W_HIGHEST_TEMP", b"BMS_LMU_W_HIGHEST_TEMP", "BMS_LMU_W_LOWEST_TEMP", b"BMS_LMU_W_LOWEST_TEMP", "BMS_PACK_CURRENT", b"BMS_PACK_CURRENT", "BMS_PACK_C_RATE", b"BMS_PACK_C_RATE", "BMS_PACK_TEMP_HIGH", b"BMS_PACK_TEMP_HIGH", "BMS_PACK_TEMP_LOW", b"BMS_PACK_TEMP_LOW", "BMS_PACK_VOLTAGE", b"BMS_PACK_VOLTAGE", "BMS_POST_PROC_2", b"BMS_POST_PROC_2", "BMS_RELAY_FAULT", b"BMS_RELAY_FAULT", "BMS_REMAINING_CHARGE_TIME", b"BMS_REMAINING_CHARGE_TIME", "BMS_REMAINING_ENERGY", b"BMS_REMAINING_ENERGY", "BMS_SOC", b"BMS_SOC", "BMS_SOH", b"BMS_SOH", "BMS_SYSTEM_STATE", b"BMS_SYSTEM_STATE", "BMS_WARNING_FLAGS", b"BMS_WARNING_FLAGS", "CRUISE_ACTIVE", b"CRUISE_ACTIVE", "CRUISE_ON", b"CRUISE_ON", "CRUISE_SET_SPEED", b"CRUISE_SET_SPEED", "CRUISE_THROTTLE", b"CRUISE_THROTTLE", "DRIVEMODE", b"DRIVEMODE", "ENGINE_ERROR", b"ENGINE_ERROR", "GPS_ALTITUDE", b"GPS_ALTITUDE", "GPS_LATITUDE", b"GPS_LATITUDE", "GPS_LATITUDE_DIRECTION", b"GPS_LATITUDE_DIRECTION", "GPS_LONGITUDE", b"GPS_LONGITUDE", "GPS_LONGITUDE_DIRECTION", b"GPS_LONGITUDE_DIRECTION", "GPS_QUALITY", b"GPS_QUALITY", "GPS_SATELLITES_NUMBER", b"GPS_SATELLITES_NUMBER", "GPS_SPEED_KILOMETERS", b"GPS_SPEED_KILOMETERS", "GPS_SPEED_KNOTS", b"GPS_SPEED_KNOTS", "HANDBRAKE", b"HANDBRAKE", "HAZARD", b"HAZARD", "HIGH_BEAM", b"HIGH_BEAM", "HORN", b"HORN", "INTERIOR", b"INTERIOR", "LEFT_INDICATOR", b"LEFT_INDICATOR", "LOW_BEAM", b"LOW_BEAM", "MAIN_SWITCH", b"MAIN_SWITCH", "MPPT_1_Current_IN", b"MPPT_1_Current_IN", "MPPT_1_MOSFET_TEMP", b"MPPT_1_MOSFET_TEMP", "MPPT_1_PCB_TEMP", b"MPPT_1_PCB_TEMP", "MPPT_1_Power_IN", b"MPPT_1_Power_IN", "MPPT_1_Voltage_IN", b"MPPT_1_Voltage_IN", "MPPT_1_Voltage_OUT", b"MPPT_1_Voltage_OUT", "MPPT_2_Current_IN", b"MPPT_2_Current_IN", "MPPT_2_MOSFET_TEMP", b"MPPT_2_MOSFET_TEMP", "MPPT_2_PCB_TEMP", b"MPPT_2_PCB_TEMP", "MPPT_2_Power_IN", b"MPPT_2_Power_IN", "MPPT_2_Voltage_IN", b"MPPT_2_Voltage_IN", "MPPT_2_Voltage_OUT", b"MPPT_2_Voltage_OUT", "MPPT_3_Current_IN", b"MPPT_3_Current_IN", "MPPT_3_MOSFET_TEMP", b"MPPT_3_MOSFET_TEMP", "MPPT_3_PCB_TEMP", b"MPPT_3_PCB_TEMP", "MPPT_3_Power_IN", b"MPPT_3_Power_IN", "MPPT_3_Voltage_IN", b"MPPT_3_Voltage_IN", "MPPT_3_Voltage_OUT", b"MPPT_3_Voltage_OUT", "MPPT_4_Current_IN", b"MPPT_4_Current_IN", "MPPT_4_MOSFET_TEMP", b"MPPT_4_MOSFET_TEMP", "MPPT_4_PCB_TEMP", b"MPPT_4_PCB_TEMP", "MPPT_4_Power_IN", b"MPPT_4_Power_IN", "MPPT_4_Voltage_IN", b"MPPT_4_Voltage_IN", "MPPT_4_Voltage_OUT", b"MPPT_4_Voltage_OUT", "PARK", b"PARK", "PRESSURE_FRONT_LEFT", b"PRESSURE_FRONT_LEFT", "PRESSURE_FRONT_RIGHT", b"PRESSURE_FRONT_RIGHT", "PRESSURE_REAR_LEFT", b"PRESSURE_REAR_LEFT", "PRESSURE_REAR_RIGHT", b"PRESSURE_REAR_RIGHT", "REGEN", b"REGEN", "RIGHT_INDICATOR", b"RIGHT_INDICATOR", "STOP", b"STOP", "TEMP_LEFT_DRIVER", b"TEMP_LEFT_DRIVER", "TEMP_LEFT_MOTOR", b"TEMP_LEFT_MOTOR", "TEMP_RIGHT_DRIVER", b"TEMP_RIGHT_DRIVER", "TEMP_RIGHT_MOTOR", b"TEMP_RIGHT_MOTOR", "THROTTLE", b"THROTTLE", "_BATT_ERROR", b"_BATT_ERROR", "_BMS_AVG_CELL_VOLTAGE", b"_BMS_AVG_CELL_VOLTAGE", "_BMS_BATTERY_IN_FAULT_STATE", b"_BMS_BATTERY_IN_FAULT_STATE", "_BMS_CELLS_CONNECTED", b"_BMS_CELLS_CONNECTED", "_BMS_CELL_VOLTAGE_MAX", b"_BMS_CELL_VOLTAGE_MAX", "_BMS_CELL_VOLTAGE_MIN", b"_BMS_CELL_VOLTAGE_MIN", "_BMS_CELL_W_HIGHEST_VOLTAGE", b"_BMS_CELL_W_HIGHEST_VOLTAGE", "_BMS_CELL_W_LOWEST_VOLTAGE", b"_BMS_CELL_W_LOWEST_VOLTAGE", "_BMS_CHARGE_EN", b"_BMS_CHARGE_EN", "_BMS_ERROR_FLAGS", b"_BMS_ERROR_FLAGS", "_BMS_K1_RELAY_STATE", b"_BMS_K1_RELAY_STATE", "_BMS_K2_RELAY_STATE", b"_BMS_K2_RELAY_STATE", "_BMS_K3_RELAY_STATE", b"_BMS_K3_RELAY_STATE", "_BMS_LMU_W_HIGHEST_TEMP", b"_BMS_LMU_W_HIGHEST_TEMP", "_BMS_LMU_W_LOWEST_TEMP", b"_BMS_LMU_W_LOWEST_TEMP", "_BMS_PACK_CURRENT", b"_BMS_PACK_CURRENT", "_BMS_PACK_C_RATE", b"_BMS_PACK_C_RATE", "_BMS_PACK_TEMP_HIGH", b"_BMS_PACK_TEMP_HIGH", "_BMS_PACK_TEMP_LOW", b"_BMS_PACK_TEMP_LOW", "_BMS_PACK_VOLTAGE", b"_BMS_PACK_VOLTAGE", "_BMS_POST_PROC_2", b"_BMS_POST_PROC_2", "_BMS_RELAY_FAULT", b"_BMS_RELAY_FAULT", "_BMS_REMAINING_CHARGE_TIME", b"_BMS_REMAINING_CHARGE_TIME", "_BMS_REMAINING_ENERGY", b"_BMS_REMAINING_ENERGY", "_BMS_SOC", b"_BMS_SOC", "_BMS_SOH", b"_BMS_SOH", "_BMS_SYSTEM_STATE", b"_BMS_SYSTEM_STATE", "_BMS_WARNING_FLAGS", b"_BMS_WARNING_FLAGS", "_CRUISE_ACTIVE", b"_CRUISE_ACTIVE", "_CRUISE_ON", b"_CRUISE_ON", "_CRUISE_SET_SPEED", b"_CRUISE_SET_SPEED", "_CRUISE_THROTTLE", b"_CRUISE_THROTTLE", "_DRIVEMODE", b"_DRIVEMODE", "_ENGINE_ERROR", b"_ENGINE_ERROR", "_GPS_ALTITUDE", b"_GPS_ALTITUDE", "_GPS_LATITUDE", b"_GPS_LATITUDE", "_GPS_LATITUDE_DIRECTION", b"_GPS_LATITUDE_DIRECTION", "_GPS_LONGITUDE", b"_GPS_LONGITUDE", "_GPS_LONGITUDE_DIRECTION", b"_GPS_LONGITUDE_DIRECTION", "_GPS_QUALITY", b"_GPS_QUALITY", "_GPS_SATELLITES_NUMBER", b"_GPS_SATELLITES_NUMBER", "_GPS_SPEED_KILOMETERS", b"_GPS_SPEED_KILOMETERS", "_GPS_SPEED_KNOTS", b"_GPS_SPEED_KNOTS", "_HANDBRAKE", b"_HANDBRAKE", "_HAZARD", b"_HAZARD", "_HIGH_BEAM", b"_HIGH_BEAM", "_HORN", b"_HORN", "_INTERIOR", b"_INTERIOR", "_LEFT_INDICATOR", b"_LEFT_INDICATOR", "_LOW_BEAM", b"_LOW_BEAM", "_MAIN_SWITCH", b"_MAIN_SWITCH", "_MPPT_1_Current_IN", b"_MPPT_1_Current_IN", "_MPPT_1_MOSFET_TEMP", b"_MPPT_1_MOSFET_TEMP", "_MPPT_1_PCB_TEMP", b"_MPPT_1_PCB_TEMP", "_MPPT_1_Power_IN", b"_MPPT_1_Power_IN", "_MPPT_1_Voltage_IN", b"_MPPT_1_Voltage_IN", "_MPPT_1_Voltage_OUT", b"_MPPT_1_Voltage_OUT", "_MPPT_2_Current_IN", b"_MPPT_2_Current_IN", "_MPPT_2_MOSFET_TEMP", b"_MPPT_2_MOSFET_TEMP", "_MPPT_2_PCB_TEMP", b"_MPPT_2_PCB_TEMP", "_MPPT_2_Power_IN", b"_MPPT_2_Power_IN", "_MPPT_2_Voltage_IN", b"_MPPT_2_Voltage_IN", "_MPPT_2_Voltage_OUT", b"_MPPT_2_Voltage_OUT", "_MPPT_3_Current_IN", b"_MPPT_3_Current_IN", "_MPPT_3_MOSFET_TEMP", b"_MPPT_3_MOSFET_TEMP", "_MPPT_3_PCB_TEMP", b"_MPPT_3_PCB_TEMP", "_MPPT_3_Power_IN", b"_MPPT_3_Power_IN", "_MPPT_3_Voltage_IN", b"_MPPT_3_Voltage_IN", "_MPPT_3_Voltage_OUT", b"_MPPT_3_Voltage_OUT", "_MPPT_4_Current_IN", b"_MPPT_4_Current_IN", "_MPPT_4_MOSFET_TEMP", b"_MPPT_4_MOSFET_TEMP", "_MPPT_4_PCB_TEMP", b"_MPPT_4_PCB_TEMP", "_MPPT_4_Power_IN", b"_MPPT_4_Power_IN", "_MPPT_4_Voltage_IN", b"_MPPT_4_Voltage_IN", "_MPPT_4_Voltage_OUT", b"_MPPT_4_Voltage_OUT", "_PARK", b"_PARK", "_PRESSURE_FRONT_LEFT", b"_PRESSURE_FRONT_LEFT", "_PRESSURE_FRONT_RIGHT", b"_PRESSURE_FRONT_RIGHT", "_PRESSURE_REAR_LEFT", b"_PRESSURE_REAR_LEFT", "_PRESSURE_REAR_RIGHT", b"_PRESSURE_REAR_RIGHT", "_REGEN", b"_REGEN", "_RIGHT_INDICATOR", b"_RIGHT_INDICATOR", "_STOP", b"_STOP", "_TEMP_LEFT_DRIVER", b"_TEMP_LEFT_DRIVER", "_TEMP_LEFT_MOTOR", b"_TEMP_LEFT_MOTOR", "_TEMP_RIGHT_DRIVER", b"_TEMP_RIGHT_DRIVER", "_TEMP_RIGHT_MOTOR", b"_TEMP_RIGHT_MOTOR", "_THROTTLE", b"_THROTTLE"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing_extensions.Literal["BATT_ERROR", b"BATT_ERROR", "BMS_AVG_CELL_VOLTAGE", b"BMS_AVG_CELL_VOLTAGE", "BMS_BATTERY_IN_FAULT_STATE", b"BMS_BATTERY_IN_FAULT_STATE", "BMS_CELLS_CONNECTED", b"BMS_CELLS_CONNECTED", "BMS_CELL_VOLTAGE_MAX", b"BMS_CELL_VOLTAGE_MAX", "BMS_CELL_VOLTAGE_MIN", b"BMS_CELL_VOLTAGE_MIN", "BMS_CELL_W_HIGHEST_VOLTAGE", b"BMS_CELL_W_HIGHEST_VOLTAGE", "BMS_CELL_W_LOWEST_VOLTAGE", b"BMS_CELL_W_LOWEST_VOLTAGE", "BMS_CHARGE_EN", b"BMS_CHARGE_EN", "BMS_ERROR_FLAGS", b"BMS_ERROR_FLAGS", "BMS_K1_RELAY_STATE", b"BMS_K1_RELAY_STATE", "BMS_K2_RELAY_STATE", b"BMS_K2_RELAY_STATE", "BMS_K3_RELAY_STATE", b"BMS_K3_RELAY_STATE", "BMS_LMU_W_HIGHEST_TEMP", b"BMS_LMU_W_HIGHEST_TEMP", "BMS_LMU_W_LOWEST_TEMP", b"BMS_LMU_W_LOWEST_TEMP", "BMS_PACK_CURRENT", b"BMS_PACK_CURRENT", "BMS_PACK_C_RATE", b"BMS_PACK_C_RATE", "BMS_PACK_TEMP_HIGH", b"BMS_PACK_TEMP_HIGH", "BMS_PACK_TEMP_LOW", b"BMS_PACK_TEMP_LOW", "BMS_PACK_VOLTAGE", b"BMS_PACK_VOLTAGE", "BMS_POST_PROC_2", b"BMS_POST_PROC_2", "BMS_RELAY_FAULT", b"BMS_RELAY_FAULT", "BMS_REMAINING_CHARGE_TIME", b"BMS_REMAINING_CHARGE_TIME", "BMS_REMAINING_ENERGY", b"BMS_REMAINING_ENERGY", "BMS_SOC", b"BMS_SOC", "BMS_SOH", b"BMS_SOH", "BMS_SYSTEM_STATE", b"BMS_SYSTEM_STATE", "BMS_WARNING_FLAGS", b"BMS_WARNING_FLAGS", "CRUISE_ACTIVE", b"CRUISE_ACTIVE", "CRUISE_ON", b"CRUISE_ON", "CRUISE_SET_SPEED", b"CRUISE_SET_SPEED", "CRUISE_THROTTLE", b"CRUISE_THROTTLE", "DRIVEMODE", b"DRIVEMODE", "ENGINE_ERROR", b"ENGINE_ERROR", "GPS_ALTITUDE", b"GPS_ALTITUDE", "GPS_LATITUDE", b"GPS_LATITUDE", "GPS_LATITUDE_DIRECTION", b"GPS_LATITUDE_DIRECTION", "GPS_LONGITUDE", b"GPS_LONGITUDE", "GPS_LONGITUDE_DIRECTION", b"GPS_LONGITUDE_DIRECTION", "GPS_QUALITY", b"GPS_QUALITY", "GPS_SATELLITES_NUMBER", b"GPS_SATELLITES_NUMBER", "GPS_SPEED_KILOMETERS", b"GPS_SPEED_KILOMETERS", "GPS_SPEED_KNOTS", b"GPS_SPEED_KNOTS", "HANDBRAKE", b"HANDBRAKE", "HAZARD", b"HAZARD", "HIGH_BEAM", b"HIGH_BEAM", "HORN", b"HORN", "INTERIOR", b"INTERIOR", "LEFT_INDICATOR", b"LEFT_INDICATOR", "LOW_BEAM", b"LOW_BEAM", "MAIN_SWITCH", b"MAIN_SWITCH", "MPPT_1_Current_IN", b"MPPT_1_Current_IN", "MPPT_1_MOSFET_TEMP", b"MPPT_1_MOSFET_TEMP", "MPPT_1_PCB_TEMP", b"MPPT_1_PCB_TEMP", "MPPT_1_Power_IN", b"MPPT_1_Power_IN", "MPPT_1_Voltage_IN", b"MPPT_1_Voltage_IN", "MPPT_1_Voltage_OUT", b"MPPT_1_Voltage_OUT", "MPPT_2_Current_IN", b"MPPT_2_Current_IN", "MPPT_2_MOSFET_TEMP", b"MPPT_2_MOSFET_TEMP", "MPPT_2_PCB_TEMP", b"MPPT_2_PCB_TEMP", "MPPT_2_Power_IN", b"MPPT_2_Power_IN", "MPPT_2_Voltage_IN", b"MPPT_2_Voltage_IN", "MPPT_2_Voltage_OUT", b"MPPT_2_Voltage_OUT", "MPPT_3_Current_IN", b"MPPT_3_Current_IN", "MPPT_3_MOSFET_TEMP", b"MPPT_3_MOSFET_TEMP", "MPPT_3_PCB_TEMP", b"MPPT_3_PCB_TEMP", "MPPT_3_Power_IN", b"MPPT_3_Power_IN", "MPPT_3_Voltage_IN", b"MPPT_3_Voltage_IN", "MPPT_3_Voltage_OUT", b"MPPT_3_Voltage_OUT", "MPPT_4_Current_IN", b"MPPT_4_Current_IN", "MPPT_4_MOSFET_TEMP", b"MPPT_4_MOSFET_TEMP", "MPPT_4_PCB_TEMP", b"MPPT_4_PCB_TEMP", "MPPT_4_Power_IN", b"MPPT_4_Power_IN", "MPPT_4_Voltage_IN", b"MPPT_4_Voltage_IN", "MPPT_4_Voltage_OUT", b"MPPT_4_Voltage_OUT", "PARK", b"PARK", "PRESSURE_FRONT_LEFT", b"PRESSURE_FRONT_LEFT", "PRESSURE_FRONT_RIGHT", b"PRESSURE_FRONT_RIGHT", "PRESSURE_REAR_LEFT", b"PRESSURE_REAR_LEFT", "PRESSURE_REAR_RIGHT", b"PRESSURE_REAR_RIGHT", "REGEN", b"REGEN", "RIGHT_INDICATOR", b"RIGHT_INDICATOR", "STOP", b"STOP", "TEMP_LEFT_DRIVER", b"TEMP_LEFT_DRIVER", "TEMP_LEFT_MOTOR", b"TEMP_LEFT_MOTOR", "TEMP_RIGHT_DRIVER", b"TEMP_RIGHT_DRIVER", "TEMP_RIGHT_MOTOR", b"TEMP_RIGHT_MOTOR", "THROTTLE", b"THROTTLE", "TIMESTAMP", b"TIMESTAMP", "_BATT_ERROR", b"_BATT_ERROR", "_BMS_AVG_CELL_VOLTAGE", b"_BMS_AVG_CELL_VOLTAGE", "_BMS_BATTERY_IN_FAULT_STATE", b"_BMS_BATTERY_IN_FAULT_STATE", "_BMS_CELLS_CONNECTED", b"_BMS_CELLS_CONNECTED", "_BMS_CELL_VOLTAGE_MAX", b"_BMS_CELL_VOLTAGE_MAX", "_BMS_CELL_VOLTAGE_MIN", b"_BMS_CELL_VOLTAGE_MIN", "_BMS_CELL_W_HIGHEST_VOLTAGE", b"_BMS_CELL_W_HIGHEST_VOLTAGE", "_BMS_CELL_W_LOWEST_VOLTAGE", b"_BMS_CELL_W_LOWEST_VOLTAGE", "_BMS_CHARGE_EN", b"_BMS_CHARGE_EN", "_BMS_ERROR_FLAGS", b"_BMS_ERROR_FLAGS", "_BMS_K1_RELAY_STATE", b"_BMS_K1_RELAY_STATE", "_BMS_K2_RELAY_STATE", b"_BMS_K2_RELAY_STATE", "_BMS_K3_RELAY_STATE", b"_BMS_K3_RELAY_STATE", "_BMS_LMU_W_HIGHEST_TEMP", b"_BMS_LMU_W_HIGHEST_TEMP", "_BMS_LMU_W_LOWEST_TEMP", b"_BMS_LMU_W_LOWEST_TEMP", "_BMS_PACK_CURRENT", b"_BMS_PACK_CURRENT", "_BMS_PACK_C_RATE", b"_BMS_PACK_C_RATE", "_BMS_PACK_TEMP_HIGH", b"_BMS_PACK_TEMP_HIGH", "_BMS_PACK_TEMP_LOW", b"_BMS_PACK_TEMP_LOW", "_BMS_PACK_VOLTAGE", b"_BMS_PACK_VOLTAGE", "_BMS_POST_PROC_2", b"_BMS_POST_PROC_2", "_BMS_RELAY_FAULT", b"_BMS_RELAY_FAULT", "_BMS_REMAINING_CHARGE_TIME", b"_BMS_REMAINING_CHARGE_TIME", "_BMS_REMAINING_ENERGY", b"_BMS_REMAINING_ENERGY", "_BMS_SOC", b"_BMS_SOC", "_BMS_SOH", b"_BMS_SOH", "_BMS_SYSTEM_STATE", b"_BMS_SYSTEM_STATE", "_BMS_WARNING_FLAGS", b"_BMS_WARNING_FLAGS", "_CRUISE_ACTIVE", b"_CRUISE_ACTIVE", "_CRUISE_ON", b"_CRUISE_ON", "_CRUISE_SET_SPEED", b"_CRUISE_SET_SPEED", "_CRUISE_THROTTLE", b"_CRUISE_THROTTLE", "_DRIVEMODE", b"_DRIVEMODE", "_ENGINE_ERROR", b"_ENGINE_ERROR", "_GPS_ALTITUDE", b"_GPS_ALTITUDE", "_GPS_LATITUDE", b"_GPS_LATITUDE", "_GPS_LATITUDE_DIRECTION", b"_GPS_LATITUDE_DIRECTION", "_GPS_LONGITUDE", b"_GPS_LONGITUDE", "_GPS_LONGITUDE_DIRECTION", b"_GPS_LONGITUDE_DIRECTION", "_GPS_QUALITY", b"_GPS_QUALITY", "_GPS_SATELLITES_NUMBER", b"_GPS_SATELLITES_NUMBER", "_GPS_SPEED_KILOMETERS", b"_GPS_SPEED_KILOMETERS", "_GPS_SPEED_KNOTS", b"_GPS_SPEED_KNOTS", "_HANDBRAKE", b"_HANDBRAKE", "_HAZARD", b"_HAZARD", "_HIGH_BEAM", b"_HIGH_BEAM", "_HORN", b"_HORN", "_INTERIOR", b"_INTERIOR", "_LEFT_INDICATOR", b"_LEFT_INDICATOR", "_LOW_BEAM", b"_LOW_BEAM", "_MAIN_SWITCH", b"_MAIN_SWITCH", "_MPPT_1_Current_IN", b"_MPPT_1_Current_IN", "_MPPT_1_MOSFET_TEMP", b"_MPPT_1_MOSFET_TEMP", "_MPPT_1_PCB_TEMP", b"_MPPT_1_PCB_TEMP", "_MPPT_1_Power_IN", b"_MPPT_1_Power_IN", "_MPPT_1_Voltage_IN", b"_MPPT_1_Voltage_IN", "_MPPT_1_Voltage_OUT", b"_MPPT_1_Voltage_OUT", "_MPPT_2_Current_IN", b"_MPPT_2_Current_IN", "_MPPT_2_MOSFET_TEMP", b"_MPPT_2_MOSFET_TEMP", "_MPPT_2_PCB_TEMP", b"_MPPT_2_PCB_TEMP", "_MPPT_2_Power_IN", b"_MPPT_2_Power_IN", "_MPPT_2_Voltage_IN", b"_MPPT_2_Voltage_IN", "_MPPT_2_Voltage_OUT", b"_MPPT_2_Voltage_OUT", "_MPPT_3_Current_IN", b"_MPPT_3_Current_IN", "_MPPT_3_MOSFET_TEMP", b"_MPPT_3_MOSFET_TEMP", "_MPPT_3_PCB_TEMP", b"_MPPT_3_PCB_TEMP", "_MPPT_3_Power_IN", b"_MPPT_3_Power_IN", "_MPPT_3_Voltage_IN", b"_MPPT_3_Voltage_IN", "_MPPT_3_Voltage_OUT", b"_MPPT_3_Voltage_OUT", "_MPPT_4_Current_IN", b"_MPPT_4_Current_IN", "_MPPT_4_MOSFET_TEMP", b"_MPPT_4_MOSFET_TEMP", "_MPPT_4_PCB_TEMP", b"_MPPT_4_PCB_TEMP", "_MPPT_4_Power_IN", b"_MPPT_4_Power_IN", "_MPPT_4_Voltage_IN", b"_MPPT_4_Voltage_IN", "_MPPT_4_Voltage_OUT", b"_MPPT_4_Voltage_OUT", "_PARK", b"_PARK", "_PRESSURE_FRONT_LEFT", b"_PRESSURE_FRONT_LEFT", "_PRESSURE_FRONT_RIGHT", b"_PRESSURE_FRONT_RIGHT", "_PRESSURE_REAR_LEFT", b"_PRESSURE_REAR_LEFT", "_PRESSURE_REAR_RIGHT", b"_PRESSURE_REAR_RIGHT", "_REGEN", b"_REGEN", "_RIGHT_INDICATOR", b"_RIGHT_INDICATOR", "_STOP", b"_STOP", "_TEMP_LEFT_DRIVER", b"_TEMP_LEFT_DRIVER", "_TEMP_LEFT_MOTOR", b"_TEMP_LEFT_MOTOR", "_TEMP_RIGHT_DRIVER", b"_TEMP_RIGHT_DRIVER", "_TEMP_RIGHT_MOTOR", b"_TEMP_RIGHT_MOTOR", "_THROTTLE", b"_THROTTLE"]) -> None: ...
     @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_battery", b"_battery"]) -> typing_extensions.Literal["battery"] | None: ...
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_BATT_ERROR", b"_BATT_ERROR"]) -> typing_extensions.Literal["BATT_ERROR"] | None: ...
     @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_batteryError", b"_batteryError"]) -> typing_extensions.Literal["batteryError"] | None: ...
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_BMS_AVG_CELL_VOLTAGE", b"_BMS_AVG_CELL_VOLTAGE"]) -> typing_extensions.Literal["BMS_AVG_CELL_VOLTAGE"] | None: ...
     @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_engineError", b"_engineError"]) -> typing_extensions.Literal["engineError"] | None: ...
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_BMS_BATTERY_IN_FAULT_STATE", b"_BMS_BATTERY_IN_FAULT_STATE"]) -> typing_extensions.Literal["BMS_BATTERY_IN_FAULT_STATE"] | None: ...
     @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_gps", b"_gps"]) -> typing_extensions.Literal["gps"] | None: ...
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_BMS_CELLS_CONNECTED", b"_BMS_CELLS_CONNECTED"]) -> typing_extensions.Literal["BMS_CELLS_CONNECTED"] | None: ...
     @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_handBrake", b"_handBrake"]) -> typing_extensions.Literal["handBrake"] | None: ...
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_BMS_CELL_VOLTAGE_MAX", b"_BMS_CELL_VOLTAGE_MAX"]) -> typing_extensions.Literal["BMS_CELL_VOLTAGE_MAX"] | None: ...
     @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_horn", b"_horn"]) -> typing_extensions.Literal["horn"] | None: ...
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_BMS_CELL_VOLTAGE_MIN", b"_BMS_CELL_VOLTAGE_MIN"]) -> typing_extensions.Literal["BMS_CELL_VOLTAGE_MIN"] | None: ...
     @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_leftEngine", b"_leftEngine"]) -> typing_extensions.Literal["leftEngine"] | None: ...
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_BMS_CELL_W_HIGHEST_VOLTAGE", b"_BMS_CELL_W_HIGHEST_VOLTAGE"]) -> typing_extensions.Literal["BMS_CELL_W_HIGHEST_VOLTAGE"] | None: ...
     @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_lights", b"_lights"]) -> typing_extensions.Literal["lights"] | None: ...
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_BMS_CELL_W_LOWEST_VOLTAGE", b"_BMS_CELL_W_LOWEST_VOLTAGE"]) -> typing_extensions.Literal["BMS_CELL_W_LOWEST_VOLTAGE"] | None: ...
     @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_motorControl", b"_motorControl"]) -> typing_extensions.Literal["motorControl"] | None: ...
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_BMS_CHARGE_EN", b"_BMS_CHARGE_EN"]) -> typing_extensions.Literal["BMS_CHARGE_EN"] | None: ...
     @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_rightEngine", b"_rightEngine"]) -> typing_extensions.Literal["rightEngine"] | None: ...
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_BMS_ERROR_FLAGS", b"_BMS_ERROR_FLAGS"]) -> typing_extensions.Literal["BMS_ERROR_FLAGS"] | None: ...
     @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_tires", b"_tires"]) -> typing_extensions.Literal["tires"] | None: ...
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_BMS_K1_RELAY_STATE", b"_BMS_K1_RELAY_STATE"]) -> typing_extensions.Literal["BMS_K1_RELAY_STATE"] | None: ...
     @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_totalMillage", b"_totalMillage"]) -> typing_extensions.Literal["totalMillage"] | None: ...
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_BMS_K2_RELAY_STATE", b"_BMS_K2_RELAY_STATE"]) -> typing_extensions.Literal["BMS_K2_RELAY_STATE"] | None: ...
     @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["_usedEnergy", b"_usedEnergy"]) -> typing_extensions.Literal["usedEnergy"] | None: ...
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_BMS_K3_RELAY_STATE", b"_BMS_K3_RELAY_STATE"]) -> typing_extensions.Literal["BMS_K3_RELAY_STATE"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_BMS_LMU_W_HIGHEST_TEMP", b"_BMS_LMU_W_HIGHEST_TEMP"]) -> typing_extensions.Literal["BMS_LMU_W_HIGHEST_TEMP"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_BMS_LMU_W_LOWEST_TEMP", b"_BMS_LMU_W_LOWEST_TEMP"]) -> typing_extensions.Literal["BMS_LMU_W_LOWEST_TEMP"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_BMS_PACK_CURRENT", b"_BMS_PACK_CURRENT"]) -> typing_extensions.Literal["BMS_PACK_CURRENT"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_BMS_PACK_C_RATE", b"_BMS_PACK_C_RATE"]) -> typing_extensions.Literal["BMS_PACK_C_RATE"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_BMS_PACK_TEMP_HIGH", b"_BMS_PACK_TEMP_HIGH"]) -> typing_extensions.Literal["BMS_PACK_TEMP_HIGH"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_BMS_PACK_TEMP_LOW", b"_BMS_PACK_TEMP_LOW"]) -> typing_extensions.Literal["BMS_PACK_TEMP_LOW"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_BMS_PACK_VOLTAGE", b"_BMS_PACK_VOLTAGE"]) -> typing_extensions.Literal["BMS_PACK_VOLTAGE"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_BMS_POST_PROC_2", b"_BMS_POST_PROC_2"]) -> typing_extensions.Literal["BMS_POST_PROC_2"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_BMS_RELAY_FAULT", b"_BMS_RELAY_FAULT"]) -> typing_extensions.Literal["BMS_RELAY_FAULT"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_BMS_REMAINING_CHARGE_TIME", b"_BMS_REMAINING_CHARGE_TIME"]) -> typing_extensions.Literal["BMS_REMAINING_CHARGE_TIME"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_BMS_REMAINING_ENERGY", b"_BMS_REMAINING_ENERGY"]) -> typing_extensions.Literal["BMS_REMAINING_ENERGY"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_BMS_SOC", b"_BMS_SOC"]) -> typing_extensions.Literal["BMS_SOC"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_BMS_SOH", b"_BMS_SOH"]) -> typing_extensions.Literal["BMS_SOH"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_BMS_SYSTEM_STATE", b"_BMS_SYSTEM_STATE"]) -> typing_extensions.Literal["BMS_SYSTEM_STATE"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_BMS_WARNING_FLAGS", b"_BMS_WARNING_FLAGS"]) -> typing_extensions.Literal["BMS_WARNING_FLAGS"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_CRUISE_ACTIVE", b"_CRUISE_ACTIVE"]) -> typing_extensions.Literal["CRUISE_ACTIVE"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_CRUISE_ON", b"_CRUISE_ON"]) -> typing_extensions.Literal["CRUISE_ON"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_CRUISE_SET_SPEED", b"_CRUISE_SET_SPEED"]) -> typing_extensions.Literal["CRUISE_SET_SPEED"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_CRUISE_THROTTLE", b"_CRUISE_THROTTLE"]) -> typing_extensions.Literal["CRUISE_THROTTLE"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_DRIVEMODE", b"_DRIVEMODE"]) -> typing_extensions.Literal["DRIVEMODE"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_ENGINE_ERROR", b"_ENGINE_ERROR"]) -> typing_extensions.Literal["ENGINE_ERROR"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_GPS_ALTITUDE", b"_GPS_ALTITUDE"]) -> typing_extensions.Literal["GPS_ALTITUDE"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_GPS_LATITUDE", b"_GPS_LATITUDE"]) -> typing_extensions.Literal["GPS_LATITUDE"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_GPS_LATITUDE_DIRECTION", b"_GPS_LATITUDE_DIRECTION"]) -> typing_extensions.Literal["GPS_LATITUDE_DIRECTION"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_GPS_LONGITUDE", b"_GPS_LONGITUDE"]) -> typing_extensions.Literal["GPS_LONGITUDE"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_GPS_LONGITUDE_DIRECTION", b"_GPS_LONGITUDE_DIRECTION"]) -> typing_extensions.Literal["GPS_LONGITUDE_DIRECTION"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_GPS_QUALITY", b"_GPS_QUALITY"]) -> typing_extensions.Literal["GPS_QUALITY"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_GPS_SATELLITES_NUMBER", b"_GPS_SATELLITES_NUMBER"]) -> typing_extensions.Literal["GPS_SATELLITES_NUMBER"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_GPS_SPEED_KILOMETERS", b"_GPS_SPEED_KILOMETERS"]) -> typing_extensions.Literal["GPS_SPEED_KILOMETERS"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_GPS_SPEED_KNOTS", b"_GPS_SPEED_KNOTS"]) -> typing_extensions.Literal["GPS_SPEED_KNOTS"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_HANDBRAKE", b"_HANDBRAKE"]) -> typing_extensions.Literal["HANDBRAKE"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_HAZARD", b"_HAZARD"]) -> typing_extensions.Literal["HAZARD"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_HIGH_BEAM", b"_HIGH_BEAM"]) -> typing_extensions.Literal["HIGH_BEAM"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_HORN", b"_HORN"]) -> typing_extensions.Literal["HORN"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_INTERIOR", b"_INTERIOR"]) -> typing_extensions.Literal["INTERIOR"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_LEFT_INDICATOR", b"_LEFT_INDICATOR"]) -> typing_extensions.Literal["LEFT_INDICATOR"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_LOW_BEAM", b"_LOW_BEAM"]) -> typing_extensions.Literal["LOW_BEAM"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_MAIN_SWITCH", b"_MAIN_SWITCH"]) -> typing_extensions.Literal["MAIN_SWITCH"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_MPPT_1_Current_IN", b"_MPPT_1_Current_IN"]) -> typing_extensions.Literal["MPPT_1_Current_IN"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_MPPT_1_MOSFET_TEMP", b"_MPPT_1_MOSFET_TEMP"]) -> typing_extensions.Literal["MPPT_1_MOSFET_TEMP"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_MPPT_1_PCB_TEMP", b"_MPPT_1_PCB_TEMP"]) -> typing_extensions.Literal["MPPT_1_PCB_TEMP"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_MPPT_1_Power_IN", b"_MPPT_1_Power_IN"]) -> typing_extensions.Literal["MPPT_1_Power_IN"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_MPPT_1_Voltage_IN", b"_MPPT_1_Voltage_IN"]) -> typing_extensions.Literal["MPPT_1_Voltage_IN"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_MPPT_1_Voltage_OUT", b"_MPPT_1_Voltage_OUT"]) -> typing_extensions.Literal["MPPT_1_Voltage_OUT"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_MPPT_2_Current_IN", b"_MPPT_2_Current_IN"]) -> typing_extensions.Literal["MPPT_2_Current_IN"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_MPPT_2_MOSFET_TEMP", b"_MPPT_2_MOSFET_TEMP"]) -> typing_extensions.Literal["MPPT_2_MOSFET_TEMP"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_MPPT_2_PCB_TEMP", b"_MPPT_2_PCB_TEMP"]) -> typing_extensions.Literal["MPPT_2_PCB_TEMP"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_MPPT_2_Power_IN", b"_MPPT_2_Power_IN"]) -> typing_extensions.Literal["MPPT_2_Power_IN"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_MPPT_2_Voltage_IN", b"_MPPT_2_Voltage_IN"]) -> typing_extensions.Literal["MPPT_2_Voltage_IN"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_MPPT_2_Voltage_OUT", b"_MPPT_2_Voltage_OUT"]) -> typing_extensions.Literal["MPPT_2_Voltage_OUT"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_MPPT_3_Current_IN", b"_MPPT_3_Current_IN"]) -> typing_extensions.Literal["MPPT_3_Current_IN"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_MPPT_3_MOSFET_TEMP", b"_MPPT_3_MOSFET_TEMP"]) -> typing_extensions.Literal["MPPT_3_MOSFET_TEMP"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_MPPT_3_PCB_TEMP", b"_MPPT_3_PCB_TEMP"]) -> typing_extensions.Literal["MPPT_3_PCB_TEMP"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_MPPT_3_Power_IN", b"_MPPT_3_Power_IN"]) -> typing_extensions.Literal["MPPT_3_Power_IN"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_MPPT_3_Voltage_IN", b"_MPPT_3_Voltage_IN"]) -> typing_extensions.Literal["MPPT_3_Voltage_IN"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_MPPT_3_Voltage_OUT", b"_MPPT_3_Voltage_OUT"]) -> typing_extensions.Literal["MPPT_3_Voltage_OUT"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_MPPT_4_Current_IN", b"_MPPT_4_Current_IN"]) -> typing_extensions.Literal["MPPT_4_Current_IN"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_MPPT_4_MOSFET_TEMP", b"_MPPT_4_MOSFET_TEMP"]) -> typing_extensions.Literal["MPPT_4_MOSFET_TEMP"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_MPPT_4_PCB_TEMP", b"_MPPT_4_PCB_TEMP"]) -> typing_extensions.Literal["MPPT_4_PCB_TEMP"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_MPPT_4_Power_IN", b"_MPPT_4_Power_IN"]) -> typing_extensions.Literal["MPPT_4_Power_IN"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_MPPT_4_Voltage_IN", b"_MPPT_4_Voltage_IN"]) -> typing_extensions.Literal["MPPT_4_Voltage_IN"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_MPPT_4_Voltage_OUT", b"_MPPT_4_Voltage_OUT"]) -> typing_extensions.Literal["MPPT_4_Voltage_OUT"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_PARK", b"_PARK"]) -> typing_extensions.Literal["PARK"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_PRESSURE_FRONT_LEFT", b"_PRESSURE_FRONT_LEFT"]) -> typing_extensions.Literal["PRESSURE_FRONT_LEFT"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_PRESSURE_FRONT_RIGHT", b"_PRESSURE_FRONT_RIGHT"]) -> typing_extensions.Literal["PRESSURE_FRONT_RIGHT"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_PRESSURE_REAR_LEFT", b"_PRESSURE_REAR_LEFT"]) -> typing_extensions.Literal["PRESSURE_REAR_LEFT"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_PRESSURE_REAR_RIGHT", b"_PRESSURE_REAR_RIGHT"]) -> typing_extensions.Literal["PRESSURE_REAR_RIGHT"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_REGEN", b"_REGEN"]) -> typing_extensions.Literal["REGEN"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_RIGHT_INDICATOR", b"_RIGHT_INDICATOR"]) -> typing_extensions.Literal["RIGHT_INDICATOR"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_STOP", b"_STOP"]) -> typing_extensions.Literal["STOP"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_TEMP_LEFT_DRIVER", b"_TEMP_LEFT_DRIVER"]) -> typing_extensions.Literal["TEMP_LEFT_DRIVER"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_TEMP_LEFT_MOTOR", b"_TEMP_LEFT_MOTOR"]) -> typing_extensions.Literal["TEMP_LEFT_MOTOR"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_TEMP_RIGHT_DRIVER", b"_TEMP_RIGHT_DRIVER"]) -> typing_extensions.Literal["TEMP_RIGHT_DRIVER"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_TEMP_RIGHT_MOTOR", b"_TEMP_RIGHT_MOTOR"]) -> typing_extensions.Literal["TEMP_RIGHT_MOTOR"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_THROTTLE", b"_THROTTLE"]) -> typing_extensions.Literal["THROTTLE"] | None: ...
 
 global___EagleTwo = EagleTwo
 

@@ -6,6 +6,8 @@ from threading import Thread
 import cantools.database.can.signal
 import persistqueue
 
+from src.frames import EagleTwoProxy
+
 INTERVAL_SEC = 1.0
 
 class NamedSignalValueEncoder(json.JSONEncoder):
@@ -15,9 +17,9 @@ class NamedSignalValueEncoder(json.JSONEncoder):
         return super().default(obj)
 
 class TransmitterScheduler(Thread):
-    def __init__(self, managed_dict: dict, queue: persistqueue.SQLiteAckQueue):
+    def __init__(self, frameProxy: EagleTwoProxy, queue: persistqueue.SQLiteAckQueue):
         super().__init__(name="data-send-scheduler")
-        self.managed_dict = managed_dict
+        self.frameProxy = frameProxy
         self.queue = queue
 
     def run(self):
@@ -28,9 +30,10 @@ class TransmitterScheduler(Thread):
         my_dict = {}
         while True:
             try:
-                self.managed_dict["timestamp"] = time.time_ns() // 1_000_000
-                finalMessage = json.dumps(self.managed_dict.copy(), cls=NamedSignalValueEncoder)
-                self.queue.put(finalMessage)
+                self.frameProxy.update_signal('TIMESTAMP', time.time_ns() // 1_000_000)
+                finalMessage = self.frameProxy.to_json()
+                print(finalMessage)
+                # self.queue.put(finalMessage)
                 logging.info(f"put item in queue")
             except Exception as e:
                 logging.warning(f"Failed creating final message: " + self.managed_dict.copy())

@@ -1,30 +1,37 @@
 #!/usr/bin/env python
-import asyncio
-from datetime import datetime
-import os
-import logging
-from multiprocessing import Process, Manager
-
 import argparse
+import asyncio
+import logging
+import os
+from datetime import datetime
+from multiprocessing import Process, Lock
+from multiprocessing.managers import BaseManager
 
-import params
 from src.communication.can_receiver import can_receiver
+from src.communication.gps_receiver import gps_receiver
 from src.communication.mock.can_mock import CanMock
+from src.frames import EagleTwoProxy
 from src.process_transmitter import Transmitter
 
 
+
+
 async def main(config: dict[str, any]):
-
-    manager = Manager()
-    managed_params = params.create_managed_params(manager, params.lst_param)
-
     configure_logging(args_config['file_logging'])
+
+    baseManager = BaseManager()
+    baseManager.register('FrameProxy', EagleTwoProxy)
+    baseManager.start()
+
+    # retrieve the object from the BaseManager
+    frameProxy: EagleTwoProxy = baseManager.FrameProxy()
+
     can_interface = configure_can(args_config['vcan'])
 
     processes = []
     # processes.append(Process(target=bms_receiver, args=[managed_params], name="BMS-Receiver"))
-    # processes.append(Process(target=gps_receiver, args=[managed_params], name="GPS-Receiver"))
-    processes.append(Process(target=can_receiver, args=(managed_params, can_interface,), name="can-receiver"))
+    # processes.append(Process(target=gps_receiver, args=[frameProxy], name="GPS-Receiver"))
+    processes.append(Process(target=can_receiver, args=(frameProxy, can_interface,), name="can-receiver"))
 
     if args_config['vcan']:
         processes.append(CanMock())
@@ -32,7 +39,7 @@ async def main(config: dict[str, any]):
     # processes.append(Process(target=tpms_receiver, args=[], name="TPMS-Receiver"))
     # processes.append(Process(target=send_timesync, name="Can-Time-Sync"))
 
-    processes.append(Transmitter(managed_params))
+    processes.append(Transmitter(frameProxy))
 
     for p in processes:
         p.start()
@@ -40,12 +47,12 @@ async def main(config: dict[str, any]):
     try:
         for p in processes:
             p.join()
-        manager.join()
+        baseManager.join()
     except KeyboardInterrupt:
         for p in processes:
             logging.info(f"Terminate {p.name}")
             p.kill()
-        logging.info(f"Terminate {repr(manager)}")
+        logging.info(f"Terminate {repr(baseManager)}")
 
 
 def retrieve_args_config():
@@ -78,6 +85,7 @@ def configure_logging(is_file_logger_enabled: bool):
                 logging.StreamHandler()
             ])
 
+
 def configure_can(use_vcan: bool):
     can_interface = 'vcan0' if use_vcan else 'can0'
     if use_vcan:
@@ -90,6 +98,7 @@ def configure_can(use_vcan: bool):
         os.system('sudo ifconfig can0 up')
 
     return can_interface
+
 
 if __name__ == "__main__":
     DIR = "/home/pi/LST_Can_Hub/logs"

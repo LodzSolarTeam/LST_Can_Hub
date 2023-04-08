@@ -3,19 +3,20 @@ from signal import pthread_kill, SIGTSTP
 
 import persistqueue
 
+from src.frames import EagleTwoProxy
 from src.schedule_thread_transmitter import TransmitterScheduler
 from src.mqtt_thread_transmitter import TransmitterMqtt
 
 
 class Transmitter(Process):
-    def __init__(self, managed_dict: dict):
+    def __init__(self, frameProxy: EagleTwoProxy):
         super().__init__(name="Transmitter")
-        self.managed_dict = managed_dict
+        self.frameProxy = frameProxy
         self.queue = persistqueue.SQLiteAckQueue('./car_queue', multithreading=True)
 
     def run(self):
         mqtt_transmitter = TransmitterMqtt(self.queue)
-        car_send_scheduler = TransmitterScheduler(self.managed_dict, self.queue)
+        car_send_scheduler = TransmitterScheduler(self.frameProxy, self.queue)
 
         while True:
             mqtt_transmitter.start()

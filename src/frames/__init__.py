@@ -1,3 +1,33 @@
+import logging
+
+from google.protobuf.json_format import MessageToJson
+
+import proto.car_frame_pb2 as proto_eagle
+
+
+class EagleTwoProxy():
+    def __init__(self):
+        self.frame = proto_eagle.EagleTwo()
+        self.frame.version = '1.0.0'
+
+    def update_signal(self, signal, value):
+        try:
+            if hasattr(self.frame, signal):
+                setattr(
+                    self.frame,
+                    signal,
+                    value
+                )
+            else:
+                logging.debug(f"Undefined parameter in proto generated class. {signal}")
+        except Exception as e:
+            logging.error(f"Exception on {signal} with {value}. Details: {e}")
+
+    def to_json(self):
+        return MessageToJson(self.frame, including_default_value_fields=True, preserving_proto_field_name=True,
+                             float_precision=3)
+
+
 class Frames:
     # CORE CAN:
     engines = bytearray(5)
@@ -31,7 +61,7 @@ class Frames:
     mppt4TemperatureData = bytearray(8)
     temperatures = bytearray(8)
 
-    canStatus = 0b0000_0000_0000_0000_0000_0000_0000_0000 # 4 bytes
+    canStatus = 0b0000_0000_0000_0000_0000_0000_0000_0000  # 4 bytes
 
     def save_frame(self, id, data):
         self.canStatus = 0b0

@@ -3,17 +3,19 @@ import os
 import can
 import cantools.database
 
+from src.frames import EagleTwoProxy
 
-def can_receiver(managed_dict: dict, can_interface):
+
+def can_receiver(frameProxy: EagleTwoProxy, can_interface):
     db = cantools.database.load_file(os.getcwd() + '/external/Eagle2-DBC/EAGLE_2_DBC.dbc')
     can_bus = can.interface.Bus(bustype='socketcan', channel=can_interface, bitrate=250000)
 
     while True:
         message = can_bus.recv()
         try:
-            data = db.decode_message(message.arbitration_id, message.data)
+            data = db.decode_message(message.arbitration_id, message.data, decode_choices=False)
             for item in data.items():
-                managed_dict[item[0]] = item[1]
+                frameProxy.update_signal(item[0], item[1])
         except KeyError as e:
             logging.info(f"Messaged decoding from can failed. {e}")
         except Exception as e:

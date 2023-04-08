@@ -1,3 +1,4 @@
+import json
 import logging
 import time
 from threading import Thread
@@ -35,10 +36,21 @@ class TransmitterMqtt(Thread):
             self.client.loop_start()
         while self.is_running:
             while self.is_connection_established and self.is_running:
+                self.client.publish(
+                    f'{DEVICE_ID}/state/send-state',
+                    json.dumps({'state': 1, 'timestamp': time.time_ns() // 1_000_000}),
+                    qos=1
+                )
                 self.publisher_runner()
             else:
                 logging.warning("MQTT Connection not established")
                 time.sleep(1)
+
+        self.client.publish(
+            f'{DEVICE_ID}/state/send-state',
+            json.dumps({'state': 0, 'timestamp': time.time_ns() // 1_000_000}),
+            qos=1
+        )
 
     def publisher_runner(self):
         try:
